@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <span class="icon"></span>
+    <!-- <span class="icon"></span> -->
     <h1 class="text">Jay Music</h1>
     <router-link class="mine" to="/user">
       <i class="icon-mine"></i>
@@ -21,23 +21,23 @@ export default {
     text-align: center;
     // color: $color-theme;
     background: $color-theme;
-    // font-size: 0;
-    .icon {
-      display: inline-block;
-      vertical-align: top;
-      margin-top: 6px;
-      width: 30px;
-      height: 32px;
-      margin-right: 9px;
-      @include bg-image('logo');
-      background-size: 30px 32px;
-    }
+    // .icon {
+    //   display: inline-block;
+    //   vertical-align: top;
+    //   margin-top: 6px;
+    //   width: 30px;
+    //   height: 32px;
+    //   margin-right: 9px;
+    //   @include bg-image('logo');
+    //   background-size: 30px 32px;
+    // }
     .text {
       display: inline-block;
       vertical-align: top;
       line-height: 44px;
       color: $color-text-l;
-      font-size: $font-size-large;
+      letter-spacing: 3px;
+      // font-size: $font-size-large;
     }
     .mine {
       position: absolute;
@@ -46,7 +46,7 @@ export default {
       .icon-mine {
         display: block;
         padding: 12px;
-        font-size: $font-size-large-x;
+        // font-size: $font-size-large-x;
         color: $color-theme-l;
       }
     }

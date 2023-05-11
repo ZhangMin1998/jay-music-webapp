@@ -1,6 +1,20 @@
 <template>
   <div class="recommend" v-loading="loading">
-    666
+    <Scroll class="recommend-content" ref="scroll" :data="playList">
+      <div>
+        <div v-show="banner.length" class="decorate"></div>
+        <div v-if="banner.length" class="slider-wrapper">
+          <slider :banner="banner" @selectBanner="selectBanner">
+            <!-- <div v-for="item in banner" :key="item.targetId" @click.stop="selectBanner(item)" class="slide-page">
+              <img :src="item.imageUrl" style="object-fit: cover;width: 360px;height: 200px;">
+            </div> -->
+          </slider>
+        </div>
+        <div class="recommend-list" ref="recommendList">
+          <h1 class="title">推荐歌单</h1>
+        </div>
+      </div>
+    </Scroll>
     <!-- <scroll class="recommend-content">
       <div>
         <div class="slider-wrapper">
@@ -42,9 +56,9 @@
 </template>
 
 <script>
-import { getBannerData } from '@/api/recommend'
-// import Slider from '@/components/base/slider/slider'
-// import Scroll from '@/components/wrap-scroll'
+import { getBannerData, getRecommendList } from '@/api/recommend'
+import Slider from '@/base/Slider/Slider.vue'
+import Scroll from '@/base/Scroll/Scroll.vue'
 // import storage from 'good-storage'
 // import { ALBUM_KEY } from '@/assets/js/constant'
 
@@ -52,43 +66,53 @@ export default {
   // eslint-disable-next-line
   name: 'recommend',
   components: {
-    // Slider,
-    // Scroll
+    Slider,
+    Scroll
   },
   data () {
     return {
-      sliders: [],
-      albums: [],
-      selectedAlbum: null
+      banner: [],
+      playList: [],
+      recommendMusic: []
     }
   },
-  // computed: {
-  //   loading () {
-  //     return !this.sliders.length && !this.albums.length
-  //   }
-  // },
-  async created () {
-    const result = await getBannerData()
-    console.log(result)
-    // this.sliders = result.sliders
-    // this.albums = result.albums
+  computed: {
+
+  },
+  created () {
+    this.getBannerData()
+    this.getRecommendList()
+  },
+  methods: {
+    // 获取轮播图
+    getBannerData () {
+      getBannerData().then((res) => {
+        console.log(res)
+        if (res.code === 200) {
+          this.banner = res.banners.slice(0, 4)
+        }
+      })
+    },
+    // 获取推荐歌单
+    getRecommendList () {
+      getRecommendList().then((res) => {
+        console.log(res)
+        if (res.code === 200) {
+          this.playList = res.result
+        }
+      })
+    },
+    // 点击轮播图
+    selectBanner (item) {
+      console.log(item)
+    }
   }
-  // methods: {
-  //   selectItem (album) {
-  //     this.selectedAlbum = album
-  //     this.cacheAlbum(album)
-  //     this.$router.push({
-  //       path: `/recommend/${album.id}`
-  //     })
-  //   },
-  //   cacheAlbum (album) {
-  //     // storage.session.set(ALBUM_KEY, album)
-  //   }
-  // }
 }
 </script>
 
 <style lang="scss" scoped>
+@import "@/assets/scss/variable";
+@import "@/assets/scss/mixin";
   .recommend {
     position: fixed;
     width: 100%;
@@ -96,13 +120,23 @@ export default {
     bottom: 0;
     overflow: scroll;
     .recommend-content {
+      width: 100%;
       height: 100%;
       overflow: hidden;
-      .slider-wrapper {
-        position: relative;
+      .decorate {
+        position: absolute;
+        top: -30vh;
+        z-index: -10;
+        background: $color-theme;
         width: 100%;
-        height: 0;
-        padding-top: 40%;
+        height: 50vh;
+        vertical-align: inherit;
+      }
+      // 轮播图
+      .slider-wrapper {
+        width: 96%;
+        margin: 0 auto;
+        border-radius: 5px;
         overflow: hidden;
         .slider-content {
           position: absolute;
@@ -112,13 +146,16 @@ export default {
           height: 100%;
         }
       }
+      // 推荐歌单
       .recommend-list {
-        .list-title {
+        .title {
           height: 65px;
           line-height: 65px;
-          text-align: center;
+          text-align: left;
+          padding-left: 1.5%;
           font-size: $font-size-medium;
-          color: $color-theme;
+          font-weight: bold;
+          color: $color-text;
         }
         .item {
           display: flex;
