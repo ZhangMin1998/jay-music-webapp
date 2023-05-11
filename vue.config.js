@@ -12,6 +12,11 @@ module.exports = defineConfig({
       }
     }
   }
+  // devServer: {
+  //   before(app) {
+  //     registerRouter(app)
+  //   }
+  // }
 })
 
 // const registerRouter = require('./backend/router')
