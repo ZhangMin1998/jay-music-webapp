@@ -12,14 +12,19 @@ export default {
   // eslint-disable-next-line
   name: 'loading',
   props: {
-    title: {
-      type: String,
-      default: '正在加载'
-    }
+    // title: {
+    //   type: String,
+    //   default: '正在加载'
+    // }
   },
   data () {
     return {
-
+      title: ''
+    }
+  },
+  methods: {
+    setTitle (title) {
+      this.title = title
     }
   }
 }

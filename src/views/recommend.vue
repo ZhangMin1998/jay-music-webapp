@@ -1,6 +1,6 @@
 <template>
   <div class="recommend">
-    <Scroll class="recommend-content" ref="scroll" :data="playList" v-loading="loading">
+    <Scroll class="recommend-content" ref="scroll" :data="playList" v-loading:[loadingText]="loading">
       <!-- Scroll对第一个子元素生效 -->
       <div>
         <div v-show="banner.length" class="decorate"></div>
@@ -82,7 +82,8 @@ export default {
     return {
       banner: [],
       playList: [],
-      recommendMusic: []
+      recommendMusic: [],
+      loadingText: '正在加载...'
     }
   },
   computed: {
