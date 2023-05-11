@@ -1,6 +1,7 @@
 <template>
   <div class="recommend" v-loading="loading">
     <Scroll class="recommend-content" ref="scroll" :data="playList">
+      <!-- Scroll对第一个子元素生效 -->
       <div>
         <div v-show="banner.length" class="decorate"></div>
         <div v-if="banner.length" class="slider-wrapper">
@@ -12,6 +13,13 @@
         </div>
         <div class="recommend-list" ref="recommendList">
           <h1 class="title">推荐歌单</h1>
+          <ul>
+            <li class="item" v-for="item in playList" :key="item.id">
+              <div class="icon">
+                <img :src="item.picUrl" alt="">
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </Scroll>
@@ -167,6 +175,11 @@ export default {
             flex: 0 0 60px;
             width: 60px;
             padding-right: 20px;
+            img {
+              width: 100%;
+              height: 100%;
+              border-radius: 3px;
+            }
           }
           .text {
             display: flex;
