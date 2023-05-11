@@ -16,7 +16,8 @@
           <ul>
             <li class="item" v-for="item in playList" :key="item.id">
               <div class="icon">
-                <img :src="item.picUrl" alt="">
+                <img v-lazy="item.picUrl" />
+                <!-- <img :src="item.picUrl" alt=""> -->
               </div>
             </li>
           </ul>
