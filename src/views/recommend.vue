@@ -1,6 +1,6 @@
 <template>
-  <div class="recommend" v-loading="loading">
-    <Scroll class="recommend-content" ref="scroll" :data="playList">
+  <div class="recommend">
+    <Scroll class="recommend-content" ref="scroll" :data="playList" v-loading="loading">
       <!-- Scroll对第一个子元素生效 -->
       <div>
         <div v-show="banner.length" class="decorate"></div>
@@ -12,7 +12,7 @@
           </slider>
         </div>
         <div class="recommend-list" ref="recommendList">
-          <h1 class="title">推荐歌单</h1>
+          <h1 class="title" v-show="!loading">推荐歌单</h1>
           <ul>
             <li class="item" v-for="item in playList" :key="item.id">
               <div class="icon">
@@ -86,7 +86,10 @@ export default {
     }
   },
   computed: {
-
+    loading () {
+      // console.log(!this.banner.length && !this.playList.length)
+      return !this.banner.length && !this.playList.length
+    }
   },
   created () {
     this.getBannerData()
@@ -96,7 +99,7 @@ export default {
     // 获取轮播图
     getBannerData () {
       getBannerData().then((res) => {
-        console.log(res)
+        console.log('获取轮播图', res)
         if (res.code === 200) {
           this.banner = res.banners.slice(0, 4)
         }
@@ -105,7 +108,7 @@ export default {
     // 获取推荐歌单
     getRecommendList () {
       getRecommendList().then((res) => {
-        console.log(res)
+        console.log('获取推荐歌单', res)
         if (res.code === 200) {
           this.playList = res.result
         }

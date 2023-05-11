@@ -28,28 +28,30 @@ import Slide from '@better-scroll/slide'
 BScroll.use(Slide)
 
 export default {
+  // eslint-disable-next-line
+  name: 'Slider',
   props: {
     banner: {
       type: Array,
       default: null
     }
   },
-  data() {
+  data () {
     return {
       nums: null,
       currentPageIndex: 0
     }
   },
-  mounted() {
+  mounted () {
     setTimeout(() => {
       this.init()
     }, 200)
   },
-  beforeDestroy() {
+  beforeUnmount () {
     this.slide.destroy()
   },
   methods: {
-    init() {
+    init () {
       this.slide = new BScroll(this.$refs.slide, {
         scrollX: true,
         scrollY: false,
