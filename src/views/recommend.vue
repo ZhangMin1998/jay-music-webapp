@@ -13,14 +13,20 @@
         </div>
         <div class="recommend-list" ref="recommendList">
           <h1 class="title" v-show="!loading">推荐歌单</h1>
-          <ul>
-            <li class="item" v-for="item in playList" :key="item.id">
+          <div class="box">
+            <div v-for="item in playList" :key="item.id" class="item-box">
               <div class="icon">
+                <!-- <div class="gradients"></div> -->
                 <img v-lazy="item.picUrl" />
-                <!-- <img :src="item.picUrl" alt=""> -->
               </div>
-            </li>
-          </ul>
+              <p class="play-count">
+                <i class="fa fa-headphones"></i>
+                {{ tranNumber(item.playCount, 2) }}
+                <!-- {{Math.floor(item.playCount / 10000) }}万 -->
+              </p>
+              <div class="text">{{item.name}}</div>
+            </div>
+          </div>
         </div>
       </div>
     </Scroll>
@@ -118,6 +124,20 @@ export default {
     // 点击轮播图
     selectBanner (item) {
       console.log(item)
+    },
+    // 数字转换
+    tranNumber (num, point) {
+      const numStr = num.toString().split('.')[0]
+      if (numStr.length < 6) {
+        return numStr
+      } else if (numStr.length >= 6 && numStr.length <= 8) {
+        const decimal = numStr.substring(numStr.length - 4, numStr.length - 4 + point)
+        return parseFloat(parseInt(num / 10000) + '.' + decimal) +
+          '万'
+      } else if (numStr.length > 8) {
+        const decimal = numStr.substring(numStr.length - 8, numStr.length - 8 + point)
+        return parseFloat(parseInt(num / 100000000) + '.' + decimal) + '亿'
+      }
     }
   }
 }
@@ -165,42 +185,48 @@ export default {
           height: 65px;
           line-height: 65px;
           text-align: left;
-          padding-left: 1.5%;
+          padding-left: 3%;
           font-size: $font-size-medium;
           font-weight: bold;
           color: $color-text;
         }
-        .item {
+        .box{
+          padding: 0 1.5%;
           display: flex;
-          box-sizing: border-box;
-          align-items: center;
-          padding: 0 20px 20px 20px;
-
-          .icon {
-            flex: 0 0 60px;
-            width: 60px;
-            padding-right: 20px;
-            img {
-              width: 100%;
-              height: 100%;
-              border-radius: 3px;
+          flex-wrap: wrap;
+          justify-content: space-around;
+          flex-direction: row;
+          // margin-top: 20px;
+          .item-box{
+            position: relative;
+            width: 112px;
+            .icon{
+              img{
+                width: 112px;
+                height: 112px;
+                object-fit: cover;
+              }
             }
-          }
-          .text {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            flex: 1;
-            line-height: 20px;
-            overflow: hidden;
-            font-size: $font-size-medium;
-          }
-          .name {
-            margin-bottom: 10px;
-            color: $color-text;
-          }
-          .title {
-            color: $color-text-d;
+            .play-count{
+              position: absolute;
+              top: 5px;
+              right: 2px;
+              font-size: $font-size-small-s;
+              color: $color-text-l
+            }
+            .text{
+              // float: left;
+              // height: 40px;
+              line-height: 16px;
+              text-align: left;
+              overflow: hidden;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 2;
+              text-overflow: ellipsis;
+              margin-bottom: 10px;
+              font-size: $font-size-small;
+            }
           }
         }
       }
