@@ -191,19 +191,20 @@ export default {
           color: $color-text;
         }
         .box{
-          padding: 0 1.5%;
+          padding: 0 3px;
+          // padding: 0 7px;
           display: flex;
           flex-wrap: wrap;
+          // justify-content: space-between;
           justify-content: space-around;
           flex-direction: row;
-          // margin-top: 20px;
           .item-box{
             position: relative;
-            width: 112px;
+            width: 114px;
             .icon{
               img{
-                width: 112px;
-                height: 112px;
+                width: 114px;
+                height: 114px;
                 object-fit: cover;
               }
             }
