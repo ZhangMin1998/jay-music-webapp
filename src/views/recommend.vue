@@ -1,6 +1,6 @@
 <template>
-  <div class="recommend">
-    <Scroll class="recommend-content" ref="scroll" :data="playList" v-loading:[loadingText]="loading">
+  <div class="recommend" v-loading:[loadingText]="loading">
+    <Scroll class="recommend-content" ref="scroll" :data="playList">
       <!-- Scroll对第一个子元素生效 -->
       <div>
         <div v-show="banner.length" class="decorate"></div>

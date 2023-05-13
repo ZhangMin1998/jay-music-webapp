@@ -32,7 +32,7 @@ export default {
 
 <style lang="scss" scoped>
 .loading{
-  position: absolute;
+  position: absolute; // 要求外层为非static
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

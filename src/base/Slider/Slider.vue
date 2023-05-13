@@ -104,18 +104,6 @@ export default {
           line-height:200px;
           text-align:center;
           font-size:26px;
-          // &.page1 {
-          //   background-color:#95B8D1;
-          // }
-          // &.page2 {
-          //   background-color:#DDA789;
-          // }
-          // &.page3 {
-          //   background-color:#C3D899;
-          // }
-          // &.page4 {
-          //   background-color:#F2D4A7;
-          // }
         }
       }
     }

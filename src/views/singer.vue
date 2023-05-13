@@ -1,5 +1,5 @@
 <template>
-  <div class="singer" v-loading="!singers.length">
+  <div class="singer" v-loading="!singerList.length">
     singer
     <!-- <index-list
       :data="singers"
@@ -14,7 +14,8 @@
 </template>
 
 <script>
-// import { getSingerList } from '@/service/singer'
+import { getSingerList } from '@/api/singer'
+const pinyin = require('pinyin')
 // import IndexList from '@/components/index-list/index-list'
 // import storage from 'good-storage'
 // import { SINGER_KEY } from '@/assets/js/constant'
@@ -27,8 +28,23 @@ export default {
   },
   data () {
     return {
-      singers: [],
+      singerList: [],
       selectedSinger: null
+    }
+  },
+  created () {
+    this.getSingerList()
+    console.log(pinyin('张敏'))
+  },
+  methods: {
+    // 获取歌手列表
+    getSingerList () {
+      getSingerList().then((res) => {
+        console.log('获取歌手列表', res)
+        if (res.code === 200) {
+          this.singerList = res.artists
+        }
+      })
     }
   }
   // async created () {
