@@ -1,6 +1,7 @@
 <template>
   <div class="singer" v-loading="!singerList.length">
     singer
+    <listView :data="singerList" ref="list"></listView>
     <!-- <index-list
       :data="singers"
       @select="selectSinger"
@@ -15,21 +16,21 @@
 
 <script>
 import { getSingerList } from '@/api/singer'
-const pinyin = require('pinyin')
-// import IndexList from '@/components/index-list/index-list'
+import listView from '@/components/listView/listView'
 // import storage from 'good-storage'
 // import { SINGER_KEY } from '@/assets/js/constant'
+const pinyin = require('pinyin')
 
 export default {
   // eslint-disable-next-line
   name: 'singer',
   components: {
-    // IndexList
+    listView
   },
   data () {
     return {
-      singerList: [],
-      selectedSinger: null
+      singerList: []
+      // selectedSinger: null
     }
   },
   created () {

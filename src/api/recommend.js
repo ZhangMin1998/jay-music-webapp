@@ -18,3 +18,9 @@ export function getRecommendList () {
     }
   })
 }
+// 推荐新音乐
+export function getRecommendMusic () {
+  return request({
+    url: '/personalized/newsong'
+  })
+}

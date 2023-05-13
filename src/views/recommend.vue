@@ -28,50 +28,31 @@
             </div>
           </div>
         </div>
-      </div>
-    </Scroll>
-    <!-- <scroll class="recommend-content">
-      <div>
-        <div class="slider-wrapper">
-          <div class="slider-content">
-            <slider v-if="sliders.length" :sliders="sliders"></slider>
-          </div>
-        </div>
-        <div class="recommend-list">
-          <h1 class="list-title" v-show="!loading">热门歌单推荐</h1>
-          <ul>
-            <li
-              v-for="item in albums"
-              class="item"
-              :key="item.id"
-              @click="selectItem(item)"
-            >
+        <div class="recommend-song" ref="recommendSong">
+          <h1 class="title" v-show="!loading">推荐歌曲</h1>
+          <div class="box">
+            <div v-for="item in recommendMusic" :key="item.id" class="item-box">
               <div class="icon">
-                <img width="60" height="60" v-lazy="item.pic">
+                <img v-lazy="item.picUrl" />
               </div>
-              <div class="text">
-                <h2 class="name">
-                  {{ item.username }}
-                </h2>
-                <p class="title">
-                  {{item.title}}
-                </p>
+              <div class="text">{{item.name}}</div>
+            </div>
+          </div>
+          <!-- <ul>
+            <li class="item" v-for="item in recommendMusic" :key="item.id" @click="selectSong(item)">
+              <div class="icon">
+                <img v-lazy="item.picUrl">
               </div>
             </li>
-          </ul>
+          </ul> -->
         </div>
       </div>
-    </scroll>
-    <router-view v-slot="{ Component }">
-      <transition appear name="slide">
-        <component :is="Component" :data="selectedAlbum"/>
-      </transition>
-    </router-view> -->
+    </Scroll>
   </div>
 </template>
 
 <script>
-import { getBannerData, getRecommendList } from '@/api/recommend'
+import { getBannerData, getRecommendList, getRecommendMusic } from '@/api/recommend'
 import Slider from '@/base/Slider/Slider.vue'
 import Scroll from '@/base/Scroll/Scroll.vue'
 // import storage from 'good-storage'
@@ -98,9 +79,10 @@ export default {
       return !this.banner.length && !this.playList.length
     }
   },
-  created () {
-    this.getBannerData()
-    this.getRecommendList()
+  async created () {
+    await this.getBannerData()
+    await this.getRecommendList()
+    await this.getRecommendMusic()
   },
   methods: {
     // 获取轮播图
@@ -121,9 +103,22 @@ export default {
         }
       })
     },
+    // 获取推荐歌曲
+    getRecommendMusic () {
+      getRecommendMusic().then((res) => {
+        console.log('获取推荐歌曲', res)
+        if (res.code === 200) {
+          this.recommendMusic = res.result.slice(0, 9)
+        }
+      })
+    },
     // 点击轮播图
     selectBanner (item) {
       console.log(item)
+    },
+    // 点击推荐歌曲
+    selectSong (item) {
+
     },
     // 数字转换
     tranNumber (num, point) {
@@ -230,6 +225,68 @@ export default {
             }
           }
         }
+      }
+      .recommend-song{
+        // margin-top: -20px;
+        .title {
+          height: 65px;
+          line-height: 65px;
+          text-align: left;
+          padding-left: 3%;
+          font-size: $font-size-medium;
+          font-weight: bold;
+          color: $color-text;
+        }
+        .box{
+          padding: 0 3px;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-around;
+          // flex-direction: row;
+          .item-box{
+            position: relative;
+            width: 114px;
+            .icon{
+              img{
+                width: 114px;
+                height: 114px;
+                object-fit: cover;
+              }
+            }
+            .text{
+              // float: left;
+              // height: 40px;
+              line-height: 16px;
+              text-align: center;
+              overflow: hidden;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 2;
+              text-overflow: ellipsis;
+              margin-bottom: 10px;
+              font-size: $font-size-small;
+            }
+          }
+        }
+        // .item{
+        //   display: inline-block;
+        //   position: relative;
+        //   box-sizing: border-box;
+        //   width: 33%;
+        //   padding: 0 1%;
+        //   .icon{
+        //     position: relative;
+        //     display: inline-block;
+        //     width: 100%;
+        //     margin-bottom: 5px;
+        //     img{
+        //       width: 114px;
+        //       height: 114px;
+        //       border-radius: 4px;
+        //       // object-fit: cover;
+        //     }
+        //   }
+        // }
       }
     }
   }
