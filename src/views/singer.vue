@@ -1,6 +1,5 @@
 <template>
   <div class="singer" v-loading="!singerList.length">
-    singer
     <listView :data="singerList" ref="list"></listView>
     <!-- <index-list
       :data="singers"
@@ -16,10 +15,13 @@
 
 <script>
 import { getSingerList } from '@/api/singer'
+import Singer from '@/assets/js/singer'
 import listView from '@/components/listView/listView'
 // import storage from 'good-storage'
 // import { SINGER_KEY } from '@/assets/js/constant'
 const pinyin = require('pinyin')
+const HOT_NAME = '热门'
+const HOT_SINGERS = 10
 
 export default {
   // eslint-disable-next-line
@@ -43,9 +45,66 @@ export default {
       getSingerList().then((res) => {
         console.log('获取歌手列表', res)
         if (res.code === 200) {
-          this.singerList = res.artists
+          // this.singerList = res.artists
+          const tempList = res.artists
+          tempList.forEach(item => {
+            // 获取姓氏首字母
+            const py = pinyin(item.name[0], {
+              style: pinyin.STYLE_FIRST_LETTER
+            })
+            // 添加initial字段，为姓氏首字母大写
+            item.initial = py[0][0].toUpperCase()
+          })
+          this.singerList = this.normalizeSinger(tempList)
+          console.log('处理后的数据', this.singerList)
         }
       })
+    },
+    normalizeSinger (list) {
+      const map = {
+        hot: {
+          title: HOT_NAME,
+          items: []
+        }
+      }
+      list.forEach((item, index) => {
+        if (index < HOT_SINGERS) {
+          map.hot.items.push(new Singer({
+            id: item.id,
+            name: item.name,
+            avatar: item.img1v1Url,
+            aliaName: item.alias.join(' / ')
+          }))
+        }
+
+        const key = item.initial
+        if (!map[key]) {
+          map[key] = {
+            title: key,
+            items: []
+          }
+        }
+        map[key].items.push(new Singer({
+          id: item.id,
+          name: item.name,
+          avatar: item.img1v1Url,
+          aliaName: item.alias[0]
+        }))
+      })
+      const hot = []
+      const ret = []
+      for (const key in map) {
+        const val = map[key]
+        if (val.title.match(/[A-Z]/)) {
+          ret.push(val)
+        } else if (val.title === HOT_NAME) {
+          hot.push(val)
+        }
+      }
+      ret.sort((a, b) => {
+        return a.title.charCodeAt(0) - b.title.charCodeAt(0)
+      })
+      return hot.concat(ret)
     }
   }
   // async created () {
