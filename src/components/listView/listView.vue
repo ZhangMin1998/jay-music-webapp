@@ -12,6 +12,11 @@
           </ul>
         </li>
       </ul>
+      <div class="list-shortcut">
+        <ul>
+          <li v-for="(item, index) in shortcutList" :key="index" class="item">{{ item }}</li>
+        </ul>
+      </div>
     </div>
   </Scroll>
 </template>
@@ -28,6 +33,19 @@ export default {
       type: Array,
       default: () => []
     }
+  },
+  computed: {
+    shortcutList () {
+      return this.singerList.map((group) => {
+        return group.title.substr(0, 1)
+      })
+    }
+    // fixedTitle () {
+    //   if (this.scrollY > 0) {
+    //     return ''
+    //   }
+    //   return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
+    // }
   },
   data () {
     return {
@@ -69,6 +87,11 @@ export default {
       align-items: center;
       padding: 5px 0;
       margin: 0 5px;
+      border-bottom: 1px solid rgb(228, 228, 228);
+      &:last-child {
+        border: none;
+        margin-bottom: 10px;
+      }
       .avatar{
         width: 50px;
         height: 50px;
@@ -79,6 +102,11 @@ export default {
         color: $color-text;
         font-size: $font-size-medium;
       }
+    }
+  }
+  .list-shortcut{
+    .item{
+
     }
   }
 }

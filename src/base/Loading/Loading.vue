@@ -19,7 +19,7 @@ export default {
   },
   data () {
     return {
-      title: ''
+      title: '正在加载...'
     }
   },
   methods: {
