@@ -200,6 +200,7 @@ export default {
               img{
                 width: 114px;
                 height: 114px;
+                border-radius: 4px;
                 object-fit: cover;
               }
             }
@@ -250,6 +251,7 @@ export default {
               img{
                 width: 114px;
                 height: 114px;
+                border-radius: 4px;
                 object-fit: cover;
               }
             }

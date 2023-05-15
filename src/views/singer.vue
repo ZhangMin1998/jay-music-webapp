@@ -1,6 +1,6 @@
 <template>
   <div class="singer" v-loading="!singerList.length">
-    <listView :data="singerList" ref="list"></listView>
+    <listView :singerList="singerList" ref="list"></listView>
     <!-- <index-list
       :data="singers"
       @select="selectSinger"
@@ -60,15 +60,16 @@ export default {
         }
       })
     },
+    // 处理歌手数据
     normalizeSinger (list) {
       const map = {
         hot: {
-          title: HOT_NAME,
+          title: HOT_NAME, // '热门'
           items: []
         }
       }
       list.forEach((item, index) => {
-        if (index < HOT_SINGERS) {
+        if (index < HOT_SINGERS) { // HOT_SINGERS = 10
           map.hot.items.push(new Singer({
             id: item.id,
             name: item.name,
