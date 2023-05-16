@@ -1,7 +1,7 @@
 <template>
   <Scroll class="listView" ref="listView" :probeType="3">
     <div>
-      <ul>
+      <ul ref="groupRef">
         <li v-for="(group, index) in singerList" :key="index" ref="listGroup" class="listGroup">
           <h2 class="list-group-title">{{ group.title }}</h2>
           <ul>
@@ -12,6 +12,13 @@
           </ul>
         </li>
       </ul>
+      <div
+        class="fixed"
+        v-show="fixedTitle"
+        :style="fixedStyle"
+      >
+        <div class="fixed-title">{{fixedTitle}}</div>
+      </div>
       <div class="list-shortcut">
         <ul>
           <li v-for="(item, index) in shortcutList" :key="index" class="item">{{ item }}</li>
@@ -23,6 +30,7 @@
 
 <script>
 import Scroll from '@/base/Scroll/Scroll.vue'
+import useFixed from '@/components/listView/use-fixed'
 
 export default {
   components: {
@@ -46,6 +54,13 @@ export default {
     //   }
     //   return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
     // }
+  },
+  setup () {
+    const { groupRef } =useFixed
+
+    return {
+      groupRef
+    }
   },
   data () {
     return {
@@ -104,9 +119,40 @@ export default {
       }
     }
   }
+  .fixed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    .fixed-title {
+      height: 30px;
+      line-height: 30px;
+      padding-left: 20px;
+      font-size: $font-size-small;
+      color: $color-text-l;
+      background: $color-highlight-background;
+    }
+  }
   .list-shortcut{
+    width: 20px;
+    position: absolute;
+    z-index: 99;
+    right: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 200px 0;
+    border-radius: 4px;
+    text-align: center;
+    font-family:Helvetica;
     .item{
-
+      padding: 4px;
+      line-height: 1;
+      color: $color-text-g;
+      font-size: $font-size-small;
+      font-weight: bold;
+      &.current {
+        color: $color-theme;
+      }
     }
   }
 }
