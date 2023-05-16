@@ -8,17 +8,16 @@ export default function useScroll (wrapperRef, options, emit) {
   const scroll = ref(null)
 
   onMounted(() => {
-    // const scrollVal = 下面
-    scroll.value = new BScroll(wrapperRef.value, {
+    const scrollVal = scroll.value = new BScroll(wrapperRef.value, {
       observeDOM: true,
       ...options
     })
 
-    // if (options.probeType > 0) {
-    //   scrollVal.on('scroll', (pos) => {
-    //     emit('scroll', pos)
-    //   })
-    // }
+    if (options.probeType > 0) {
+      scrollVal.on('scroll', (pos) => {
+        emit('scroll', pos)
+      })
+    }
   })
 
   onUnmounted(() => {

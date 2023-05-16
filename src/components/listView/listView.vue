@@ -1,29 +1,27 @@
 <template>
-  <Scroll class="listView" ref="listView" :probeType="3">
-    <div>
-      <ul ref="groupRef">
-        <li v-for="(group, index) in singerList" :key="index" ref="listGroup" class="listGroup">
-          <h2 class="list-group-title">{{ group.title }}</h2>
-          <ul>
-            <li class="list-group-item" v-for="item in group.items" :key="item.id">
-              <img v-lazy="item.avatar" class="avatar">
-              <span class="name">{{ item.name }}</span>
-            </li>
-          </ul>
-        </li>
-      </ul>
-      <div
-        class="fixed"
-        v-show="fixedTitle"
-        :style="fixedStyle"
-      >
-        <div class="fixed-title">{{fixedTitle}}</div>
-      </div>
-      <div class="list-shortcut">
+  <Scroll class="listView" ref="listView" :probeType="3" @scroll="onScroll">
+    <ul ref="groupRef">
+      <li v-for="(group, index) in singerList" :key="index" ref="listGroup" class="listGroup">
+        <h2 class="list-group-title">{{ group.title }}</h2>
         <ul>
-          <li v-for="(item, index) in shortcutList" :key="index" class="item">{{ item }}</li>
+          <li class="list-group-item" v-for="item in group.items" :key="item.id">
+            <img v-lazy="item.avatar" class="avatar">
+            <span class="name">{{ item.name }}</span>
+          </li>
         </ul>
-      </div>
+      </li>
+    </ul>
+    <div
+      class="fixed"
+      v-show="fixedTitle"
+      :style="fixedStyle"
+    >
+      <div class="fixed-title">{{fixedTitle}}</div>
+    </div>
+    <div class="list-shortcut">
+      <ul>
+        <li v-for="(item, index) in shortcutList" :key="index" class="item">{{ item }}</li>
+      </ul>
     </div>
   </Scroll>
 </template>
@@ -55,11 +53,14 @@ export default {
     //   return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
     // }
   },
-  setup () {
-    const { groupRef } =useFixed
+  setup (props) {
+    const { groupRef, onScroll, fixedTitle, fixedStyle } = useFixed(props)
 
     return {
-      groupRef
+      groupRef,
+      onScroll, // 暴露出来后useFixed里面才会执行
+      fixedTitle,
+      fixedStyle
     }
   },
   data () {
@@ -74,7 +75,11 @@ export default {
 
   },
   methods: {
-
+    // onScroll (pos) {
+    //   console.log(666)
+    //   // console.log(pos)
+    //   // this.scrollY = pos.y
+    // }
   }
 }
 </script>
@@ -88,11 +93,12 @@ export default {
   overflow: hidden;
   background: $color-background;
   .listGroup{
+    padding-bottom: 5px;
     .list-group-title{
-      height: 20px;
-      line-height: 20px;
+      height: 30px;
+      line-height: 30px;
       padding-left: 12px;
-      margin-bottom: 10px;
+      // margin-bottom: 10px;
       font-size: $font-size-small;
       color: #fff;
       background:rgba(0, 0, 0, 0.1);
@@ -110,7 +116,8 @@ export default {
       .avatar{
         width: 50px;
         height: 50px;
-        border-radius: 4px;
+        // border-radius: 4px;
+        border-radius: 50%;
       }
       .name {
         margin-left: 20px;
@@ -127,7 +134,7 @@ export default {
     .fixed-title {
       height: 30px;
       line-height: 30px;
-      padding-left: 20px;
+      padding-left: 12px;
       font-size: $font-size-small;
       color: $color-text-l;
       background: $color-highlight-background;
