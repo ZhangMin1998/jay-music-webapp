@@ -64,12 +64,14 @@ export default {
     const { shortcutList, listView, onShortcutTouchStart, onShortcutTouchMove } = useShortcut(props, groupRef)
 
     return {
+      // fixed
       groupRef,
       onScroll, // 暴露出来后useFixed里面才会执行
       fixedTitle,
       fixedStyle,
       currentIndex,
 
+      // shortcut
       shortcutList,
       listView,
       onShortcutTouchStart,
@@ -106,6 +108,7 @@ export default {
   overflow: hidden;
   background: $color-background;
   .listGroup{
+    width: 94%;
     // padding-bottom: 5px;
     .list-group-title{
       height: 30px;
