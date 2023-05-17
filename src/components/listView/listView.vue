@@ -93,7 +93,7 @@ export default {
   overflow: hidden;
   background: $color-background;
   .listGroup{
-    padding-bottom: 5px;
+    // padding-bottom: 5px;
     .list-group-title{
       height: 30px;
       line-height: 30px;
@@ -111,7 +111,7 @@ export default {
       border-bottom: 1px solid rgb(228, 228, 228);
       &:last-child {
         border: none;
-        margin-bottom: 10px;
+        // margin-bottom: 10px;
       }
       .avatar{
         width: 50px;
