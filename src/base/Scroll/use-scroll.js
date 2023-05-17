@@ -30,4 +30,5 @@ export default function useScroll (wrapperRef, options, emit) {
   onDeactivated(() => {
 
   })
+  return scroll
 }
