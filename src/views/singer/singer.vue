@@ -1,6 +1,7 @@
 <template>
   <div class="singer" v-loading="!singerList.length">
-    <listView :singerList="singerList" ref="list"></listView>
+    <listView :singerList="singerList" ref="list" @select="selectSinger"></listView>
+    <router-view :singer="selectedSinger"></router-view>
     <!-- <index-list
       :data="singers"
       @select="selectSinger"
@@ -31,8 +32,8 @@ export default {
   },
   data () {
     return {
-      singerList: []
-      // selectedSinger: null
+      singerList: [],
+      selectedSinger: null
     }
   },
   created () {
@@ -106,6 +107,14 @@ export default {
         return a.title.charCodeAt(0) - b.title.charCodeAt(0)
       })
       return hot.concat(ret)
+    },
+    // 点击歌手进入详情
+    selectSinger (singer) {
+      console.log(singer)
+      this.selectedSinger = singer
+      this.$router.push({
+        path: `/singer/${singer.id}`
+      })
     }
   }
   // async created () {

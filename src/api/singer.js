@@ -27,3 +27,24 @@ export function getMusic (songId) {
     }
   })
 }
+
+// 获取歌手详情
+export function getSingerDetail2 (id) {
+  return request({
+    url: '/artists/detail',
+    params: {
+      id: id
+    }
+  })
+}
+// 获取歌手全部单曲
+export function getSingerSongs (id) {
+  return request({
+    // url: '/artist/top/song',
+    url: '/artist/songs',
+    params: {
+      id: id
+      // limit: 100
+    }
+  })
+}

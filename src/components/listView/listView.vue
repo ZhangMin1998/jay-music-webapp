@@ -4,7 +4,7 @@
       <li v-for="(group, index) in singerList" :key="index" ref="listGroup" class="listGroup">
         <h2 class="list-group-title">{{ group.title }}</h2>
         <ul>
-          <li class="list-group-item" v-for="item in group.items" :key="item.id">
+          <li class="list-group-item" v-for="item in group.items" :key="item.id" @click="onItemClick(item)">
             <img v-lazy="item.avatar" class="avatar">
             <span class="name">{{ item.name }}</span>
           </li>
@@ -53,10 +53,17 @@ export default {
     //   return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
     // }
   },
-  setup (props) {
+  emits: ['select'],
+  setup (props, { emit }) {
     const { groupRef, onScroll, fixedTitle, fixedStyle } = useFixed(props)
 
+    // 点击歌手
+    function onItemClick (item) {
+      emit('select', item)
+    }
+
     return {
+      onItemClick,
       groupRef,
       onScroll, // 暴露出来后useFixed里面才会执行
       fixedTitle,
@@ -79,6 +86,10 @@ export default {
     //   console.log(666)
     //   // console.log(pos)
     //   // this.scrollY = pos.y
+    // }
+    // 点击歌手
+    // onItemClick (item) {
+    //   this.$emit('select', item)
     // }
   }
 }
