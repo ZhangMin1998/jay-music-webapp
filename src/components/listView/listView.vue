@@ -18,9 +18,14 @@
     >
       <div class="fixed-title">{{fixedTitle}}</div>
     </div>
-    <div class="list-shortcut">
+    <div
+      class="list-shortcut"
+      @touchstart.stop.prevent="onShortcutTouchStart"
+      @touchmove.stop.prevent="onShortcutTouchMove"
+      @touchend.stop.prevent
+    >
       <ul>
-        <li v-for="(item, index) in shortcutList" :key="index" class="item">{{ item }}</li>
+        <li v-for="(item, index) in shortcutList" :key="item" :data-index="index" :class="{ 'item': true, 'current': currentIndex === index }">{{ item }}</li>
       </ul>
     </div>
   </Scroll>
@@ -29,6 +34,7 @@
 <script>
 import Scroll from '@/base/Scroll/Scroll.vue'
 import useFixed from '@/components/listView/use-fixed'
+import useShortcut from '@/components/listView/use-shortcut'
 
 export default {
   components: {
@@ -41,21 +47,23 @@ export default {
     }
   },
   computed: {
-    shortcutList () {
-      return this.singerList.map((group) => {
-        return group.title.substr(0, 1)
-      })
-    }
-    // fixedTitle () {
-    //   if (this.scrollY > 0) {
-    //     return ''
-    //   }
-    //   return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
+    // shortcutList () {
+    //   return this.singerList.map((group) => {
+    //     return group.title.substr(0, 1)
+    //   })
     // }
   },
+  watch: {
+    // eslint-disable-next-line
+    // currentIndex: (newVal) => {
+    //   console.log(newVal)
+    // }
+  },
+
   emits: ['select'],
   setup (props, { emit }) {
     const { groupRef, onScroll, fixedTitle, fixedStyle } = useFixed(props)
+    const { shortcutList, listView, onShortcutTouchStart, onShortcutTouchMove } = useShortcut(props, groupRef)
 
     // 点击歌手
     function onItemClick (item) {
@@ -64,10 +72,18 @@ export default {
 
     return {
       onItemClick,
+      // fixed
       groupRef,
       onScroll, // 暴露出来后useFixed里面才会执行
       fixedTitle,
-      fixedStyle
+      fixedStyle,
+      currentIndex,
+
+      // shortcut
+      shortcutList,
+      listView,
+      onShortcutTouchStart,
+      onShortcutTouchMove
     }
   },
   data () {
@@ -104,7 +120,8 @@ export default {
   overflow: hidden;
   background: $color-background;
   .listGroup{
-    padding-bottom: 5px;
+    width: 94%;
+    // padding-bottom: 5px;
     .list-group-title{
       height: 30px;
       line-height: 30px;
@@ -122,7 +139,7 @@ export default {
       border-bottom: 1px solid rgb(228, 228, 228);
       &:last-child {
         border: none;
-        margin-bottom: 10px;
+        // margin-bottom: 10px;
       }
       .avatar{
         width: 50px;
@@ -158,9 +175,11 @@ export default {
     right: 3px;
     top: 50%;
     transform: translateY(-50%);
-    padding: 200px 0;
-    border-radius: 4px;
+    padding: 20px 0;
+    border-radius: 10px;
     text-align: center;
+    // background: $color-background-d;
+    background: rgba($color: $color-background-d, $alpha: 0.1);
     font-family:Helvetica;
     .item{
       padding: 4px;
@@ -170,6 +189,7 @@ export default {
       font-weight: bold;
       &.current {
         color: $color-theme;
+        // color: pink;
       }
     }
   }
