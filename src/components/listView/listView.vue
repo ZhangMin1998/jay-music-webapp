@@ -62,7 +62,7 @@ export default {
 
   emits: ['select'],
   setup (props, { emit }) {
-    const { groupRef, onScroll, fixedTitle, fixedStyle } = useFixed(props)
+    const { groupRef, onScroll, fixedTitle, fixedStyle, currentIndex } = useFixed(props)
     const { shortcutList, listView, onShortcutTouchStart, onShortcutTouchMove } = useShortcut(props, groupRef)
 
     // 点击歌手

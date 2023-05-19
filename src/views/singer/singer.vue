@@ -1,7 +1,12 @@
 <template>
   <div class="singer" v-loading="!singerList.length">
     <listView :singerList="singerList" ref="list" @select="selectSinger"></listView>
-    <router-view :singer="selectedSinger"></router-view>
+    <!-- <router-view :singer="selectedSinger"></router-view> -->
+    <!-- <router-view v-slot="{ Component }">
+      <keep-alive>
+        <component :is="Component" :singer="selectedSinger"/>
+      </keep-alive>
+    </router-view> -->
     <!-- <index-list
       :data="singers"
       @select="selectSinger"
@@ -110,10 +115,10 @@ export default {
     },
     // 点击歌手进入详情
     selectSinger (singer) {
-      console.log(singer)
       this.selectedSinger = singer
       this.$router.push({
-        path: `/singer/${singer.id}`
+        // path: '/singer/detail'
+        path: `/singer/detail/${singer.id}`
       })
     }
   }

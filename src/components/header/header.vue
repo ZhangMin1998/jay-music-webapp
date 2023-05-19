@@ -2,7 +2,7 @@
   <div class="header">
     <!-- <span class="icon"></span> -->
     <h1 class="text">Jay Music</h1>
-    <router-link class="mine" to="/user">
+    <router-link class="mine" to="/recommend">
       <i class="icon-mine"></i>
     </router-link>
   </div>

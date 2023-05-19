@@ -10,7 +10,7 @@ export function getSingerList () {
   })
 }
 // 歌手详情
-export function getSingerDetail (singerId) {
+export function getSingerDetail2 (singerId) {
   return request({
     url: '/artists', // 获取歌手单曲接口
     params: {
@@ -29,7 +29,7 @@ export function getMusic (songId) {
 }
 
 // 获取歌手详情
-export function getSingerDetail2 (id) {
+export function getSingerDetail (id) {
   return request({
     url: '/artists/detail',
     params: {
@@ -45,6 +45,17 @@ export function getSingerSongs (id) {
     params: {
       id: id
       // limit: 100
+    }
+  })
+}
+
+// 获取音乐url
+export function getSongsUrl (id) {
+  return request({
+    // url: '/artist/top/song',
+    url: '/song/url/v1',
+    params: {
+      id: id
     }
   })
 }

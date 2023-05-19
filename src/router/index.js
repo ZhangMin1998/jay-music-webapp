@@ -1,10 +1,10 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 const Recommend = () => import('@/views/recommend'/* webpackChunkName: "recommend" */)
-const Singer = () => import('@/views/singer/singer'/* webpackChunkName: "singer" */)
+const Singer = () => import('@/views/singer/singer.vue'/* webpackChunkName: "singer" */)
 const TopList = () => import('@/views/top-list'/* webpackChunkName: "top-list" */)
 const Search = () => import('@/views/search'/* webpackChunkName: "search" */)
-const SingerDetail = () => import('@/views/singer/singer-detail'/* webpackChunkName: "singer-detail" */)
+const SingerDetail = () => import('@/views/singer/singer-detail.vue'/* webpackChunkName: "singer-detail" */)
 // const Album = () => import('@/views/album'/* webpackChunkName: "album" */)
 // const TopDetail = () => import('@/views/top-detail'/* webpackChunkName: "top-detail" */)
 // const UserCenter = () => import('@/views/user-center'/* webpackChunkName: "user-center" */)
@@ -26,14 +26,20 @@ const routes = [
   },
   {
     path: '/singer',
+    name: 'Singer',
     component: Singer,
     children: [
       {
-        path: ':id',
+        path: '/detail/:id',
+        name: 'SingerDetail',
         component: SingerDetail
       }
     ]
   },
+  // {
+  //   path: '/singer/detail/:id',
+  //   component: SingerDetail
+  // },
   {
     path: '/top-list',
     component: TopList
@@ -45,7 +51,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL), // createWebHashHistory
+  history: createWebHashHistory(process.env.BASE_URL), // createWebHashHistory
   routes
 })
 
