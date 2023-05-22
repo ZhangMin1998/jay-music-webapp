@@ -19,6 +19,7 @@
       :style="scrollStyle"
       :probe-type="3"
       :data="songs"
+      @scroll="onScroll"
     >
       <div class="music_list_wrapper">
         <SongList :songs="songs"></SongList>
@@ -30,6 +31,8 @@
 <script>
 import Scroll from '@/base/Scroll/Scroll'
 import SongList from '@/base/SongList/SongList'
+
+const RESERVED_HEIGHT = 44 // 返回栏高度44
 
 export default {
   name: 'music_list',
@@ -69,7 +72,9 @@ export default {
   },
   data () {
     return {
-      imageHeight: 0
+      imageHeight: 0,
+      scrollY: 0, // 滚动的距离
+      maxTranslateY: 0 // 最大可滚动距离
     }
   },
   mounted () {
@@ -81,6 +86,9 @@ export default {
   methods: {
     goBack () {
       this.$router.back()
+    },
+    onScroll(pos) {
+      this.scrollY = -pos.y
     }
   }
 }
@@ -145,7 +153,7 @@ export default {
     // top: 0;
     bottom: 0;
     z-index: 0;
-    overflow: hidden;
+    // overflow: hidden;
     .music_list_wrapper{
       background: $color-background;
     }
