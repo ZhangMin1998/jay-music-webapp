@@ -6,10 +6,11 @@
       </div>
       <div class="text">
         <h1 class="title">{{ headerTitle }}</h1>
+        <h2 class="list-title" v-if="!showAlias">{{alias}}</h2>
       </div>
     </div>
     <div class="bg_image" :style="bgImageStyle" ref="bgImage">
-      <div class="text">
+      <div class="text" v-if="showAlias">
         <h2 class="list-title">{{alias}}</h2>
       </div>
     </div>
@@ -60,7 +61,24 @@ export default {
   },
   computed: {
     bgImageStyle () {
+      const scrollY = this.scrollY
+      let zIndex = 0
+      let paddingTop = '70%'
+      let height = 0
+      let backgroundPosition = '0 30%'
+
+      if (scrollY > this.maxTranslateY) {
+        zIndex = 10
+        paddingTop = 0
+        height = `${RESERVED_HEIGHT}px`
+        backgroundPosition = '0 10%'
+      }
+
       return {
+        zIndex,
+        paddingTop,
+        height,
+        backgroundPosition,
         backgroundImage: `url(${this.pic})`
       }
     },
@@ -70,24 +88,34 @@ export default {
       }
     }
   },
+  watch: {
+    scrollY: {
+      handler (newVal) {
+        if (newVal >= this.maxTranslateY) {
+          this.showAlias = false
+        } else {
+          this.showAlias = true
+        }
+      }
+    }
+  },
   data () {
     return {
-      imageHeight: 0,
+      showAlias: true,
+      imageHeight: 0, // 图片的高度
       scrollY: 0, // 滚动的距离
       maxTranslateY: 0 // 最大可滚动距离
     }
   },
   mounted () {
     this.imageHeight = this.$refs.bgImage.clientHeight
-    // this.maxTranslateY = this.imageHeight - RESERVED_HEIGHT
-    console.log(this.imageHeight)
-    console.log(this.$refs.bgImage)
+    this.maxTranslateY = this.imageHeight - RESERVED_HEIGHT
   },
   methods: {
     goBack () {
       this.$router.back()
     },
-    onScroll(pos) {
+    onScroll (pos) {
       this.scrollY = -pos.y
     }
   }
@@ -115,21 +143,29 @@ export default {
       }
     }
     .text {
-      position: absolute;
-      left: 38px;
-      line-height: 44px;
-      font-size: $font-size-medium-x;
-      // @include no-wrap()
+      .title{
+        position: absolute;
+        left: 38px;
+        line-height: 44px;
+        font-size: $font-size-medium-x;
+      }
+      .list-title{
+        position: absolute;
+        right: 14px;
+        line-height: 44px;
+        // font-weight: bold;
+        font-size: $font-size-large-s;
+      }
     }
   }
   .bg_image{
     width: 100%;
     // height: 0;
     position: relative;
-    padding-top: 70%;
+    // padding-top: 70%;
     transform-origin: top;
     background-size: cover;
-    background-position: 0 30%;
+    // background-position: 0 30%;
     .text{
       width: 80%;
       height: 20px;
