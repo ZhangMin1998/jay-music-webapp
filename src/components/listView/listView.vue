@@ -171,7 +171,7 @@ export default {
   .list-shortcut{
     width: 20px;
     position: absolute;
-    z-index: 99;
+    // z-index: 99;
     right: 3px;
     top: 50%;
     transform: translateY(-50%);

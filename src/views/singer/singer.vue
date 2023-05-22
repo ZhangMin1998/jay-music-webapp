@@ -2,20 +2,11 @@
   <div class="singer" v-loading="!singerList.length">
     <listView :singerList="singerList" ref="list" @select="selectSinger"></listView>
     <!-- <router-view :singer="selectedSinger"></router-view> -->
-    <!-- <router-view v-slot="{ Component }">
-      <keep-alive>
-        <component :is="Component" :singer="selectedSinger"/>
-      </keep-alive>
-    </router-view> -->
-    <!-- <index-list
-      :data="singers"
-      @select="selectSinger"
-    ></index-list>
     <router-view v-slot="{ Component }">
       <transition appear name="slide">
-        <component :is="Component" :data="selectedSinger"/>
+        <component :is="Component" :singer="selectedSinger"/>
       </transition>
-    </router-view> -->
+    </router-view>
   </div>
 </template>
 
@@ -38,18 +29,18 @@ export default {
   data () {
     return {
       singerList: [],
-      selectedSinger: null
+      selectedSinger: null // 选中的歌手
     }
   },
   created () {
     this.getSingerList()
-    console.log(pinyin('张敏'))
+    // console.log(pinyin('张敏'))
   },
   methods: {
     // 获取歌手列表
     getSingerList () {
       getSingerList().then((res) => {
-        console.log('获取歌手列表', res)
+        // console.log('获取歌手列表', res)
         if (res.code === 200) {
           // this.singerList = res.artists
           const tempList = res.artists
@@ -62,7 +53,7 @@ export default {
             item.initial = py[0][0].toUpperCase()
           })
           this.singerList = this.normalizeSinger(tempList)
-          console.log('处理后的数据', this.singerList)
+          // console.log('处理后的数据', this.singerList)
         }
       })
     },
@@ -118,26 +109,10 @@ export default {
       this.selectedSinger = singer
       this.$router.push({
         // path: '/singer/detail'
-        path: `/singer/detail/${singer.id}`
+        path: `/singer/${singer.id}`
       })
     }
   }
-  // async created () {
-  //   const result = await getSingerList()
-  //   this.singers = result.singers
-  // },
-  // methods: {
-  //   selectSinger (singer) {
-  //     this.selectedSinger = singer
-  //     this.cacheSinger(singer)
-  //     this.$router.push({
-  //       path: `/singer/${singer.mid}`
-  //     })
-  //   },
-  //   cacheSinger (singer) {
-  //     // storage.session.set(SINGER_KEY, singer)
-  //   }
-  // }
 }
 </script>
 
