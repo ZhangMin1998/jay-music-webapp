@@ -66,12 +66,20 @@ export default {
       let paddingTop = '70%'
       let height = 0
       let backgroundPosition = '0 30%'
+      let translateZ = 0 // ios适配
 
       if (scrollY > this.maxTranslateY) {
         zIndex = 10
         paddingTop = 0
         height = `${RESERVED_HEIGHT}px`
         backgroundPosition = '0 10%'
+        translateZ = 1 // ios适配
+      }
+
+      // 下拉放大效果
+      let scale = 1 // 初始值
+      if (scrollY < 0) { // 往下拉
+        scale = 1 + Math.abs(scrollY / this.imageHeight) // 求绝对值
       }
 
       return {
@@ -79,7 +87,8 @@ export default {
         paddingTop,
         height,
         backgroundPosition,
-        backgroundImage: `url(${this.pic})`
+        backgroundImage: `url(${this.pic})`,
+        transform: `scale(${scale})translateZ(${translateZ}px)` //  // ios适配
       }
     },
     scrollStyle () {
