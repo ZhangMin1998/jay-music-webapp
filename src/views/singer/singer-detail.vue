@@ -5,6 +5,7 @@
       :headerTitle="headerTitle"
       :pic="pic"
       :bgStyle="bgStyle"
+      :loading="loading"
     ></music-list>
   </div>
 </template>
@@ -50,7 +51,8 @@ export default {
   data () {
     return {
       headerTitle: '歌手',
-      hotSongs: []
+      hotSongs: [],
+      loading: true
     }
   },
   async created () {
@@ -61,6 +63,7 @@ export default {
     // console.log(detailResult)
     console.log(detailResult2)
     this.hotSongs = detailResult2.hotSongs
+    this.loading = false
     // console.log(detailResult3)
   },
   methods: {

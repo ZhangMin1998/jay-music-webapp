@@ -8,13 +8,19 @@
         <h1 class="title">{{ headerTitle }}</h1>
       </div>
     </div>
+    <div class="bg_image" :style="bgImageStyle" ref="bgImage">
+      <div class="text">
+        <h2 class="list-title">{{alias}}</h2>
+      </div>
+    </div>
     <Scroll class="list"
       ref="list"
+      v-loading="loading"
+      :style="scrollStyle"
       :probe-type="3"
       :data="songs"
     >
       <div class="music_list_wrapper">
-        <div class="bg_image" :style="bgStyle" ref="bgImage"></div>
         <SongList :songs="songs"></SongList>
       </div>
     </Scroll>
@@ -31,6 +37,7 @@ export default {
     Scroll,
     SongList
   },
+  inject: ['alias'],
   props: {
     songs: {
       type: Array
@@ -43,12 +50,33 @@ export default {
     },
     bgStyle: {
       type: String
+    },
+    loading: {
+      type: Boolean
+    }
+  },
+  computed: {
+    bgImageStyle () {
+      return {
+        backgroundImage: `url(${this.pic})`
+      }
+    },
+    scrollStyle () {
+      return {
+        top: `${this.imageHeight}px`
+      }
     }
   },
   data () {
     return {
-
+      imageHeight: 0
     }
+  },
+  mounted () {
+    this.imageHeight = this.$refs.bgImage.clientHeight
+    // this.maxTranslateY = this.imageHeight - RESERVED_HEIGHT
+    console.log(this.imageHeight)
+    console.log(this.$refs.bgImage)
   },
   methods: {
     goBack () {
@@ -86,22 +114,40 @@ export default {
       // @include no-wrap()
     }
   }
+  .bg_image{
+    width: 100%;
+    // height: 0;
+    position: relative;
+    padding-top: 70%;
+    transform-origin: top;
+    background-size: cover;
+    background-position: 0 30%;
+    .text{
+      width: 80%;
+      height: 20px;
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      color: #fff;
+      .list-title{
+        font-size: $font-size-large-s;
+        line-height: 18px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        position: absolute;
+        bottom: 0;
+      }
+    }
+  }
   .list{
     width: 100%;
-    position: fixed;
-    top: 0;
+    position: absolute;
+    // top: 0;
     bottom: 0;
-    background: $color-background;
+    z-index: 0;
+    overflow: hidden;
     .music_list_wrapper{
-      .bg_image{
-        width: 100%;
-        height: 0;
-        position: relative;
-        padding-top: 75%;
-        transform-origin: top;
-        background-size: cover;
-        background-position: 0 30%;
-      }
+      background: $color-background;
     }
   }
 }
