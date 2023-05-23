@@ -13,6 +13,7 @@
       <div class="text" v-if="showAlias">
         <h2 class="list-title">{{alias}}</h2>
       </div>
+      <div class="filter" :style="filterStyle"></div>
     </div>
     <Scroll class="list"
       ref="list"
@@ -94,6 +95,17 @@ export default {
     scrollStyle () {
       return {
         top: `${this.imageHeight}px`
+      }
+    },
+    filterStyle () {
+      let blur = 0
+      const scrollY = this.scrollY
+      const imageHeight = this.imageHeight
+      if (scrollY >= 0) { // 往上拉   需要模糊
+        blur = Math.min(scrollY / imageHeight, this.maxTranslateY / imageHeight) * 10
+      }
+      return {
+        backdropFilter: `blur(${blur}px)`
       }
     }
   },
@@ -190,6 +202,14 @@ export default {
         position: absolute;
         bottom: 0;
       }
+    }
+    .filter{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(7, 17, 27, 0.1);
     }
   }
   .list{
