@@ -5,8 +5,9 @@ export const TOP_KEY = '__top__'
 export const SEARCH_KEY = '__search__'
 export const PLAY_KEY = '__play__'
 
+// 播放模式
 export const PLAY_MODE = {
-  sequence: 0,
-  loop: 1,
-  random: 2
+  sequence: 0, // 顺序
+  loop: 1, // 循环
+  random: 2 // 随机
 }
