@@ -18,6 +18,7 @@
     <Scroll class="list"
       ref="list"
       v-loading="loading"
+      v-no-result:[noResultText]="noResult"
       :style="scrollStyle"
       :probe-type="3"
       :data="songs"
@@ -58,6 +59,10 @@ export default {
     },
     loading: {
       type: Boolean
+    },
+    noResultText: {
+      type: String,
+      default: '抱歉，没有找到可播放的歌曲'
     }
   },
   computed: {
@@ -107,6 +112,9 @@ export default {
       return {
         backdropFilter: `blur(${blur}px)`
       }
+    },
+    noResult () {
+      return !this.loading && !this.songs.length
     }
   },
   watch: {

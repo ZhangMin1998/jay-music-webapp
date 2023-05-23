@@ -11,7 +11,7 @@ const loadingDirective = {
   mounted (el, binding) {
     // 新建vue实例
     const app = createApp(Loading) // app对象根组件就是Loading
-    const instance = app.mount(document.createElement('div')) // app实例挂载的地方是动态创建的div   后面再挂载到el上
+    const instance = app.mount(document.createElement('div')) // app对象根组件就是Loading
     el.instance = instance // 先保存  el.instance => Loading组件实例   updated中拿不到instance
 
     // 设置动态title
