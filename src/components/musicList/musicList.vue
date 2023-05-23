@@ -180,6 +180,7 @@ export default {
     }
   }
   .bg_image{
+    // filter: blur(3px);
     width: 100%;
     // height: 0;
     position: relative;

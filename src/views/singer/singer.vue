@@ -14,8 +14,8 @@
 import { getSingerList } from '@/api/singer'
 import Singer from '@/assets/js/singer'
 import listView from '@/components/listView/listView'
-// import storage from 'good-storage'
-// import { SINGER_KEY } from '@/assets/js/constant'
+import storage from 'good-storage'
+import { SINGER_KEY } from '@/assets/js/constant'
 const pinyin = require('pinyin')
 const HOT_NAME = '热门'
 const HOT_SINGERS = 10
@@ -107,8 +107,8 @@ export default {
     // 点击歌手进入详情
     selectSinger (singer) {
       this.selectedSinger = singer
+      storage.session.set(SINGER_KEY, singer)
       this.$router.push({
-        // path: '/singer/detail'
         path: `/singer/${singer.id}`
       })
     }

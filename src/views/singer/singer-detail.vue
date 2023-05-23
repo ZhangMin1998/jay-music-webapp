@@ -13,6 +13,8 @@
 <script>
 import musicList from '@/components/musicList/musicList'
 import { getSingerDetail } from '@/api/singer' // getSingerSongs
+import storage from 'good-storage'
+import { SINGER_KEY } from '@/assets/js/constant'
 
 export default {
   components: {
@@ -24,12 +26,26 @@ export default {
     }
   },
   computed: {
+    singerSource () {
+      let soure = null
+      const singer = this.singer
+      if (singer) {
+        soure = singer
+      } else {
+        const cachedSinger = storage.session.get(SINGER_KEY)
+        if (cachedSinger && cachedSinger.id === Number(this.$route.params.id)) {
+          soure = cachedSinger
+        }
+      }
+      return soure
+    },
     headerTitleTouchDown () {
       let name = ''
-      if (this.singer.aliaName) {
-        name = this.singer.name + ` (${this.singer.aliaName})`
+      const singer = this.singerSource
+      if (singer.aliaName) {
+        name = singer.name + ` (${singer.aliaName})`
       } else {
-        name = this.singer.name
+        name = singer.name
       }
       return name
     },
@@ -37,10 +53,12 @@ export default {
       return this.headerTitleTouchDown
     },
     bgStyle () {
-      return `background-image: url(${this.singer.avatar})`
+      const singer = this.singerSource
+      return `background-image: url(${singer.avatar})`
     },
     pic () {
-      return this.singer.avatar
+      const singer = this.singerSource
+      return singer && singer.avatar
     }
   },
   provide () {
@@ -56,15 +74,16 @@ export default {
     }
   },
   async created () {
-    console.log('singer-detail-singer', this.singer)
-    // const detailResult = await getSingerDetail(this.singer.id)
-    const detailResult2 = await getSingerDetail(this.singer.id)
-    // const detailResult3 = await getSingerSongs(this.singer.id)
-    // console.log(detailResult)
-    console.log(detailResult2)
+    // console.log(this.singerSource)
+    // console.log('singer-detail-singer', this.singer)
+    // if (!this.singerSource) {
+    //   console.log(this.$route)
+    //   return
+    // }
+    const detailResult2 = await getSingerDetail(this.singerSource.id)
+
     this.hotSongs = detailResult2.hotSongs
     this.loading = false
-    // console.log(detailResult3)
   },
   methods: {
 
