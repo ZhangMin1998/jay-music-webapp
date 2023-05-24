@@ -25,7 +25,7 @@
       @scroll="onScroll"
     >
       <div class="music_list_wrapper">
-        <SongList :songs="songs"></SongList>
+        <SongList :songs="songs" @select="selectItem"></SongList>
       </div>
     </Scroll>
   </div>
@@ -34,6 +34,7 @@
 <script>
 import Scroll from '@/base/Scroll/Scroll'
 import SongList from '@/base/SongList/SongList'
+import { mapActions, mapState } from 'vuex'
 
 const RESERVED_HEIGHT = 44 // 返回栏高度44
 
@@ -115,7 +116,10 @@ export default {
     },
     noResult () {
       return !this.loading && !this.songs.length
-    }
+    },
+    ...mapState([
+      'playlist'
+    ])
   },
   watch: {
     scrollY: {
@@ -146,7 +150,17 @@ export default {
     },
     onScroll (pos) {
       this.scrollY = -pos.y
-    }
+    },
+    // 点击音乐
+    selectItem ({ song, index }) {
+      this.selectPlay({
+        list: this.songs,
+        index
+      })
+    },
+    ...mapActions([
+      'selectPlay'
+    ])
   }
 }
 </script>

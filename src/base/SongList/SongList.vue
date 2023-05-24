@@ -1,7 +1,7 @@
 <template>
   <div class="song_list">
     <ul>
-      <li v-for="(item, index) in songs" :key="index" class="item">
+      <li v-for="(item, index) in songs" :key="index" class="item" @click="selectItem(item, index)">
         <p class="count">{{index + 1}}</p>
         <div class="content">
           <h2 class="name">{{ item.name }}</h2>
@@ -18,10 +18,12 @@ export default {
   name: 'song_list',
   props: {
     songs: {
-      type: Array
+      type: Array,
+      default: () => []
     }
   },
   inject: ['alias'],
+  emits: ['select'],
   data () {
     return {
       // getDesc (item) {
@@ -34,7 +36,9 @@ export default {
     }
   },
   methods: {
-
+    selectItem (item, index) {
+      this.$emit('select', { item, index })
+    }
   }
 }
 </script>
