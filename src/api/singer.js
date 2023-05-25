@@ -53,7 +53,7 @@ export function getSingerSongs (id) {
 export function getSongsUrl (id) {
   return request({
     // url: '/artist/top/song',
-    url: '/song/url/v1',
+    url: '/song/url',
     params: {
       id: id
     }
