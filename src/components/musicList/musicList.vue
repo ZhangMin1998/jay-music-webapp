@@ -13,6 +13,12 @@
       <div class="text" v-if="showAlias">
         <h2 class="list-title">{{alias}}</h2>
       </div>
+      <!-- <div class="play_btn_wrapper">
+        <div class="play_btn">
+          <i class="icon-play"></i>
+          <span class="text">随机播放全部</span>
+        </div>
+      </div> -->
       <div class="filter" :style="filterStyle"></div>
     </div>
     <Scroll class="list"
@@ -25,6 +31,11 @@
       @scroll="onScroll"
     >
       <div class="music_list_wrapper">
+        <div class="sequence_play" v-show="songs.length" @click="random">
+          <i class="iconfont icon-play"></i>
+          <span class="text">随机播放</span>
+          <span class="count">(共{{songs.length}}首)</span>
+        </div>
         <SongList :songs="songs" @select="selectItem"></SongList>
       </div>
     </Scroll>
@@ -151,15 +162,20 @@ export default {
     onScroll (pos) {
       this.scrollY = -pos.y
     },
-    // 点击音乐
+    // 点击音乐播放
     selectItem ({ song, index }) {
       this.selectPlay({
         list: this.songs,
         index
       })
     },
+    // 随机播放全部
+    random () {
+      this.randomPlay(this.songs)
+    },
     ...mapActions([
-      'selectPlay'
+      'selectPlay',
+      'randomPlay'
     ])
   }
 }
@@ -226,6 +242,20 @@ export default {
         bottom: 0;
       }
     }
+    // .play_btn_wrapper{
+    //   width: 100%;
+    //   position: absolute;
+    //   bottom: 20px;
+    //   z-index: 10;
+    //   .play_btn{
+    //     .icon-play{
+
+    //     }
+    //     .text{
+
+    //     }
+    //   }
+    // }
     .filter{
       position: absolute;
       top: 0;
@@ -243,7 +273,34 @@ export default {
     z-index: 0;
     // overflow: hidden;
     .music_list_wrapper{
+      position: relative;
+      border-radius: 10px;
+      top:-10px;
+      padding: 40px 0 20px 0;
+      // background: pink;
       background: $color-background;
+      .sequence_play{
+        width: 100%;
+        height: 40px;
+        padding-left: 16px;
+        border-bottom: 1px solid rgb(228, 228, 228);
+        position: absolute;
+        top: 0;
+        display: flex;
+        align-items: center;
+        .iconfont{
+          font-size: 18px;
+          color: $color-text;
+          padding-right: 14px;
+        }
+        .text{
+          font-size: $font-size-medium-x;
+        }
+        .count{
+          font-size: $font-size-medium;
+          color: $color-text-g;
+        }
+      }
     }
   }
 }

@@ -1,4 +1,5 @@
 import { PLAY_MODE } from '@/assets/js/constant'
+import { shuffle } from '@/assets/js/util' // 随机洗牌算法
 
 // 选择播放
 export function selectPlay ({ commit, state }, { list, index }) {
@@ -8,4 +9,14 @@ export function selectPlay ({ commit, state }, { list, index }) {
   commit('setFullScreen', true)
   commit('setPlaylist', list)
   commit('setCurrentIndex', index)
+}
+
+// 随机播放
+export function randomPlay ({ commit }, list) {
+  commit('setPlayMode', PLAY_MODE.random)
+  commit('setSequenceList', list)
+  commit('setPlayingState', true)
+  commit('setFullScreen', true)
+  commit('setPlaylist', shuffle(list))
+  commit('setCurrentIndex', 0)
 }
