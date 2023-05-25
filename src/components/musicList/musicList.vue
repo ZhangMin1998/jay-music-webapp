@@ -32,7 +32,7 @@
     >
       <div class="music_list_wrapper">
         <div class="sequence_play" v-show="songs.length" @click="random">
-          <i class="iconfont icon-play"></i>
+          <i class="iconfont icon-bofangicon"></i>
           <span class="text">随机播放</span>
           <span class="count">(共{{songs.length}}首)</span>
         </div>
