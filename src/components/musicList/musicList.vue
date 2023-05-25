@@ -83,7 +83,7 @@ export default {
       let zIndex = 0
       let paddingTop = '70%'
       let height = 0
-      let backgroundPosition = '0 30%'
+      let backgroundPosition = '0 50%'
       let translateZ = 0 // ios适配
 
       if (scrollY > this.maxTranslateY) {
@@ -242,20 +242,6 @@ export default {
         bottom: 0;
       }
     }
-    // .play_btn_wrapper{
-    //   width: 100%;
-    //   position: absolute;
-    //   bottom: 20px;
-    //   z-index: 10;
-    //   .play_btn{
-    //     .icon-play{
-
-    //     }
-    //     .text{
-
-    //     }
-    //   }
-    // }
     .filter{
       position: absolute;
       top: 0;

@@ -3,25 +3,25 @@
     <div class="normal_player" v-show="fullScreen">
       <div class="background">
         <div class="filter"></div>
-        <img :src="currentSong.al.picUrl"/>
+        <img :src="currentSong.al.picUrl" v-if="currentSong.al"/>
       </div>
       <div class="top">
-        <div class="back">
+        <div class="back" @click="goBack">
           <!-- <i class="icon-back"></i> -->
           <i class="fa fa-angle-down"></i>
         </div>
         <h1 class="title">{{ currentSong.name }}</h1>
-        <h2 class="subtitle">{{ currentSong.al.name }}</h2>
+        <h2 class="subtitle" v-if="currentSong.al">{{ currentSong.al.name }}</h2>
       </div>
     </div>
-    <audio src=""></audio>
+    <audio ref="audioRef" src=""></audio>
   </div>
 </template>
 
 <script>
 import { getSongsUrl } from '@/api/singer'
 import { useStore } from 'vuex'
-import { computed, watch } from 'vue'
+import { computed, watch, ref } from 'vue'
 
 export default {
   name: 'p-layer',
@@ -29,11 +29,12 @@ export default {
 
   },
   setup () {
+    const audioRef = ref(null)
     // vuex
     const store = useStore()
     const fullScreen = computed(() => store.state.fullScreen)
     const currentSong = computed(() => store.getters.currentSong)
-    console.log(currentSong.value)
+    // console.log(currentSong)
 
     // watch
     watch(currentSong, (newVal) => {
@@ -41,20 +42,33 @@ export default {
       getUrl(newVal.id)
     })
 
+    // methods
     const getUrl = (id) => {
       getSongsUrl(id).then(res => {
-        if (res.code === 200) {
-          console.log(res.data)
+        if (res.code === 200 && res.data.length) {
+          // console.log(currentSong)
+          console.log(res.data[0])
+          const songData = res.data[0]
+
+          const audioEl = audioRef.value
+          audioEl.src = songData.url
+          audioEl.play() // 播放
         }
       })
     }
 
+    const goBack = () => {
+      store.commit('setFullScreen', false)
+    }
+
     return {
+      audioRef,
       // vuex
       fullScreen,
       currentSong,
 
-      getUrl
+      getUrl,
+      goBack
     }
   }
 }
@@ -77,14 +91,14 @@ export default {
       width: 100%;
       height: 100%;
       z-index: -1;
-      opacity: 0.6;
-      filter: blur(30px);
+      opacity: 0.7;
+      filter: blur(20px);
       .filter {
         position: absolute;
         width: 100%;
         height: 100%;
         background: black;
-        opacity: 0.5;
+        opacity: 0.2;
       }
       img {
         width: 100%;
