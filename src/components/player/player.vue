@@ -5,6 +5,7 @@
         <div class="filter"></div>
         <img :src="currentSong.al.picUrl" v-if="currentSong.al"/>
       </div>
+      <!-- top -->
       <div class="top">
         <div class="back" @click="goBack">
           <!-- <i class="icon-back"></i> -->
@@ -13,8 +14,32 @@
         <h1 class="title">{{ currentSong.name }}</h1>
         <h2 class="subtitle" v-if="currentSong.al">{{ currentSong.al.name }}</h2>
       </div>
+      <!-- bottom -->
+      <div class="bottom">
+        <div class="progress-bar-wrapper">
+
+        </div>
+        <div class="operators">
+          <div class="icon i-left" >
+            <i class="iconfont mode icon-random"></i>
+          </div>
+          <div class="icon i-left" >
+            <i class="iconfont icon-prev"></i>
+          </div>
+          <div class="icon i-center" >
+            <i :class="playIcon" @click="togglePlaying"></i>
+            <!-- <i class="iconfont icon-bofangicon"></i> -->
+          </div>
+          <div class="icon i-right" >
+            <i class="iconfont icon-test"></i>
+          </div>
+          <div class="icon i-right">
+            <i class="iconfont icon-like"></i>
+          </div>
+        </div>
+      </div>
     </div>
-    <audio ref="audioRef" src=""></audio>
+    <audio ref="audioRef" @pause="pause"></audio>
   </div>
 </template>
 
@@ -34,12 +59,20 @@ export default {
     const store = useStore()
     const fullScreen = computed(() => store.state.fullScreen)
     const currentSong = computed(() => store.getters.currentSong)
+    const playing = computed(() => store.state.playing)
     // console.log(currentSong)
+    const playIcon = computed(() => {
+      return playing.value ? 'iconfont icon-stop' : 'iconfont icon-bofangicon'
+    })
 
     // watch
     watch(currentSong, (newVal) => {
       if (!newVal.id) return
       getUrl(newVal.id)
+    })
+    watch(playing, (newVal) => { // 播放 停止
+      const audioEl = audioRef.value
+      newVal ? audioEl.play() : audioEl.pause()
     })
 
     // methods
@@ -61,14 +94,25 @@ export default {
       store.commit('setFullScreen', false)
     }
 
+    const togglePlaying = () => {
+      store.commit('setPlayingState', !playing.value)
+    }
+
+    const pause = () => { // 非人为导致播放暂停，显式修改状态 不然状态混乱
+      store.commit('setPlayingState', false)
+    }
+
     return {
       audioRef,
       // vuex
       fullScreen,
       currentSong,
+      playIcon,
 
       getUrl,
-      goBack
+      goBack,
+      togglePlaying,
+      pause
     }
   }
 }
@@ -92,7 +136,7 @@ export default {
       height: 100%;
       z-index: -1;
       opacity: 0.7;
-      filter: blur(20px);
+      filter: blur(10px);
       .filter {
         position: absolute;
         width: 100%;
@@ -143,6 +187,47 @@ export default {
         font-size: $font-size-medium;
         // color: $color-text;
         color: $color-theme-l;
+      }
+    }
+    .bottom{
+      position: absolute;
+      bottom: 50px;
+      width: 100%;
+      .progress-wrapper{
+
+      }
+      .operators{
+        display: flex;
+        align-items: center;
+        .icon{
+          flex: 1;
+          color: $color-theme-l;
+          &.disable {
+            color: $color-theme;
+          }
+          &.i-left {
+            text-align: right;
+          }
+          &.i-center {
+            padding: 0 20px;
+            text-align: center;
+            i {
+              font-size: 40px;
+            }
+          }
+          &.i-right {
+            text-align: left;
+          }
+          i {
+            font-size: 30px;
+          }
+          .mode {
+            font-size: 25px;
+          }
+          .icon-like {
+            color: $color-sub-theme;
+          }
+        }
       }
     }
   }
