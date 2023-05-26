@@ -12,7 +12,7 @@ export default function useMode () {
   })
 
   const changeMode = () => {
-    const mode = (playModeVal + 1) % 3
+    const mode = (playMode.value + 1) % 3
     store.dispatch('changeMode', mode)
   }
 

@@ -22,6 +22,11 @@ export function randomPlay ({ commit }, list) {
 }
 
 // 切换播放模式
-export function changeMode () {
-
+export function changeMode ({ commit, state, getters }, mode) {
+  if (mode === PLAY_MODE.random) {
+    commit('setPlaylist', shuffle(state.sequenceList))
+  } else {
+    commit('setPlaylist', state.sequenceList)
+  }
+  commit('setPlayMode', mode)
 }

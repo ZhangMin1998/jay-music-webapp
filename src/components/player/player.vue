@@ -70,6 +70,7 @@ export default {
     const playing = computed(() => store.state.playing) // 播放状态
     const currentIndex = computed(() => store.state.currentIndex) // 当前播放索引
     const playlist = computed(() => store.state.playlist) // 当前播放列表
+    const playMode = computed(() => store.state.playMode)
 
     // hooks
     const { modeIcon, changeMode } = useMode()
@@ -92,6 +93,9 @@ export default {
       if (!songReady.value) return
       const audioEl = audioRef.value
       newVal ? audioEl.play() : audioEl.pause()
+    })
+    watch(playMode, (newVal) => {
+      console.log(newVal)
     })
 
     // methods
