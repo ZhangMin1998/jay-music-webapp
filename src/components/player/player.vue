@@ -24,14 +24,14 @@
             <i class="iconfont mode icon-random"></i>
           </div>
           <div class="icon i-left" >
-            <i class="iconfont icon-prev"></i>
+            <i class="iconfont icon-prev" @click="prev"></i>
           </div>
           <div class="icon i-center" >
             <i :class="playIcon" @click="togglePlaying"></i>
             <!-- <i class="iconfont icon-bofangicon"></i> -->
           </div>
           <div class="icon i-right" >
-            <i class="iconfont icon-test"></i>
+            <i class="iconfont icon-test" @click="next"></i>
           </div>
           <div class="icon i-right">
             <i class="iconfont icon-like"></i>
@@ -57,9 +57,11 @@ export default {
     const audioRef = ref(null)
     // vuex
     const store = useStore()
-    const fullScreen = computed(() => store.state.fullScreen)
-    const currentSong = computed(() => store.getters.currentSong)
-    const playing = computed(() => store.state.playing)
+    const fullScreen = computed(() => store.state.fullScreen) // 是否全屏
+    const currentSong = computed(() => store.getters.currentSong) // 当前歌曲
+    const playing = computed(() => store.state.playing) // 播放状态
+    const currentIndex = computed(() => store.state.currentIndex) // 当前播放索引
+    const playlist = computed(() => store.state.playlist) // 当前播放列表
     // console.log(currentSong)
     const playIcon = computed(() => {
       return playing.value ? 'iconfont icon-stop' : 'iconfont icon-bofangicon'
@@ -94,7 +96,7 @@ export default {
       store.commit('setFullScreen', false)
     }
 
-    const togglePlaying = () => {
+    const togglePlaying = () => { // 点击播放暂停
       store.commit('setPlayingState', !playing.value)
     }
 
@@ -102,17 +104,62 @@ export default {
       store.commit('setPlayingState', false)
     }
 
+    const prev = () => {
+      const list = playlist.value
+      if (list.length === 1) {
+        // 如果列表只有一首歌，就循环播放
+        loop()
+      } else {
+        let index = currentIndex.value - 1
+        if (index === -1) {
+          index = list.length - 1
+        }
+        store.commit('setCurrentIndex', index)
+        if (!playing.value) {
+          store.commit('setPlayingState', true)
+        }
+      }
+    }
+
+    const next = () => {
+      const list = playlist.value
+      if (list.length === 1) {
+        // 如果列表只有一首歌，就循环播放
+        loop()
+      } else {
+        let index = currentIndex.value + 1
+        if (index === list.length) {
+          index = 0
+        }
+        store.commit('setCurrentIndex', index)
+        if (!playing.value) {
+          store.commit('setPlayingState', true)
+        }
+      }
+    }
+
+    const loop = () => {
+      const audioEl = audioRef.value
+      audioEl.currentTime = 0
+      audioEl.play()
+      store.commit('setPlayingState', true)
+    }
+
     return {
       audioRef,
       // vuex
       fullScreen,
       currentSong,
+      currentIndex,
+      playlist,
       playIcon,
 
       getUrl,
       goBack,
       togglePlaying,
-      pause
+      pause,
+      prev,
+      next
     }
   }
 }
