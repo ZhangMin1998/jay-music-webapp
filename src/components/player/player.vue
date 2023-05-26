@@ -23,14 +23,14 @@
           <div class="icon i-left" >
             <i class="iconfont mode icon-random"></i>
           </div>
-          <div class="icon i-left" >
+          <div class="icon i-left" :class="disableCls">
             <i class="iconfont icon-prev" @click="prev"></i>
           </div>
-          <div class="icon i-center" >
+          <div class="icon i-center" :class="disableCls">
             <i :class="playIcon" @click="togglePlaying"></i>
             <!-- <i class="iconfont icon-bofangicon"></i> -->
           </div>
-          <div class="icon i-right" >
+          <div class="icon i-right" :class="disableCls">
             <i class="iconfont icon-test" @click="next"></i>
           </div>
           <div class="icon i-right">
@@ -39,7 +39,12 @@
         </div>
       </div>
     </div>
-    <audio ref="audioRef" @pause="pause"></audio>
+    <audio
+      ref="audioRef"
+      @pause="pause"
+      @canplay="ready"
+      @error="error"
+    ></audio>
   </div>
 </template>
 
@@ -55,6 +60,7 @@ export default {
   },
   setup () {
     const audioRef = ref(null)
+    const songReady = ref(false)
     // vuex
     const store = useStore()
     const fullScreen = computed(() => store.state.fullScreen) // 是否全屏
@@ -66,13 +72,18 @@ export default {
     const playIcon = computed(() => {
       return playing.value ? 'iconfont icon-stop' : 'iconfont icon-bofangicon'
     })
+    const disableCls = computed(() => {
+      return songReady.value ? '' : 'disable'
+    })
 
     // watch
     watch(currentSong, (newVal) => {
       if (!newVal.id) return
+      songReady.value = false // 切歌的时候
       getUrl(newVal.id)
     })
     watch(playing, (newVal) => { // 播放 停止
+      if (!songReady.value) return
       const audioEl = audioRef.value
       newVal ? audioEl.play() : audioEl.pause()
     })
@@ -97,6 +108,7 @@ export default {
     }
 
     const togglePlaying = () => { // 点击播放暂停
+      if (!songReady.value) return
       store.commit('setPlayingState', !playing.value)
     }
 
@@ -106,6 +118,7 @@ export default {
 
     const prev = () => {
       const list = playlist.value
+      if (!songReady.value || !list.length) return
       if (list.length === 1) {
         // 如果列表只有一首歌，就循环播放
         loop()
@@ -123,6 +136,7 @@ export default {
 
     const next = () => {
       const list = playlist.value
+      if (!songReady.value || !list.length) return
       if (list.length === 1) {
         // 如果列表只有一首歌，就循环播放
         loop()
@@ -145,6 +159,15 @@ export default {
       store.commit('setPlayingState', true)
     }
 
+    const ready = () => {
+      if (songReady.value) return
+      songReady.value = true
+    }
+
+    const error = () => { // 有问题也能切换
+      songReady.value = true
+    }
+
     return {
       audioRef,
       // vuex
@@ -152,14 +175,18 @@ export default {
       currentSong,
       currentIndex,
       playlist,
+
       playIcon,
+      disableCls,
 
       getUrl,
       goBack,
       togglePlaying,
       pause,
       prev,
-      next
+      next,
+      ready,
+      error
     }
   }
 }
