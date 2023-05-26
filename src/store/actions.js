@@ -20,3 +20,8 @@ export function randomPlay ({ commit }, list) {
   commit('setPlaylist', shuffle(list))
   commit('setCurrentIndex', 0)
 }
+
+// 切换播放模式
+export function changeMode () {
+
+}

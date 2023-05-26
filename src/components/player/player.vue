@@ -21,7 +21,7 @@
         </div>
         <div class="operators">
           <div class="icon i-left" >
-            <i class="iconfont mode icon-random"></i>
+            <i class="iconfont mode" :class="modeIcon" @click="changeMode"></i>
           </div>
           <div class="icon i-left" :class="disableCls">
             <i class="iconfont icon-prev" @click="prev"></i>
@@ -52,6 +52,7 @@
 import { getSongsUrl } from '@/api/singer'
 import { useStore } from 'vuex'
 import { computed, watch, ref } from 'vue'
+import useMode from '@/components/player/use-mode'
 
 export default {
   name: 'p-layer',
@@ -61,6 +62,7 @@ export default {
   setup () {
     const audioRef = ref(null)
     const songReady = ref(false)
+
     // vuex
     const store = useStore()
     const fullScreen = computed(() => store.state.fullScreen) // 是否全屏
@@ -68,7 +70,11 @@ export default {
     const playing = computed(() => store.state.playing) // 播放状态
     const currentIndex = computed(() => store.state.currentIndex) // 当前播放索引
     const playlist = computed(() => store.state.playlist) // 当前播放列表
-    // console.log(currentSong)
+
+    // hooks
+    const { modeIcon, changeMode } = useMode()
+
+    // computed
     const playIcon = computed(() => {
       return playing.value ? 'iconfont icon-stop' : 'iconfont icon-bofangicon'
     })
@@ -178,6 +184,9 @@ export default {
 
       playIcon,
       disableCls,
+
+      modeIcon,
+      changeMode,
 
       getUrl,
       goBack,
