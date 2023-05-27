@@ -23,10 +23,15 @@ export function randomPlay ({ commit }, list) {
 
 // 切换播放模式
 export function changeMode ({ commit, state, getters }, mode) {
+  const currentId = getters.currentSong.id // 拿到当前播放的id
   if (mode === PLAY_MODE.random) {
     commit('setPlaylist', shuffle(state.sequenceList))
   } else {
     commit('setPlaylist', state.sequenceList)
   }
+  const index = state.playlist.findIndex(song => { // 在新播放列表中找到当前播放的索引
+    return currentId === song.id
+  })
+  commit('setCurrentIndex', index) // 保证在切换模式后新列表 还是播放当前歌曲
   commit('setPlayMode', mode)
 }
