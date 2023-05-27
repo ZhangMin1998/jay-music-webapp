@@ -2,13 +2,14 @@ import storage from 'good-storage'
 
 function inertArray(arr, val, compare, maxLen) {
   const index = arr.findIndex(compare)
-  if (index === 0) {
-    return
-  }
-  if (index > 0) {
-    arr.splice(index, 1)
-  }
-  arr.unshift(val)
+  // if (index === 0) {
+  //   return
+  // }
+  // if (index > 0) {
+  //   arr.splice(index, 1)
+  // }
+  if (index > -1) return
+  arr.unshift(val) // 插入
   if (maxLen && arr.length > maxLen) {
     arr.pop()
   }
@@ -22,7 +23,7 @@ function deleteFromArray(arr, compare) {
 }
 
 export function save(item, key, compare, maxLen) {
-  const items = storage.get(key, [])
+  const items = storage.get(key, []) // 默认空数组
   inertArray(items, item, compare, maxLen)
   storage.set(key, items)
   return items

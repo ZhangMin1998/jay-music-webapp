@@ -6,7 +6,9 @@ const state = {
   playing: false, // 播放状态
   playMode: PLAY_MODE.sequence, // 播放模式
   currentIndex: 0, // 当前播放索引
-  fullScreen: false // 全屏播放还是收缩
+  fullScreen: false, // 全屏播放还是收缩
+
+  favoriteList: [] // 收藏歌曲列表
 }
 
 export default state

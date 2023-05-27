@@ -34,7 +34,7 @@
             <i class="iconfont icon-test" @click="next"></i>
           </div>
           <div class="icon i-right">
-            <i class="iconfont icon-like"></i>
+            <i class="iconfont" :class="getFavoriteIcon(currentSong)"></i>
           </div>
         </div>
       </div>
@@ -53,6 +53,7 @@ import { getSongsUrl } from '@/api/singer'
 import { useStore } from 'vuex'
 import { computed, watch, ref } from 'vue'
 import useMode from '@/components/player/use-mode'
+import useFavorite from '@/components/player/use-favorite'
 
 export default {
   name: 'p-layer',
@@ -74,6 +75,7 @@ export default {
 
     // hooks
     const { modeIcon, changeMode } = useMode()
+    const { getFavoriteIcon, toggleFavorite } = useFavorite()
 
     // computed
     const playIcon = computed(() => {
@@ -191,6 +193,8 @@ export default {
 
       modeIcon,
       changeMode,
+      getFavoriteIcon,
+      toggleFavorite,
 
       getUrl,
       goBack,
