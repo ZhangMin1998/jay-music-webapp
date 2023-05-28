@@ -34,7 +34,7 @@
             <i class="iconfont icon-test" @click="next"></i>
           </div>
           <div class="icon i-right">
-            <i class="iconfont" :class="getFavoriteIcon(currentSong)"></i>
+            <i class="iconfont" :class="getFavoriteIcon(currentSong)" @click="toggleFavorite(currentSong)"></i>
           </div>
         </div>
       </div>
