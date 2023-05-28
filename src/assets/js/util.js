@@ -21,8 +21,8 @@ function swap (arr, i, j) {
 
 // 格式化时间
 export function formatTime (interval) {
-  interval = interval | 0
-  const minute = ((interval / 60 | 0) + '').padStart(2, '0')
+  interval = (interval/1000) | 0 // 向下取整
+  const minute = ((interval / 60 | 0) + '').padStart(2, '0') // 保持2位，不足2位填充0
   const second = (interval % 60 + '').padStart(2, '0')
   return `${minute}:${second}`
 }

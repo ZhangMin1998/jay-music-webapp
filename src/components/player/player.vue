@@ -16,7 +16,14 @@
       </div>
       <!-- bottom -->
       <div class="bottom">
-        <div class="progress-bar-wrapper">
+        <div class="progress-wrapper">
+          <span class="time time_l">{{ formatTime1(currentTime) }}</span>
+          <div class="progress_bar_wrapper">
+            <progress-bar
+              :progress="progress"
+            ></progress-bar>
+          </div>
+          <span class="time time_r">{{ formatTime2(currentSongTime) }}</span>
 
         </div>
         <div class="operators">
@@ -44,6 +51,7 @@
       @pause="pause"
       @canplay="ready"
       @error="error"
+      @timeupdate="updateTime"
     ></audio>
   </div>
 </template>
@@ -54,15 +62,19 @@ import { useStore } from 'vuex'
 import { computed, watch, ref } from 'vue'
 import useMode from '@/components/player/use-mode'
 import useFavorite from '@/components/player/use-favorite'
+import progressBar from '@/components/player/progress-bar'
+// import { formatTime } from '@/assets/js/util'
 
 export default {
   name: 'p-layer',
   components: {
-
+    progressBar
   },
   setup () {
     const audioRef = ref(null)
     const songReady = ref(false)
+    const currentTime = ref(0) // 当前歌曲播放时长
+    const currentSongTime = ref(0) // 当前歌曲播放总时长
 
     // vuex
     const store = useStore()
@@ -84,10 +96,15 @@ export default {
     const disableCls = computed(() => {
       return songReady.value ? '' : 'disable'
     })
+    const progress = computed(() => {
+      return currentTime.value / currentSong.time
+    })
 
     // watch
     watch(currentSong, (newVal) => {
       if (!newVal.id) return
+      // console.log(newVal)
+      currentTime.value = 0 // 播放时长计为0
       songReady.value = false // 切歌的时候
       getUrl(newVal.id)
     })
@@ -104,9 +121,11 @@ export default {
     const getUrl = (id) => {
       getSongsUrl(id).then(res => {
         if (res.code === 200 && res.data.length) {
-          // console.log(currentSong)
+          console.log(currentSong)
           console.log(res.data[0])
+
           const songData = res.data[0]
+          currentSongTime.value = songData.time
 
           const audioEl = audioRef.value
           audioEl.src = songData.url
@@ -180,8 +199,32 @@ export default {
       songReady.value = true
     }
 
+    const updateTime = (e) => {
+      currentTime.value = e.target.currentTime
+    }
+    const formatTime1 = (interval) => {
+      interval = interval | 0 // 向下取整
+      let minute = ((interval / 60 | 0) + '').padStart(2, '0') // 保持2位，不足2位填充0
+      let second = interval % 60
+      if (second < 10) {
+        second = '0' + second
+      }
+      return minute + ':' + second
+    }
+    const formatTime2 = (interval) => {
+      interval = (interval / 1000) | 0 // 向下取整
+      let minute = ((interval / 60 | 0) + '').padStart(2, '0') // 保持2位，不足2位填充0
+      let second = interval % 60
+      if (second < 10) {
+        second = '0' + second
+      }
+      return minute + ':' + second
+    }
+
     return {
       audioRef,
+      currentTime,
+      currentSongTime,
       // vuex
       fullScreen,
       currentSong,
@@ -190,6 +233,7 @@ export default {
 
       playIcon,
       disableCls,
+      progress,
 
       modeIcon,
       changeMode,
@@ -203,7 +247,10 @@ export default {
       prev,
       next,
       ready,
-      error
+      error,
+      updateTime,
+      formatTime1,
+      formatTime2
     }
   }
 }
@@ -285,7 +332,28 @@ export default {
       bottom: 50px;
       width: 100%;
       .progress-wrapper{
-
+        display: flex;
+        align-items: center;
+        width: 80%;
+        margin: 0 auto;
+        padding: 10px 0;
+        .time{
+          width: 30px;
+          line-height: 30px;
+          flex: 0 0 30px;
+          color: $color-text-l;
+          font-size: $font-size-small;
+        }
+        &.time_l{
+          text-align: left;
+        }
+        &.time_r{
+          text-align: right;
+          color: $color-text-gg;
+        }
+        .progress_bar_wrapper{
+          flex: 1;
+        }
       }
       .operators{
         display: flex;
