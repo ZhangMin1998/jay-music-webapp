@@ -3,7 +3,7 @@
     <div class="normal_player" v-show="fullScreen">
       <div class="background">
         <div class="filter"></div>
-        <img :src="currentSong.al.picUrl" v-if="currentSong.al"/>
+        <img :src="currentSongPicUrl" v-if="currentSong.al"/>
       </div>
       <!-- top -->
       <div class="top">
@@ -13,6 +13,16 @@
         </div>
         <h1 class="title">{{ currentSong.name }}</h1>
         <h2 class="subtitle" v-if="currentSong.al">{{ currentSong.al.name }}</h2>
+      </div>
+      <div class="middle">
+        <div class="middle_l">
+          <div class="cd_wrapper">
+            <div class="cd">
+              <img class="image" ref="image" :src="currentSongPicUrl" />
+            </div>
+          </div>
+        </div>
+        <div class="middle_r"></div>
       </div>
       <!-- bottom -->
       <div class="bottom">
@@ -79,6 +89,7 @@ export default {
     const songReady = ref(false)
     const currentTime = ref(0) // 当前歌曲播放时长
     const currentSongTime = ref(0) // 当前歌曲播放总时长
+    const currentSongPicUrl = ref('')
     let progressChanging = false
 
     // vuex
@@ -108,7 +119,7 @@ export default {
     // watch
     watch(currentSong, (newVal) => {
       if (!newVal.id) return
-      // console.log(newVal)
+      console.log(newVal)
       currentTime.value = 0 // 播放时长计为0
       songReady.value = false // 切歌的时候
       getUrl(newVal.id)
@@ -126,11 +137,12 @@ export default {
     const getUrl = (id) => {
       getSongsUrl(id).then(res => {
         if (res.code === 200 && res.data.length) {
-          // console.log(currentSong)
+          console.log(currentSong)
           // console.log(res.data[0])
 
           const songData = res.data[0]
           currentSongTime.value = songData.time
+          currentSongPicUrl.value = currentSong.value.al.picUrl
 
           const audioEl = audioRef.value
           audioEl.src = songData.url
@@ -252,6 +264,7 @@ export default {
       audioRef,
       currentTime,
       currentSongTime,
+      currentSongPicUrl,
       // vuex
       fullScreen,
       currentSong,
@@ -355,6 +368,51 @@ export default {
         font-size: $font-size-medium;
         // color: $color-text;
         color: $color-theme-l;
+      }
+    }
+    .middle{
+      width: 100%;
+      position: fixed;
+      top: 80px;
+      bottom: 170px;
+      white-space: nowrap;
+      font-size: 0;
+      display: flex;
+      align-items: center;
+      .middle_l{
+        width: 100%;
+        height: 0;
+        padding-top: 80%;
+        display: inline-block;
+        vertical-align: top;
+        position: relative;
+        .cd_wrapper{
+          width: 80%;
+          height: 100%;
+          box-sizing: border-box;
+          position: absolute;
+          left: 10%;
+          top: 0;
+          .cd{
+            width: 100%;
+            height: 100%;
+            // box-sizing: border-box;
+            // border: 15px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            .image{
+              position: absolute;
+              left: 0;
+              top: 0;
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
+              border: 10px solid rgba(255, 255, 255, 0.1);
+            }
+          }
+        }
+      }
+      .middle_r{
+
       }
     }
     .bottom{
