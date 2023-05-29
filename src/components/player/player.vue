@@ -17,8 +17,9 @@
       <div class="middle">
         <div class="middle_l">
           <div class="cd_wrapper">
+            <!-- <img class="image" ref="image" :src="currentSongPicUrl" /> -->
             <div class="cd">
-              <img class="image" ref="image" :src="currentSongPicUrl" />
+              <img class="image paly" ref="image" :src="currentSongPicUrl" />
             </div>
           </div>
         </div>
@@ -372,43 +373,48 @@ export default {
     }
     .middle{
       width: 100%;
-      height: 0;
+      // height: 100%;
       position: fixed;
       top: 80px;
-      // bottom: 170px;
+      bottom: 170px;
       // white-space: nowrap;
       // font-size: 0;
       display: flex;
       align-items: center;
+      // background-color: pink;
+      // margin: 0 auto;
       .middle_l{
-        width: 100%;
-        // height: 0;
-        padding-top: 80%;
-        // display: inline-block;
-        // vertical-align: top;
+        display: inline-block;
+        vertical-align: top;
         position: relative;
-        .cd_wrapper{
+        width: 100%;
+        height: 0;
+        padding-top: 80%;
+        .cd_wrapper {
+          position: absolute;
+          left: 10%;
+          top: 0;
           width: 80%;
           height: 100%;
-          box-sizing: border-box;
-          margin: 0 auto;
-          // position: absolute;
-          // left: 10%;
-          // top: 0;
-          .cd{
+          .cd {
             width: 100%;
             height: 100%;
-            // box-sizing: border-box;
-            // border: 15px solid rgba(255, 255, 255, 0.1);
-            // border-radius: 50%;
-            .image{
+            box-sizing: border-box;
+            border: 15px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            // &.play {
+            //   animation: rotate 20s linear infinite;
+            // }
+            // &.pause {
+            //   animation-play-state: paused;
+            // }
+            .image {
               position: absolute;
               left: 0;
               top: 0;
               width: 100%;
               height: 100%;
               border-radius: 50%;
-              border: 10px solid rgba(255, 255, 255, 0.1);
             }
           }
         }
@@ -478,6 +484,14 @@ export default {
           }
         }
       }
+    }
+  }
+  @keyframes rotate {
+    0% {
+      transform: rotate(0);
+    }
+    100% {
+      transform: rotate(360deg);
     }
   }
 }
