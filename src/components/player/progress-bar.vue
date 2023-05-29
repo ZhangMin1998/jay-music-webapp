@@ -1,6 +1,6 @@
 <template>
   <div class="progress_bar" ref="progressBar">
-    <div class="bar_inner">
+    <div class="bar_inner" @click="onClick">
       <div class="progress" ref="progress" :style="progressStyle"></div>
       <div
         class="progress_btn_wrapper"
@@ -50,14 +50,15 @@ export default {
     setOffset (progress) {
       const barWidth = this.$el.clientWidth - progressBtnWidth // this.$el 是 progress_bar
       this.offset = barWidth * progress
+      // console.log(barWidth, progress, this.offset)
     },
     onTouchStart (e) {
-      console.log('onTouchStart', e.touches[0])
+      // console.log('onTouchStart', e.touches[0])
       this.touch.x1 = e.touches[0].pageX
       this.touch.beginWidth = this.$refs.progress.clientWidth // 红色进度条-初始宽度
     },
     onTouchMove (e) {
-      console.log('onTouchMove')
+      // console.log('onTouchMove')
       const delta = e.touches[0].pageX - this.touch.x1 // 拿到偏移值
       const tempWidth = this.touch.beginWidth + delta // 移动后红色进度条宽度
       const barWidth = this.$el.clientWidth - progressBtnWidth // 红色进度条最大值
@@ -67,9 +68,18 @@ export default {
       this.$emit('progress-changing', progress)
     },
     onTouchEnd (e) {
-      console.log('onTouchEnd')
+      // console.log('onTouchEnd')
       const barWidth = this.$el.clientWidth - progressBtnWidth // 红色进度条最大值
       const progress = this.$refs.progress.clientWidth / barWidth
+      this.$emit('progress-changed', progress)
+    },
+    onClick (e) {
+      // console.log(this.$el.getBoundingClientRect(), e.pageX)
+      const rect = this.$el.getBoundingClientRect()
+      const offsetWidth = e.pageX - rect.left // 点击处到刻度0的距离
+      const barWidth = this.$el.clientWidth - progressBtnWidth // 红色进度条最大值
+      // console.log(offsetWidth)
+      const progress = offsetWidth / barWidth
       this.$emit('progress-changed', progress)
     }
   }

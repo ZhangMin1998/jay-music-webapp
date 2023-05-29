@@ -100,7 +100,7 @@ export default {
       return songReady.value ? '' : 'disable'
     })
     const progress = computed(() => {
-      return currentTime.value / currentSong.value.time
+      return currentTime.value / (currentSongTime.value / 1000)
     })
 
     // watch
@@ -124,8 +124,8 @@ export default {
     const getUrl = (id) => {
       getSongsUrl(id).then(res => {
         if (res.code === 200 && res.data.length) {
-          console.log(currentSong)
-          console.log(res.data[0])
+          // console.log(currentSong)
+          // console.log(res.data[0])
 
           const songData = res.data[0]
           currentSongTime.value = songData.time
