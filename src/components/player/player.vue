@@ -372,33 +372,35 @@ export default {
     }
     .middle{
       width: 100%;
+      height: 0;
       position: fixed;
       top: 80px;
-      bottom: 170px;
-      white-space: nowrap;
-      font-size: 0;
+      // bottom: 170px;
+      // white-space: nowrap;
+      // font-size: 0;
       display: flex;
       align-items: center;
       .middle_l{
         width: 100%;
-        height: 0;
+        // height: 0;
         padding-top: 80%;
-        display: inline-block;
-        vertical-align: top;
+        // display: inline-block;
+        // vertical-align: top;
         position: relative;
         .cd_wrapper{
           width: 80%;
           height: 100%;
           box-sizing: border-box;
-          position: absolute;
-          left: 10%;
-          top: 0;
+          margin: 0 auto;
+          // position: absolute;
+          // left: 10%;
+          // top: 0;
           .cd{
             width: 100%;
             height: 100%;
             // box-sizing: border-box;
             // border: 15px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
+            // border-radius: 50%;
             .image{
               position: absolute;
               left: 0;
