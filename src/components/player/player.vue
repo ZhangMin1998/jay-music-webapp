@@ -54,6 +54,7 @@
       @canplay="ready"
       @error="error"
       @timeupdate="updateTime"
+      @ended="end"
     ></audio>
   </div>
 </template>
@@ -65,6 +66,7 @@ import { computed, watch, ref } from 'vue'
 import useMode from '@/components/player/use-mode'
 import useFavorite from '@/components/player/use-favorite'
 import progressBar from '@/components/player/progress-bar'
+import { PLAY_MODE } from '@/assets/js/constant'
 // import { formatTime } from '@/assets/js/util'
 
 export default {
@@ -237,6 +239,14 @@ export default {
         store.commit('setPlayingState', true)
       }
     }
+    const end = () => {
+      currentTime.value = 0
+      if (playMode.value === PLAY_MODE.loop) {
+        loop()
+      } else {
+        next()
+      }
+    }
 
     return {
       audioRef,
@@ -269,7 +279,8 @@ export default {
       formatTime1,
       formatTime2,
       onProgressChanging,
-      onProgressChanged
+      onProgressChanged,
+      end
     }
   }
 }
