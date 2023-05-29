@@ -21,6 +21,8 @@
           <div class="progress_bar_wrapper">
             <progress-bar
               :progress="progress"
+              @progress-changing="onProgressChanging"
+              @progress-changed="onProgressChanged"
             ></progress-bar>
           </div>
           <span class="time time_r">{{ formatTime2(currentSongTime) }}</span>
@@ -75,6 +77,7 @@ export default {
     const songReady = ref(false)
     const currentTime = ref(0) // 当前歌曲播放时长
     const currentSongTime = ref(0) // 当前歌曲播放总时长
+    let progressChanging = false
 
     // vuex
     const store = useStore()
@@ -97,7 +100,7 @@ export default {
       return songReady.value ? '' : 'disable'
     })
     const progress = computed(() => {
-      return currentTime.value / currentSong.time
+      return currentTime.value / currentSong.value.time
     })
 
     // watch
@@ -200,11 +203,13 @@ export default {
     }
 
     const updateTime = (e) => {
-      currentTime.value = e.target.currentTime
+      if (!progressChanging) {
+        currentTime.value = e.target.currentTime
+      }
     }
     const formatTime1 = (interval) => {
       interval = interval | 0 // 向下取整
-      let minute = ((interval / 60 | 0) + '').padStart(2, '0') // 保持2位，不足2位填充0
+      const minute = ((interval / 60 | 0) + '').padStart(2, '0') // 保持2位，不足2位填充0
       let second = interval % 60
       if (second < 10) {
         second = '0' + second
@@ -213,12 +218,24 @@ export default {
     }
     const formatTime2 = (interval) => {
       interval = (interval / 1000) | 0 // 向下取整
-      let minute = ((interval / 60 | 0) + '').padStart(2, '0') // 保持2位，不足2位填充0
+      const minute = ((interval / 60 | 0) + '').padStart(2, '0') // 保持2位，不足2位填充0
       let second = interval % 60
       if (second < 10) {
         second = '0' + second
       }
       return minute + ':' + second
+    }
+    const onProgressChanging = (progress) => {
+      progressChanging = true
+      currentTime.value = progress * currentSongTime.value / 1000
+    }
+    const onProgressChanged = (progress) => { // 这里真正修改
+      progressChanging = false
+      audioRef.value.currentTime = currentTime.value = progress * currentSongTime.value / 1000
+      // audioRef.value.play()
+      if (!playing.value) {
+        store.commit('setPlayingState', true)
+      }
     }
 
     return {
@@ -250,7 +267,9 @@ export default {
       error,
       updateTime,
       formatTime1,
-      formatTime2
+      formatTime2,
+      onProgressChanging,
+      onProgressChanged
     }
   }
 }

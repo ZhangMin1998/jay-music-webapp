@@ -27,7 +27,7 @@ export default function useFavorite () {
     }
     store.commit('setFavoriteList', list)
 
-    function compare(item) {
+    function compare (item) {
       return item.id === song.id
     }
   }

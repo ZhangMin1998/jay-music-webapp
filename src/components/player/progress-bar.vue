@@ -1,17 +1,15 @@
 <template>
   <div class="progress_bar" ref="progressBar">
     <div class="bar_inner">
-      <div class="progress" ref="progress" :style="progressStyle">
-
-      </div>
-
+      <div class="progress" ref="progress" :style="progressStyle"></div>
       <div
         class="progress_btn_wrapper"
         :style="btnStyle"
+        @touchstart.prevent="onTouchStart"
+        @touchmove.prevent="onTouchMove"
+        @touchend.prevent="onTouchEnd"
       >
-        <div class="progress_btn">
-
-        </div>
+        <div class="progress_btn"></div>
       </div>
     </div>
   </div>
@@ -28,6 +26,7 @@ export default {
       default: 0
     }
   },
+  emits: ['progress-changing', 'progress-changed'],
   computed: {
     progressStyle () {
       return `width: ${this.offset}px`
@@ -37,19 +36,41 @@ export default {
     }
   },
   watch: {
-    progress(newVal) {
+    progress (newVal) {
       this.setOffset(newVal)
     }
   },
   data () {
     return {
-      offset: 0
+      offset: 0,
+      touch: {}
     }
   },
   methods: {
     setOffset (progress) {
       const barWidth = this.$el.clientWidth - progressBtnWidth // this.$el 是 progress_bar
       this.offset = barWidth * progress
+    },
+    onTouchStart (e) {
+      console.log('onTouchStart', e.touches[0])
+      this.touch.x1 = e.touches[0].pageX
+      this.touch.beginWidth = this.$refs.progress.clientWidth // 红色进度条-初始宽度
+    },
+    onTouchMove (e) {
+      console.log('onTouchMove')
+      const delta = e.touches[0].pageX - this.touch.x1 // 拿到偏移值
+      const tempWidth = this.touch.beginWidth + delta // 移动后红色进度条宽度
+      const barWidth = this.$el.clientWidth - progressBtnWidth // 红色进度条最大值
+      const progress = Math.min(1, Math.max(tempWidth / barWidth, 0))
+      this.offset = barWidth * progress
+
+      this.$emit('progress-changing', progress)
+    },
+    onTouchEnd (e) {
+      console.log('onTouchEnd')
+      const barWidth = this.$el.clientWidth - progressBtnWidth // 红色进度条最大值
+      const progress = this.$refs.progress.clientWidth / barWidth
+      this.$emit('progress-changed', progress)
     }
   }
 }
