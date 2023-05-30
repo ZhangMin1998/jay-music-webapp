@@ -79,6 +79,7 @@ import useMode from '@/components/player/use-mode'
 import useFavorite from '@/components/player/use-favorite'
 import progressBar from '@/components/player/progress-bar'
 import useCd from '@/components/player/use-cd'
+import useLyric from '@/components/player/use-Lyric'
 // import { formatTime } from '@/assets/js/util'
 
 export default {
@@ -107,6 +108,7 @@ export default {
     const { modeIcon, changeMode } = useMode()
     const { getFavoriteIcon, toggleFavorite } = useFavorite()
     const { cdRef, imageRef, cdClass } = useCd()
+    const { aaa } = useLyric()
 
     // computed
     const playIcon = computed(() => {
@@ -299,7 +301,8 @@ export default {
       formatTime2,
       onProgressChanging,
       onProgressChanged,
-      end
+      end,
+      aaa
     }
   }
 }

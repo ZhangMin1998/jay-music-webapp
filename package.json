@@ -14,6 +14,7 @@
     "axios": "^1.4.0",
     "core-js": "^3.8.3",
     "good-storage": "^1.1.1",
+    "lyric-parser": "^1.0.1",
     "pinyin": "^2.11.2",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
