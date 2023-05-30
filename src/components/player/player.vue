@@ -15,7 +15,7 @@
         <h2 class="subtitle" v-if="currentSong.al">{{ currentSong.al.name }}</h2>
       </div>
       <div class="middle">
-        <div class="middle_l">
+        <div class="middle_l" v-if="false">
           <div class="cd_wrapper">
             <!-- <img class="image" ref="image" :src="currentSongPicUrl" /> -->
             <div ref="cdRef" class="cd" :class="cdClass">
@@ -23,7 +23,18 @@
             </div>
           </div>
         </div>
-        <div class="middle_r"></div>
+        <scroll ref="lyricScrollRef" class="middle_r">
+          <div class="lyric_wrapper">
+            <div ref="lyricListRef" v-if="currentLyric">
+              <p class="text" v-for="(line, index) in currentLyric" :key="index">
+                {{line.txt}}
+              </p>
+            </div>
+            <div class="pure-music">
+
+            </div>
+          </div>
+        </scroll>
       </div>
       <!-- bottom -->
       <div class="bottom">
@@ -71,6 +82,7 @@
 </template>
 
 <script>
+import Scroll from '@/base/Scroll/Scroll'
 import { getSongsUrl } from '@/api/singer'
 import { useStore } from 'vuex'
 import { computed, watch, ref } from 'vue'
@@ -85,7 +97,8 @@ import useLyric from '@/components/player/use-Lyric'
 export default {
   name: 'p-layer',
   components: {
-    progressBar
+    progressBar,
+    Scroll
   },
   setup () {
     const audioRef = ref(null)
@@ -108,7 +121,7 @@ export default {
     const { modeIcon, changeMode } = useMode()
     const { getFavoriteIcon, toggleFavorite } = useFavorite()
     const { cdRef, imageRef, cdClass } = useCd()
-    const { aaa } = useLyric()
+    const { currentLyric, currentLineNum } = useLyric()
 
     // computed
     const playIcon = computed(() => {
@@ -287,6 +300,8 @@ export default {
       cdRef,
       imageRef,
       cdClass,
+      currentLyric,
+      currentLineNum,
 
       getUrl,
       goBack,
@@ -301,8 +316,7 @@ export default {
       formatTime2,
       onProgressChanging,
       onProgressChanged,
-      end,
-      aaa
+      end
     }
   }
 }
@@ -385,8 +399,8 @@ export default {
       position: fixed;
       top: 80px;
       bottom: 170px;
-      // font-size: 0;
-      // white-space: nowrap;
+      font-size: 0;
+      white-space: nowrap;
       // background: pink;
       // display: flex;
       // align-items: center;
@@ -427,7 +441,30 @@ export default {
         }
       }
       .middle_r{
-
+        display: inline-block;
+        vertical-align: top;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        // position: absolute;
+        // top: 0;
+        .lyric_wrapper{
+          width: 80%;
+          margin: 0 auto;
+          overflow: hidden;
+          text-align: center;
+          .text{
+            line-height: 32px;
+            color: $color-text-ggg;
+            font-size: $font-size-medium;
+          }
+          .pure-music{
+            padding-top: 50%;
+            line-height: 32px;
+            color: $color-text-ggg;
+            font-size: $font-size-medium;
+          }
+        }
       }
     }
     .bottom{
