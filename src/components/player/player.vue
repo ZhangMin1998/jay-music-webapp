@@ -18,8 +18,8 @@
         <div class="middle_l">
           <div class="cd_wrapper">
             <!-- <img class="image" ref="image" :src="currentSongPicUrl" /> -->
-            <div class="cd">
-              <img class="image paly" ref="image" :src="currentSongPicUrl" />
+            <div ref="cdRef" class="cd" :class="cdClass">
+              <img class="image" ref="imageRef" :src="currentSongPicUrl" />
             </div>
           </div>
         </div>
@@ -74,10 +74,11 @@
 import { getSongsUrl } from '@/api/singer'
 import { useStore } from 'vuex'
 import { computed, watch, ref } from 'vue'
+import { PLAY_MODE } from '@/assets/js/constant'
 import useMode from '@/components/player/use-mode'
 import useFavorite from '@/components/player/use-favorite'
 import progressBar from '@/components/player/progress-bar'
-import { PLAY_MODE } from '@/assets/js/constant'
+import useCd from '@/components/player/use-cd'
 // import { formatTime } from '@/assets/js/util'
 
 export default {
@@ -105,6 +106,7 @@ export default {
     // hooks
     const { modeIcon, changeMode } = useMode()
     const { getFavoriteIcon, toggleFavorite } = useFavorite()
+    const { cdRef, imageRef, cdClass } = useCd()
 
     // computed
     const playIcon = computed(() => {
@@ -280,6 +282,9 @@ export default {
       changeMode,
       getFavoriteIcon,
       toggleFavorite,
+      cdRef,
+      imageRef,
+      cdClass,
 
       getUrl,
       goBack,
@@ -327,6 +332,7 @@ export default {
         opacity: 0.2;
       }
       img {
+        object-fit: cover;
         width: 100%;
         height: 100%;
       }
@@ -373,19 +379,15 @@ export default {
     }
     .middle{
       width: 100%;
-      // height: 100%;
       position: fixed;
       top: 80px;
       bottom: 170px;
-      // white-space: nowrap;
       // font-size: 0;
-      display: flex;
-      align-items: center;
-      // background-color: pink;
-      // margin: 0 auto;
+      // white-space: nowrap;
+      // background: pink;
+      // display: flex;
+      // align-items: center;
       .middle_l{
-        display: inline-block;
-        vertical-align: top;
         position: relative;
         width: 100%;
         height: 0;
@@ -393,28 +395,30 @@ export default {
         .cd_wrapper {
           position: absolute;
           left: 10%;
-          top: 0;
+          top: 15%;
           width: 80%;
           height: 100%;
+          box-sizing: border-box;
           .cd {
             width: 100%;
             height: 100%;
-            box-sizing: border-box;
-            border: 15px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            // &.play {
-            //   animation: rotate 20s linear infinite;
-            // }
-            // &.pause {
-            //   animation-play-state: paused;
-            // }
+            // box-sizing: border-box;
+            // border: 15px solid rgba(255, 255, 255, 0.1);
+            // border-radius: 50%;
+            &.play {
+              animation: rotate 20s linear infinite;
+            }
+            &.pause {
+              animation-play-state: paused;
+            }
             .image {
               position: absolute;
               left: 0;
               top: 0;
-              width: 100%;
-              height: 100%;
+              width: 90%;
+              height: 90%;
               border-radius: 50%;
+              border: 15px solid rgba(255, 255, 255, 0.1);
             }
           }
         }
