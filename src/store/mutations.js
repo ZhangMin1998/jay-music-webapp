@@ -29,8 +29,9 @@ const mutations = {
   },
   // 保存歌词
   addSongLyric(state, {song, lyric}) {
+    // console.log('song', song)
     state.sequenceList.map(item => {
-      if (song.id === item.id) {
+      if (song.value.id === item.id) {
         item.lyric = lyric
       }
       return item

@@ -8,33 +8,30 @@ export default function useLyric () {
   const currentLineNum = ref(0) // 当前
 
   const lyricData = ref('')
-  const aaa = 1
   const store = useStore()
   const currentSong = computed(() => store.getters.currentSong)
   watch(currentSong, async newVal => {
     if (!newVal.id) return
 
     if (!newVal.lyric) {
-      const lyric = await getSongLyric(newVal.id)
-      lyricData.value = lyric.lrc.lyric
-      // console.log('lyric', lyric.lrc.lyric)
+      const result = await getSongLyric(newVal.id)
+      lyricData.value = result.lrc.lyric
+
       store.commit('addSongLyric', {
         song: currentSong,
         lyric: lyricData
       })
-      console.log(currentSong.value.lyric)
     } else {
       // console.log(currentSong.value.lyric)
       lyricData.value = currentSong.value.lyric
     }
-    console.log(currentSong.value, lyricData)
-    // if (currentSong.value.lyric !== lyricData) { // 防止快速切换currentSong 歌词调用接口慢
-    //   return
-    // }
+    // console.log(currentSong.value, lyricData)
+    if (currentSong.value.lyric !== lyricData.value) { // 防止快速切换currentSong 歌词调用接口慢
+      return
+    }
 
-    // currentLyric.value = new Lyric(lyricData, handleLyric)
-    // console.log(currentLyric.value)
-    console.log(currentSong.value.lyric)
+    currentLyric.value = new Lyric(lyricData.value, handleLyric)
+    // console.log('currentLyric.value', currentLyric.value)
   })
 
   const handleLyric = ({lineNum, txt }) => {

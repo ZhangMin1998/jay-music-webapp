@@ -26,7 +26,7 @@
         <scroll ref="lyricScrollRef" class="middle_r">
           <div class="lyric_wrapper">
             <div ref="lyricListRef" v-if="currentLyric">
-              <p class="text" v-for="(line, index) in currentLyric" :key="index">
+              <p class="text" v-for="(line, index) in currentLyric.lines" :key="index">
                 {{line.txt}}
               </p>
             </div>
