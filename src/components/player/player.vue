@@ -121,7 +121,7 @@ export default {
     const { modeIcon, changeMode } = useMode()
     const { getFavoriteIcon, toggleFavorite } = useFavorite()
     const { cdRef, imageRef, cdClass } = useCd()
-    const { currentLyric, currentLineNum } = useLyric()
+    const { currentLyric, currentLineNum, playLyric } = useLyric({ songReady, currentTime })
 
     // computed
     const playIcon = computed(() => {
@@ -228,6 +228,7 @@ export default {
     const ready = () => {
       if (songReady.value) return
       songReady.value = true
+      playLyric() // 如果歌词先到 songReady未触发  那就等songReady触发后执行
     }
 
     const error = () => { // 有问题也能切换
