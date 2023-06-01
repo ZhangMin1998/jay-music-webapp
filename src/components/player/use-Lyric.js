@@ -1,6 +1,6 @@
-import { useStore } from "vuex"
-import { getSongLyric } from "@/api/song"
-import { computed, watch, ref } from "vue"
+import { useStore } from 'vuex'
+import { getSongLyric } from '@/api/song'
+import { computed, watch, ref } from 'vue'
 import Lyric from 'lyric-parser'
 
 export default function useLyric ({ songReady, currentTime }) {
@@ -29,7 +29,7 @@ export default function useLyric ({ songReady, currentTime }) {
     }
 
     currentLyric.value = new Lyric(lyricData.value, handleLyric)
-    // console.log(currentLyric.value)
+    console.log(currentLyric.value)
     if (songReady.value) { // player.vue页面songReady执行了再执行playLyric 但是如果歌词为空  也不执行 所以这里执行下
       playLyric()
     }
@@ -39,12 +39,12 @@ export default function useLyric ({ songReady, currentTime }) {
   const playLyric = () => {
     const currentLyricVal = currentLyric.value
     if (currentLyricVal) {
-      currentLyricVal.seek(currentTime.value * 1000)
+      currentLyricVal.seek(currentTime.value * 1000) // ???
     }
   }
 
   // 歌词格式化
-  const handleLyric = ({lineNum, txt }) => {
+  const handleLyric = ({ lineNum }) => {
     currentLineNum.value = lineNum
   }
 

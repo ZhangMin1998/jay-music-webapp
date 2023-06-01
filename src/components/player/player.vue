@@ -14,6 +14,7 @@
         <h1 class="title">{{ currentSong.name }}</h1>
         <h2 class="subtitle" v-if="currentSong.al">{{ currentSong.al.name }}</h2>
       </div>
+      <!-- middle -->
       <div class="middle">
         <div class="middle_l" v-if="false">
           <div class="cd_wrapper">
@@ -26,13 +27,16 @@
         <scroll ref="lyricScrollRef" class="middle_r">
           <div class="lyric_wrapper">
             <div ref="lyricListRef" v-if="currentLyric">
-              <p class="text" v-for="(line, index) in currentLyric.lines" :key="index">
+              <p
+                class="text"
+                :class="{ 'current': currentLineNum === index }"
+                v-for="(line, index) in currentLyric.lines"
+                :key="index"
+              >
                 {{line.txt}}
               </p>
             </div>
-            <div class="pure-music">
-
-            </div>
+            <!-- <div class="pure-music"></div> -->
           </div>
         </scroll>
       </div>
@@ -458,6 +462,9 @@ export default {
             line-height: 32px;
             color: $color-text-ggg;
             font-size: $font-size-medium;
+            &.current {
+              color: #FFF;
+            }
           }
           .pure-music{
             padding-top: 50%;
