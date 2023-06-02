@@ -125,7 +125,7 @@ export default {
     const { modeIcon, changeMode } = useMode()
     const { getFavoriteIcon, toggleFavorite } = useFavorite()
     const { cdRef, imageRef, cdClass } = useCd()
-    const { currentLyric, currentLineNum, playLyric } = useLyric({ songReady, currentTime })
+    const { currentLyric, currentLineNum, playLyric, lyricScrollRef, lyricListRef } = useLyric({ songReady, currentTime })
 
     // computed
     const playIcon = computed(() => {
@@ -307,6 +307,8 @@ export default {
       cdClass,
       currentLyric,
       currentLineNum,
+      lyricScrollRef,
+      lyricListRef,
 
       getUrl,
       goBack,

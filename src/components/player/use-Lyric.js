@@ -7,6 +7,9 @@ export default function useLyric ({ songReady, currentTime }) {
   const currentLyric = ref(null) // 当前歌曲歌词
   const currentLineNum = ref(0) // 当前播放行数
 
+  const lyricScrollRef = ref(null)
+  const lyricListRef = ref(null)
+
   const lyricData = ref('')
   const store = useStore()
   const currentSong = computed(() => store.getters.currentSong)
@@ -19,7 +22,7 @@ export default function useLyric ({ songReady, currentTime }) {
 
       store.commit('addSongLyric', {
         song: currentSong,
-        lyric: lyricData
+        lyric: result.lrc.lyric
       })
     } else {
       lyricData.value = currentSong.value.lyric
@@ -46,11 +49,24 @@ export default function useLyric ({ songReady, currentTime }) {
   // 歌词格式化
   const handleLyric = ({ lineNum }) => {
     currentLineNum.value = lineNum
+
+    // 使歌词高亮始终在中间位置
+    const scrollComponent = lyricScrollRef.value
+    const listEl = lyricListRef.value
+    if (!listEl) return
+    if (lineNum > 5) { // 第六行开始滚动
+      const lineEl = listEl.children[lineNum - 5]
+      scrollComponent.scroll.scrollToElement(lineEl, 1000)
+    } else {
+      scrollComponent.scroll.scrollTo(0, 0, 1000) // 不滚动
+    }
   }
 
   return {
     currentLyric,
     currentLineNum,
-    playLyric
+    playLyric,
+    lyricScrollRef,
+    lyricListRef
   }
 }
