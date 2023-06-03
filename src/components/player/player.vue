@@ -16,11 +16,16 @@
       </div>
       <!-- middle -->
       <div class="middle">
-        <div class="middle_l" v-if="false">
+        <div class="middle_l">
           <div class="cd_wrapper">
             <!-- <img class="image" ref="image" :src="currentSongPicUrl" /> -->
             <div ref="cdRef" class="cd" :class="cdClass">
               <img class="image" ref="imageRef" :src="currentSongPicUrl" />
+            </div>
+          </div>
+          <div class="playing_lyric_wrapper">
+            <div class="play_lyric">
+              {{ playingLyric }}
             </div>
           </div>
         </div>
@@ -36,7 +41,9 @@
                 {{line.txt}}
               </p>
             </div>
-            <!-- <div class="pure-music"></div> -->
+            <div class="pure-music" v-show="pureMusicLyric">
+              <p>{{ pureMusicLyric }}</p>
+            </div>
           </div>
         </scroll>
       </div>
@@ -125,7 +132,7 @@ export default {
     const { modeIcon, changeMode } = useMode()
     const { getFavoriteIcon, toggleFavorite } = useFavorite()
     const { cdRef, imageRef, cdClass } = useCd()
-    const { currentLyric, currentLineNum, playLyric, stopLyric, lyricScrollRef, lyricListRef } = useLyric({ songReady, currentTime })
+    const { currentLyric, currentLineNum, playLyric, stopLyric, lyricScrollRef, lyricListRef, pureMusicLyric, playingLyric } = useLyric({ songReady, currentTime })
 
     // computed
     const playIcon = computed(() => {
@@ -320,6 +327,8 @@ export default {
       currentLineNum,
       lyricScrollRef,
       lyricListRef,
+      pureMusicLyric,
+      playingLyric,
 
       getUrl,
       goBack,
@@ -423,6 +432,9 @@ export default {
       // display: flex;
       // align-items: center;
       .middle_l{
+        // display: none;
+        display: inline-block;
+        vertical-align: top;
         position: relative;
         width: 100%;
         height: 0;
@@ -455,6 +467,18 @@ export default {
               border-radius: 50%;
               border: 15px solid rgba(255, 255, 255, 0.1);
             }
+          }
+        }
+        .playing_lyric_wrapper{
+          width: 80%;
+          margin: 100px auto 0 auto;
+          overflow: hidden;
+          text-align: center;
+          .play_lyric{
+            height: 20px;
+            line-height: 20px;
+            color: $color-text-ggg;
+            font-size: $font-size-medium;
           }
         }
       }
