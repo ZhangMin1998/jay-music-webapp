@@ -46,6 +46,14 @@ export default function useLyric ({ songReady, currentTime }) {
     }
   }
 
+  // 歌词停止
+  const stopLyric = () => {
+    const currentLyricVal = currentLyric.value
+    if (currentLyricVal) {
+      currentLyricVal.stop()
+    }
+  }
+
   // 歌词格式化
   const handleLyric = ({ lineNum }) => {
     currentLineNum.value = lineNum
@@ -56,7 +64,7 @@ export default function useLyric ({ songReady, currentTime }) {
     if (!listEl) return
     if (lineNum > 5) { // 第六行开始滚动
       const lineEl = listEl.children[lineNum - 5]
-      scrollComponent.scroll.scrollToElement(lineEl, 1000)
+      scrollComponent.scroll.scrollToElement(lineEl, 1000) // 滚动时间1s
     } else {
       scrollComponent.scroll.scrollTo(0, 0, 1000) // 不滚动
     }
@@ -66,6 +74,7 @@ export default function useLyric ({ songReady, currentTime }) {
     currentLyric,
     currentLineNum,
     playLyric,
+    stopLyric,
     lyricScrollRef,
     lyricListRef
   }

@@ -125,7 +125,7 @@ export default {
     const { modeIcon, changeMode } = useMode()
     const { getFavoriteIcon, toggleFavorite } = useFavorite()
     const { cdRef, imageRef, cdClass } = useCd()
-    const { currentLyric, currentLineNum, playLyric, lyricScrollRef, lyricListRef } = useLyric({ songReady, currentTime })
+    const { currentLyric, currentLineNum, playLyric, stopLyric, lyricScrollRef, lyricListRef } = useLyric({ songReady, currentTime })
 
     // computed
     const playIcon = computed(() => {
@@ -149,7 +149,14 @@ export default {
     watch(playing, (newVal) => { // 播放 停止
       if (!songReady.value) return
       const audioEl = audioRef.value
-      newVal ? audioEl.play() : audioEl.pause()
+      // newVal ? audioEl.play() : audioEl.pause()
+      if (newVal) {
+        audioEl.play()
+        playLyric()
+      } else {
+        audioEl.pause()
+        stopLyric()
+      }
     })
     watch(playMode, (newVal) => {
       console.log(newVal)
