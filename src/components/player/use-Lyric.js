@@ -13,8 +13,14 @@ export default function useLyric ({ songReady, currentTime }) {
   const lyricData = ref('')
   const store = useStore()
   const currentSong = computed(() => store.getters.currentSong)
+
+  // 切歌的时候
   watch(currentSong, async newVal => {
     if (!newVal.id) return
+
+    stopLyric()
+    currentLyric.value = null
+    currentLineNum.value = 0
 
     if (!newVal.lyric) {
       const result = await getSongLyric(newVal.id)
