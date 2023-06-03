@@ -272,6 +272,9 @@ export default {
     const onProgressChanging = (progress) => {
       progressChanging = true
       currentTime.value = progress * currentSongTime.value / 1000
+      // 歌词先动后停
+      playLyric()
+      stopLyric()
     }
     const onProgressChanged = (progress) => { // 这里真正修改
       progressChanging = false
@@ -280,6 +283,7 @@ export default {
       if (!playing.value) {
         store.commit('setPlayingState', true)
       }
+      playLyric()
     }
     const end = () => {
       currentTime.value = 0
