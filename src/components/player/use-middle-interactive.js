@@ -12,6 +12,7 @@ export default function useMiddleInteractive () {
     // console.log(e.touches[0].pageX)
     touch.startX = e.touches[0].pageX // 初始位置
     touch.startY = e.touches[0].pageY
+    touch.directionLocked = '' // 方向锁
   }
 
   const onMiddleTouchMove = e => {
@@ -20,8 +21,15 @@ export default function useMiddleInteractive () {
     const deltaY = e.touches[0].pageY - touch.startY
 
     // 取绝对值
-    // const absDeltaX = Math.abs(deltaX)
-    // const absDeltaY = Math.abs(deltaY)
+    const absDeltaX = Math.abs(deltaX)
+    const absDeltaY = Math.abs(deltaY)
+
+    if (!touch.directionLocked) {
+      touch.directionLocked = absDeltaX >= absDeltaY ? 'h' : 'v'
+    }
+    if (touch.directionLocked === 'v') { // 如果是纵向 return
+      return
+    }
 
     const left = currentView === 'cd' ? 0 : -window.innerWidth // 初始位移
     // const offsetWidth = left + deltaX
