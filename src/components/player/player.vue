@@ -1,5 +1,5 @@
 <template>
-  <div class="player">
+  <div class="player" v-show="playlist.length">
     <div class="normal_player" v-show="fullScreen">
       <div class="background">
         <div class="filter"></div>
@@ -91,6 +91,8 @@
         </div>
       </div>
     </div>
+
+    <mini-player></mini-player>
     <audio
       ref="audioRef"
       @pause="pause"
@@ -116,11 +118,14 @@ import useLyric from '@/components/player/use-Lyric'
 import useMiddleInteractive from '@/components/player/use-middle-interactive'
 // import { formatTime } from '@/assets/js/util'
 
+import miniPlayer from '@/components/player/mini-player'
+
 export default {
   name: 'p-layer',
   components: {
     progressBar,
-    Scroll
+    Scroll,
+    miniPlayer
   },
   setup () {
     const audioRef = ref(null)
@@ -160,7 +165,7 @@ export default {
     // watch
     watch(currentSong, (newVal) => {
       if (!newVal.id) return
-      console.log(newVal)
+      // console.log(newVal)
       currentTime.value = 0 // 播放时长计为0
       songReady.value = false // 切歌的时候
       getUrl(newVal.id)
@@ -185,7 +190,7 @@ export default {
     const getUrl = (id) => {
       getSongsUrl(id).then(res => {
         if (res.code === 200 && res.data.length) {
-          console.log(currentSong)
+          // console.log(currentSong)
           // console.log(res.data[0])
 
           const songData = res.data[0]
