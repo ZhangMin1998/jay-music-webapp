@@ -5,20 +5,25 @@
         <div class="filter"></div>
         <img :src="currentSongPicUrl" v-if="currentSong.al"/>
       </div>
+
       <!-- top -->
       <div class="top">
         <div class="back" @click="goBack">
-          <!-- <i class="icon-back"></i> -->
           <i class="fa fa-angle-down"></i>
         </div>
         <h1 class="title">{{ currentSong.name }}</h1>
         <h2 class="subtitle" v-if="currentSong.al">{{ currentSong.al.name }}</h2>
       </div>
+
       <!-- middle -->
-      <div class="middle">
-        <div class="middle_l">
+      <div
+        class="middle"
+        @touchstart.prevent="onMiddleTouchStart"
+        @touchmove.prevent="onMiddleTouchMove"
+        @touchend.prevent="onMiddleTouchEnd"
+      >
+        <div class="middle_l" :style="middleLStyle">
           <div class="cd_wrapper">
-            <!-- <img class="image" ref="image" :src="currentSongPicUrl" /> -->
             <div ref="cdRef" class="cd" :class="cdClass">
               <img class="image" ref="imageRef" :src="currentSongPicUrl" />
             </div>
@@ -29,7 +34,7 @@
             </div>
           </div>
         </div>
-        <scroll ref="lyricScrollRef" class="middle_r">
+        <scroll ref="lyricScrollRef" class="middle_r" :style="middleRStyle">
           <div class="lyric_wrapper">
             <div ref="lyricListRef" v-if="currentLyric">
               <p
@@ -47,8 +52,13 @@
           </div>
         </scroll>
       </div>
+
       <!-- bottom -->
       <div class="bottom">
+        <div class="dot_wrapper">
+          <span class="dot" :class="{'active': currentShow === 'cd'}"></span>
+          <span class="dot" :class="{'active': currentShow === 'lyric'}"></span>
+        </div>
         <div class="progress-wrapper">
           <span class="time time_l">{{ formatTime1(currentTime) }}</span>
           <div class="progress_bar_wrapper">
@@ -103,6 +113,7 @@ import useFavorite from '@/components/player/use-favorite'
 import progressBar from '@/components/player/progress-bar'
 import useCd from '@/components/player/use-cd'
 import useLyric from '@/components/player/use-Lyric'
+import useMiddleInteractive from '@/components/player/use-middle-interactive'
 // import { formatTime } from '@/assets/js/util'
 
 export default {
@@ -133,6 +144,7 @@ export default {
     const { getFavoriteIcon, toggleFavorite } = useFavorite()
     const { cdRef, imageRef, cdClass } = useCd()
     const { currentLyric, currentLineNum, playLyric, stopLyric, lyricScrollRef, lyricListRef, pureMusicLyric, playingLyric } = useLyric({ songReady, currentTime })
+    const { currentShow, middleLStyle, middleRStyle, onMiddleTouchStart, onMiddleTouchMove, onMiddleTouchEnd } = useMiddleInteractive()
 
     // computed
     const playIcon = computed(() => {
@@ -329,6 +341,12 @@ export default {
       lyricListRef,
       pureMusicLyric,
       playingLyric,
+      currentShow,
+      middleLStyle,
+      middleRStyle,
+      onMiddleTouchStart,
+      onMiddleTouchMove,
+      onMiddleTouchEnd,
 
       getUrl,
       goBack,
@@ -389,13 +407,6 @@ export default {
         top: 0;
         left: 6px;
         z-index: 50;
-        .icon-back {
-          display: block;
-          padding: 9px;
-          font-size: $font-size-large-x;
-          color: $color-theme;
-          transform: rotate(-90deg);
-        }
         .fa-angle-down {
           display: block;
           padding: 5px 9px;
@@ -410,14 +421,12 @@ export default {
         text-align: center;
         @include no-wrap();
         font-size: $font-size-large;
-        // color: $color-text;
         color: $color-theme-l;
       }
       .subtitle{
         line-height: 20px;
         text-align: center;
         font-size: $font-size-medium;
-        // color: $color-text;
         color: $color-theme-l;
       }
     }
@@ -516,6 +525,24 @@ export default {
       position: absolute;
       bottom: 50px;
       width: 100%;
+      .dot_wrapper{
+        text-align: center;
+        font-size: 0;
+        .dot{
+          display: inline-block;
+          vertical-align: middle;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: $color-text-l;
+          margin: 0 4px;
+          &.active{
+            width: 20px;
+            border-radius: 5px;
+            background: $color-text-ll;
+          }
+        }
+      }
       .progress-wrapper{
         display: flex;
         align-items: center;
@@ -534,7 +561,7 @@ export default {
         }
         &.time_r{
           text-align: right;
-          color: $color-text-gg;
+          // color: $color-text-gg;
         }
         .progress_bar_wrapper{
           flex: 1;
