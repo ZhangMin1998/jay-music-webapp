@@ -47,10 +47,15 @@ export default {
     }
   },
   computed: {
-    dashOffset() {
+    dashOffset () {
       return (1 - this.progress) * this.dashArray
     }
-  }
+  },
+  // watch: {
+  //   progress (newVal) {
+  //     console.log(newVal)
+  //   }
+  // }
 }
 </script>
 
@@ -60,11 +65,11 @@ export default {
   circle {
     stroke-width: 8px;
     transform-origin: center;
-    &.progress-background {
+    &.progress_background {
       transform: scale(0.9);
       stroke: $color-theme-d;
     }
-    &.progress-bar {
+    &.progress_bar {
       transform: scale(0.9) rotate(-90deg);
       stroke: $color-highlight-background;
     }

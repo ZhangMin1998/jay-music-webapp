@@ -11,7 +11,7 @@
     </div>
     <div class="control">
       <progress-circle :radius="32" :progress="progress">
-        <i class="fa" :class="miniIcon"></i>
+        <i class="fa" :class="miniIcon" @click.stop="togglePlaying"></i>
       </progress-circle>
     </div>
     <!-- <div class="control">
@@ -32,6 +32,13 @@ export default {
   components: {
     progressCircle
   },
+  props: {
+    progress: {
+      type: Number,
+      default: 0
+    },
+    togglePlaying: Function
+  },
 
   setup () {
     // const route = useRoute()
@@ -43,7 +50,7 @@ export default {
     const playing = computed(() => store.state.playing)
 
     const miniIcon = computed(() => {
-      return playing.value  ? 'fa-stop' : 'fa-play'
+      return playing.value ? 'fa-stop' : 'fa-play'
     })
 
     // hooks
@@ -119,7 +126,7 @@ export default {
   .control{
     width: 30px;
     padding: 0 10px;
-    // flex: 0 0 30px;
+    flex: 0 0 30px;
     .icon-play-mini, .icon-pause-mini, .icon-playlist, .iconfont {
       font-size: 30px;
       color: $color-theme-d;
