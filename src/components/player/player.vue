@@ -63,6 +63,7 @@
           <span class="time time_l">{{ formatTime1(currentTime) }}</span>
           <div class="progress_bar_wrapper">
             <progress-bar
+              ref="barRef"
               :progress="progress"
               @progress-changing="onProgressChanging"
               @progress-changed="onProgressChanged"
@@ -108,7 +109,7 @@
 import Scroll from '@/base/Scroll/Scroll'
 import { getSongsUrl } from '@/api/singer'
 import { useStore } from 'vuex'
-import { computed, watch, ref } from 'vue'
+import { computed, watch, ref, nextTick } from 'vue'
 import { PLAY_MODE } from '@/assets/js/constant'
 import useMode from '@/components/player/use-mode'
 import useFavorite from '@/components/player/use-favorite'
@@ -129,6 +130,7 @@ export default {
   },
   setup () {
     const audioRef = ref(null)
+    const barRef = ref(null)
     const songReady = ref(false)
     const currentTime = ref(0) // 当前歌曲播放时长
     const currentSongTime = ref(0) // 当前歌曲播放总时长
@@ -184,6 +186,12 @@ export default {
     })
     watch(playMode, (newVal) => {
       console.log(newVal)
+    })
+    watch(fullScreen, async (newFullScreen) => {
+      if (newFullScreen) {
+        await nextTick()
+        barRef.value.setOffset(progress.value)
+      }
     })
 
     // methods
@@ -320,6 +328,7 @@ export default {
 
     return {
       audioRef,
+      barRef,
       currentTime,
       currentSongTime,
       currentSongPicUrl,
