@@ -51,7 +51,6 @@ export default function useLyric ({ songReady, currentTime }) {
     } else {
       pureMusicLyric.value = '暂无歌词'
     }
-
   })
 
   // 歌词播放

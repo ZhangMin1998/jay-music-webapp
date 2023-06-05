@@ -9,6 +9,11 @@
       <h2 class="name">{{currentSong.name}}</h2>
       <p class="desc">{{currentSong.ar[0].name}}</p>
     </div>
+    <div class="control">
+      <progress-circle :radius="32" :progress="progress">
+        <i class="fa" :class="miniIcon"></i>
+      </progress-circle>
+    </div>
     <!-- <div class="control">
       <i class="iconfont icon-caidan1"></i>
     </div> -->
@@ -20,11 +25,12 @@ import { computed } from 'vue'
 import { useStore } from 'vuex'
 // import { useRoute } from 'vue-router'
 import useCd from '@/components/player/use-cd'
+import progressCircle from '@/components/player/progress-circle'
 
 export default {
   name: 'mini_player',
   components: {
-
+    progressCircle
   },
 
   setup () {
@@ -34,6 +40,11 @@ export default {
     const store = useStore()
     const fullScreen = computed(() => store.state.fullScreen) // 是否全屏
     const currentSong = computed(() => store.getters.currentSong) // 当前歌曲
+    const playing = computed(() => store.state.playing)
+
+    const miniIcon = computed(() => {
+      return playing.value  ? 'fa-stop' : 'fa-play'
+    })
 
     // hooks
     const { cdRef, imageRef, cdClass } = useCd()
@@ -45,6 +56,7 @@ export default {
     return {
       fullScreen,
       currentSong,
+      miniIcon,
 
       cdRef,
       imageRef,
@@ -106,6 +118,26 @@ export default {
   }
   .control{
     width: 30px;
+    padding: 0 10px;
+    // flex: 0 0 30px;
+    .icon-play-mini, .icon-pause-mini, .icon-playlist, .iconfont {
+      font-size: 30px;
+      color: $color-theme-d;
+    }
+    .fa-play {
+      color: $color-theme-d;
+      font-size: 14px;
+      position: absolute;
+      left: 12px;
+      top: 8.5px;
+    }
+    .fa-stop {
+      color: $color-theme-d;
+      font-size: 12px;
+      position: absolute;
+      left: 11px;
+      top: 10px;
+    }
   }
   @keyframes rotate {
     0% {
