@@ -50,7 +50,7 @@ export default {
     dashOffset () {
       return (1 - this.progress) * this.dashArray
     }
-  },
+  }
   // watch: {
   //   progress (newVal) {
   //     console.log(newVal)

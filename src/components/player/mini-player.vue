@@ -5,9 +5,13 @@
         <img ref="imageRef" :src="picUrl" :class="cdClass">
       </div>
     </div>
-    <div class="text">
-      <h2 class="name">{{name}}</h2>
-      <p class="desc">{{singer}}</p>
+    <div ref="sliderRef" class="slider_wrapper">
+      <div class="slider_group" v-for="song in playList" :key="song.id">
+        <div class="slider_page">
+          <h2 class="name">{{song.name}}</h2>
+          <p class="desc">{{song.ar[0].name}}</p>
+        </div>
+      </div>
     </div>
     <div class="control">
       <progress-circle :radius="32" :progress="progress">
@@ -26,6 +30,7 @@ import { useStore } from 'vuex'
 // import { useRoute } from 'vue-router'
 import useCd from '@/components/player/use-cd'
 import progressCircle from '@/components/player/progress-circle'
+import useMiniSlider from '@/components/player/use-mini-slider'
 
 export default {
   name: 'mini_player',
@@ -51,6 +56,7 @@ export default {
     const fullScreen = computed(() => store.state.fullScreen) // 是否全屏
     const currentSong = computed(() => store.getters.currentSong) // 当前歌曲
     const playing = computed(() => store.state.playing)
+    const playlist = computed(() => store.state.playlist) // 当前播放列表
     // console.log(currentSong.value)
 
     const miniIcon = computed(() => {
@@ -68,6 +74,7 @@ export default {
 
     // hooks
     const { cdRef, imageRef, cdClass } = useCd()
+    const { sliderRef } = useMiniSlider()
 
     const showNormalPlayer = () => {
       store.commit('setFullScreen', true)
@@ -81,10 +88,12 @@ export default {
       fullScreen,
       currentSong,
       miniIcon,
+      playlist,
 
       cdRef,
       imageRef,
       cdClass,
+      sliderRef,
 
       showNormalPlayer
     }
@@ -123,21 +132,28 @@ export default {
       }
     }
   }
-  .text{
+  .slider_wrapper{
     display: flex;
     flex-direction: column;
     justify-content: center;
     flex: 1;
     overflow: hidden;
-    .name{
-      margin-bottom: 2px;
-      line-height: 14px;
-      font-size: $font-size-medium;
-      color: $color-text;
-    }
-    .desc{
-      font-size: $font-size-small;
-      color: $color-text;
+    .slider_group{
+      .slider_page{
+        display: inline-block;
+        width: 100%;
+        transform: translate(0, 0);
+        .name{
+          margin-bottom: 2px;
+          line-height: 14px;
+          font-size: $font-size-medium;
+          color: $color-text;
+        }
+        .desc{
+          font-size: $font-size-small;
+          color: $color-text;
+        }
+      }
     }
   }
   .control{
