@@ -1,13 +1,13 @@
 <template>
-  <div class="mini_player" v-show="!fullScreen" @click="showNormalPlayer">
+  <div class="mini_player" v-if="!fullScreen && currentSong" @click="showNormalPlayer">
     <div class="cd_wrapper">
       <div ref="cdRef" class="cd">
-        <img ref="imageRef" :src="currentSong.al.picUrl" :class="cdClass">
+        <img ref="imageRef" :src="picUrl" :class="cdClass">
       </div>
     </div>
     <div class="text">
-      <h2 class="name">{{currentSong.name}}</h2>
-      <p class="desc">{{currentSong.ar[0].name}}</p>
+      <h2 class="name">{{name}}</h2>
+      <p class="desc">{{singer}}</p>
     </div>
     <div class="control">
       <progress-circle :radius="32" :progress="progress">
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 // import { useRoute } from 'vue-router'
 import useCd from '@/components/player/use-cd'
@@ -42,15 +42,28 @@ export default {
 
   setup () {
     // const route = useRoute()
+    const picUrl = ref(null)
+    const name = ref(null)
+    const singer = ref(null)
 
     // vuex
     const store = useStore()
     const fullScreen = computed(() => store.state.fullScreen) // 是否全屏
     const currentSong = computed(() => store.getters.currentSong) // 当前歌曲
     const playing = computed(() => store.state.playing)
+    // console.log(currentSong.value)
 
     const miniIcon = computed(() => {
       return playing.value ? 'fa-stop' : 'fa-play'
+    })
+
+    watch(currentSong, (newSong) => {
+      if (!newSong.id) {
+        return
+      }
+      picUrl.value = currentSong.value.al.picUrl
+      name.value = currentSong.value.name
+      singer.value = currentSong.value.ar[0].name
     })
 
     // hooks
@@ -61,6 +74,10 @@ export default {
     }
 
     return {
+      picUrl,
+      name,
+      singer,
+
       fullScreen,
       currentSong,
       miniIcon,
