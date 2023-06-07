@@ -1,97 +1,100 @@
 <template>
   <div class="player" v-show="playlist.length">
-    <div class="normal_player" v-show="fullScreen">
-      <div class="background">
-        <div class="filter"></div>
-        <img :src="currentSongPicUrl" v-if="currentSong.al"/>
-      </div>
+    <transition name="normal">
+      <div class="normal_player" v-show="fullScreen">
 
-      <!-- top -->
-      <div class="top">
-        <div class="back" @click="goBack">
-          <i class="fa fa-angle-down"></i>
+        <div class="background">
+          <div class="filter"></div>
+          <img :src="currentSongPicUrl" v-if="currentSong.al"/>
         </div>
-        <h1 class="title">{{ currentSong.name }}</h1>
-        <h2 class="subtitle" v-if="currentSong.al">{{ currentSong.al.name }}</h2>
-      </div>
 
-      <!-- middle -->
-      <div
-        class="middle"
-        @touchstart.prevent="onMiddleTouchStart"
-        @touchmove.prevent="onMiddleTouchMove"
-        @touchend.prevent="onMiddleTouchEnd"
-      >
-        <div class="middle_l" :style="middleLStyle">
-          <div class="cd_wrapper">
-            <div ref="cdRef" class="cd" :class="cdClass">
-              <img class="image" ref="imageRef" :src="currentSongPicUrl" />
+        <!-- top -->
+        <div class="top">
+          <div class="back" @click="goBack">
+            <i class="fa fa-angle-down"></i>
+          </div>
+          <h1 class="title">{{ currentSong.name }}</h1>
+          <h2 class="subtitle" v-if="currentSong.al">{{ currentSong.al.name }}</h2>
+        </div>
+
+        <!-- middle -->
+        <div
+          class="middle"
+          @touchstart.prevent="onMiddleTouchStart"
+          @touchmove.prevent="onMiddleTouchMove"
+          @touchend.prevent="onMiddleTouchEnd"
+        >
+          <div class="middle_l" :style="middleLStyle">
+            <div class="cd_wrapper">
+              <div ref="cdRef" class="cd" :class="cdClass">
+                <img class="image" ref="imageRef" :src="currentSongPicUrl" />
+              </div>
+            </div>
+            <div class="playing_lyric_wrapper">
+              <div class="play_lyric">
+                {{ playingLyric }}
+              </div>
             </div>
           </div>
-          <div class="playing_lyric_wrapper">
-            <div class="play_lyric">
-              {{ playingLyric }}
+          <scroll ref="lyricScrollRef" class="middle_r" :style="middleRStyle">
+            <div class="lyric_wrapper">
+              <div ref="lyricListRef" v-if="currentLyric">
+                <p
+                  class="text"
+                  :class="{ 'current': currentLineNum === index }"
+                  v-for="(line, index) in currentLyric.lines"
+                  :key="index"
+                >
+                  {{line.txt}}
+                </p>
+              </div>
+              <div class="pure-music" v-show="pureMusicLyric">
+                <p>{{ pureMusicLyric }}</p>
+              </div>
             </div>
-          </div>
+          </scroll>
         </div>
-        <scroll ref="lyricScrollRef" class="middle_r" :style="middleRStyle">
-          <div class="lyric_wrapper">
-            <div ref="lyricListRef" v-if="currentLyric">
-              <p
-                class="text"
-                :class="{ 'current': currentLineNum === index }"
-                v-for="(line, index) in currentLyric.lines"
-                :key="index"
-              >
-                {{line.txt}}
-              </p>
-            </div>
-            <div class="pure-music" v-show="pureMusicLyric">
-              <p>{{ pureMusicLyric }}</p>
-            </div>
-          </div>
-        </scroll>
-      </div>
 
-      <!-- bottom -->
-      <div class="bottom">
-        <div class="dot_wrapper">
-          <span class="dot" :class="{'active': currentShow === 'cd'}"></span>
-          <span class="dot" :class="{'active': currentShow === 'lyric'}"></span>
-        </div>
-        <div class="progress-wrapper">
-          <span class="time time_l">{{ formatTime1(currentTime) }}</span>
-          <div class="progress_bar_wrapper">
-            <progress-bar
-              ref="barRef"
-              :progress="progress"
-              @progress-changing="onProgressChanging"
-              @progress-changed="onProgressChanged"
-            ></progress-bar>
+        <!-- bottom -->
+        <div class="bottom">
+          <div class="dot_wrapper">
+            <span class="dot" :class="{'active': currentShow === 'cd'}"></span>
+            <span class="dot" :class="{'active': currentShow === 'lyric'}"></span>
           </div>
-          <span class="time time_r">{{ formatTime2(currentSongTime) }}</span>
+          <div class="progress-wrapper">
+            <span class="time time_l">{{ formatTime1(currentTime) }}</span>
+            <div class="progress_bar_wrapper">
+              <progress-bar
+                ref="barRef"
+                :progress="progress"
+                @progress-changing="onProgressChanging"
+                @progress-changed="onProgressChanged"
+              ></progress-bar>
+            </div>
+            <span class="time time_r">{{ formatTime2(currentSongTime) }}</span>
 
-        </div>
-        <div class="operators">
-          <div class="icon i-left" >
-            <i class="iconfont mode" :class="modeIcon" @click="changeMode"></i>
           </div>
-          <div class="icon i-left" :class="disableCls">
-            <i class="iconfont icon-prev" @click="prev"></i>
-          </div>
-          <div class="icon i-center" :class="disableCls">
-            <i :class="playIcon" @click="togglePlaying"></i>
-            <!-- <i class="iconfont icon-bofangicon"></i> -->
-          </div>
-          <div class="icon i-right" :class="disableCls">
-            <i class="iconfont icon-test" @click="next"></i>
-          </div>
-          <div class="icon i-right">
-            <i class="iconfont" :class="getFavoriteIcon(currentSong)" @click="toggleFavorite(currentSong)"></i>
+          <div class="operators">
+            <div class="icon i-left" >
+              <i class="iconfont mode" :class="modeIcon" @click="changeMode"></i>
+            </div>
+            <div class="icon i-left" :class="disableCls">
+              <i class="iconfont icon-prev" @click="prev"></i>
+            </div>
+            <div class="icon i-center" :class="disableCls">
+              <i :class="playIcon" @click="togglePlaying"></i>
+              <!-- <i class="iconfont icon-bofangicon"></i> -->
+            </div>
+            <div class="icon i-right" :class="disableCls">
+              <i class="iconfont icon-test" @click="next"></i>
+            </div>
+            <div class="icon i-right">
+              <i class="iconfont" :class="getFavoriteIcon(currentSong)" @click="toggleFavorite(currentSong)"></i>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </transition>
 
     <mini-player :progress="progress" :togglePlaying="togglePlaying"></mini-player>
     <audio
@@ -613,6 +616,22 @@ export default {
             color: $color-sub-theme;
           }
         }
+      }
+    }
+    &.normal-enter-active, &.normal-leave-active {
+      transition: all 0.6s;
+      .top, .bottom {
+        // transition: all 0.6s ease-in-out;
+        transition: all 0.6s cubic-bezier(0.45, 0, 0.55, 1);
+      }
+    }
+    &.normal-enter-from, &.normal-leave-to {
+      opacity: 0;
+      .top {
+        transform: translate3d(0, -100px, 0);
+      }
+      .bottom {
+        transform: translate3d(0, 100px, 0)
       }
     }
   }
