@@ -5,14 +5,18 @@
         <img ref="imageRef" :src="picUrl" :class="cdClass">
       </div>
     </div>
-    <div ref="sliderRef" class="slider_wrapper">
-      <div class="slider_group" v-for="song in playList" :key="song.id">
-        <div class="slider_page">
-          <h2 class="name">{{song.name}}</h2>
-          <p class="desc">{{song.ar[0].name}}</p>
+    <div ref="sliderWrapperRef" class="slider_wrapper">
+      <div class="slider_group">
+        <div class="slider_page" v-for="song in playlist" :key="song.id">
+          <h2 class="name">{{ song.name }}</h2>
+          <p class="desc">{{ song.ar[0].name }}</p>
         </div>
       </div>
     </div>
+    <!-- <div class="text">
+      <h2 class="name">{{name}}</h2>
+      <p class="desc">{{singer}}</p>
+    </div> -->
     <div class="control">
       <progress-circle :radius="32" :progress="progress">
         <i class="fa" :class="miniIcon" @click.stop="togglePlaying"></i>
@@ -74,7 +78,7 @@ export default {
 
     // hooks
     const { cdRef, imageRef, cdClass } = useCd()
-    const { sliderRef } = useMiniSlider()
+    const { sliderWrapperRef } = useMiniSlider()
 
     const showNormalPlayer = () => {
       store.commit('setFullScreen', true)
@@ -87,13 +91,14 @@ export default {
 
       fullScreen,
       currentSong,
+      playlist,
       miniIcon,
       playlist,
 
       cdRef,
       imageRef,
       cdClass,
-      sliderRef,
+      sliderWrapperRef,
 
       showNormalPlayer
     }
@@ -116,6 +121,7 @@ export default {
     width: 40px;
     height: 40px;
     padding: 0 10px 0 20px;
+    // flex: 0 0 40px;
     .cd{
       height: 100%;
       width: 100%;
@@ -137,19 +143,27 @@ export default {
     flex-direction: column;
     justify-content: center;
     flex: 1;
+    // line-height: 20px;
     overflow: hidden;
     .slider_group{
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
       .slider_page{
-        display: inline-block;
         width: 100%;
-        transform: translate(0, 0);
+        display: inline-block;
+        transform: translate3d(0, 0, 0);
+        // transform: translate(0, 0);
+        backface-visibility: hidden;
         .name{
+          @include no-wrap();
           margin-bottom: 2px;
           line-height: 14px;
           font-size: $font-size-medium;
           color: $color-text;
         }
         .desc{
+          @include no-wrap();
           font-size: $font-size-small;
           color: $color-text;
         }
