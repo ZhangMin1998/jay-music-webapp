@@ -388,7 +388,7 @@ export default {
       onProgressChanged,
       end,
 
-      //animation
+      // animation
       cdWrapperRef,
       enter,
       afterEnter,

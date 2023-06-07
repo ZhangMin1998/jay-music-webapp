@@ -18,7 +18,7 @@ export default function useAnimation () {
         transform: `translate(${x}px, ${y}px) scale(${scale})`
       },
       '100%': {
-        transform: `translate(0, 0, 0) scale(1)`
+        transform: 'translate(0, 0, 0) scale(1)'
       }
     }
     animations.registerAnimation({
@@ -48,7 +48,7 @@ export default function useAnimation () {
     const { x, y, scale } = getPosAndScale()
     const cdWrapperEl = cdWrapperRef.value
 
-    cdWrapperEl.style.transition = `all 0.6s cubic-bezier(0.45, 0, 0.55, 1)`
+    cdWrapperEl.style.transition = 'all 0.6s cubic-bezier(0.45, 0, 0.55, 1)'
     cdWrapperEl.style.transform = `translate(${x}px, ${y}px) scale(${scale})`
 
     const next = () => {
@@ -56,7 +56,6 @@ export default function useAnimation () {
       done()
     }
     cdWrapperEl.addEventListener('transitionend', next)
-
   }
 
   const afterLeave = () => {
