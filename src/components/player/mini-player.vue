@@ -61,7 +61,7 @@ export default {
     const currentSong = computed(() => store.getters.currentSong) // 当前歌曲
     const playing = computed(() => store.state.playing)
     const playlist = computed(() => store.state.playlist) // 当前播放列表
-    console.log('playlist', playlist.value)
+    // console.log(currentSong.value)
 
     const miniIcon = computed(() => {
       return playing.value ? 'fa-stop' : 'fa-play'
@@ -93,6 +93,7 @@ export default {
       currentSong,
       playlist,
       miniIcon,
+      playlist,
 
       cdRef,
       imageRef,
