@@ -93,7 +93,6 @@ export default {
       currentSong,
       playlist,
       miniIcon,
-      playlist,
 
       cdRef,
       imageRef,

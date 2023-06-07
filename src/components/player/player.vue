@@ -1,6 +1,12 @@
 <template>
   <div class="player" v-show="playlist.length">
-    <transition name="normal">
+    <transition
+      name="normal"
+      @enter="enter"
+      @after-enter="afterEnter"
+      @leave="leave"
+      @after-leave="afterLeave"
+    >
       <div class="normal_player" v-show="fullScreen">
 
         <div class="background">
@@ -25,7 +31,7 @@
           @touchend.prevent="onMiddleTouchEnd"
         >
           <div class="middle_l" :style="middleLStyle">
-            <div class="cd_wrapper">
+            <div ref="cdWrapperRef" class="cd_wrapper">
               <div ref="cdRef" class="cd" :class="cdClass">
                 <img class="image" ref="imageRef" :src="currentSongPicUrl" />
               </div>
@@ -120,6 +126,7 @@ import progressBar from '@/components/player/progress-bar'
 import useCd from '@/components/player/use-cd'
 import useLyric from '@/components/player/use-Lyric'
 import useMiddleInteractive from '@/components/player/use-middle-interactive'
+import useAnimation from '@/components/player/use-animation'
 // import { formatTime } from '@/assets/js/util'
 
 import miniPlayer from '@/components/player/mini-player'
@@ -155,6 +162,7 @@ export default {
     const { cdRef, imageRef, cdClass } = useCd()
     const { currentLyric, currentLineNum, playLyric, stopLyric, lyricScrollRef, lyricListRef, pureMusicLyric, playingLyric } = useLyric({ songReady, currentTime })
     const { currentShow, middleLStyle, middleRStyle, onMiddleTouchStart, onMiddleTouchMove, onMiddleTouchEnd } = useMiddleInteractive()
+    const { cdWrapperRef, enter, afterEnter, leave, afterLeave } = useAnimation()
 
     // computed
     const playIcon = computed(() => {
@@ -378,7 +386,14 @@ export default {
       formatTime2,
       onProgressChanging,
       onProgressChanged,
-      end
+      end,
+
+      //animation
+      cdWrapperRef,
+      enter,
+      afterEnter,
+      leave,
+      afterLeave
     }
   }
 }
@@ -468,7 +483,8 @@ export default {
         .cd_wrapper {
           position: absolute;
           left: 10%;
-          top: 15%;
+          top: 0;
+          // top: 15%;
           width: 80%;
           height: 100%;
           box-sizing: border-box;
