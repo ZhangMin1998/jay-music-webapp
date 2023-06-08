@@ -29,7 +29,7 @@ export default function useAnimation () {
         easing: 'cubic-bezier(0.45, 0, 0.55, 1)'
       }
     })
-    animations.runAnimation(cdWrapperRef.value, 'move', done) // player内部的一个donghua 所以不用el
+    animations.runAnimation(cdWrapperRef.value, 'move', done) // player内部的一个动画 所以不用el
   }
 
   const afterEnter = () => {
