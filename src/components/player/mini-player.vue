@@ -13,18 +13,15 @@
         </div>
       </div>
     </div>
-    <!-- <div class="text">
-      <h2 class="name">{{name}}</h2>
-      <p class="desc">{{singer}}</p>
-    </div> -->
     <div class="control">
       <progress-circle :radius="32" :progress="progress">
         <i class="fa" :class="miniIcon" @click.stop="togglePlaying"></i>
       </progress-circle>
     </div>
-    <!-- <div class="control">
+    <div class="control" @click.stop="showPlaylist">
       <i class="iconfont icon-caidan1"></i>
-    </div> -->
+    </div>
+    <Playlist ref="playlistRef"></Playlist>
   </div>
 </template>
 
@@ -35,11 +32,13 @@ import { useStore } from 'vuex'
 import useCd from '@/components/player/use-cd'
 import progressCircle from '@/components/player/progress-circle'
 import useMiniSlider from '@/components/player/use-mini-slider'
+import Playlist from '@/components/player/playlist' // 妈的 这里playlist会报错  因为setup里面有playlist
 
 export default {
   name: 'mini_player',
   components: {
-    progressCircle
+    progressCircle,
+    Playlist
   },
   props: {
     progress: {
@@ -50,6 +49,8 @@ export default {
   },
 
   setup () {
+    const playlistRef = ref(null)
+
     // const route = useRoute()
     const picUrl = ref(null)
     const name = ref(null)
@@ -84,7 +85,13 @@ export default {
       store.commit('setFullScreen', true)
     }
 
+    const showPlaylist = () => {
+      playlistRef.value.show()
+    }
+
     return {
+      playlistRef,
+
       picUrl,
       name,
       singer,
@@ -99,7 +106,8 @@ export default {
       cdClass,
       sliderWrapperRef,
 
-      showNormalPlayer
+      showNormalPlayer,
+      showPlaylist
     }
   }
 }
@@ -176,6 +184,11 @@ export default {
     .icon-play-mini, .icon-pause-mini, .icon-playlist, .iconfont {
       font-size: 30px;
       color: $color-theme-d;
+    }
+    .iconfont{
+      position: relative;
+      top: -4px;
+      left: -5px;
     }
     .fa-play {
       color: $color-theme-d;
