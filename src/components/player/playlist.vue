@@ -1,19 +1,24 @@
 <template>
-  <div class="playlist" v-show="visible && playlist.length" @click="hide">
-    <div class="list_wrapper">
+  <div class="playlist" v-show="visible && playlist.length" @click.stop="hide">
+    <div class="list_wrapper" @click.stop>
       <div class="list_header">
-        <h1 class="title">
-          <i class="iconfont" :class="modeIcon" @click.stop="changeMode"></i>
-          <span class="text" @click.stop="changeMode">
-            {{ modeText }}{{ '(' + playlist.length + ')' }}
-          </span>
-          <span class="clear">
-            <i class="icon-clear"></i>
-          </span>
-        </h1>
+        <div class="title">
+          <div class="left" @click="changeMode">
+            <i class="iconfont" :class="modeIcon"></i>
+            <span class="text">
+              {{ modeText }}{{ '(' + playlist.length + ')' }}
+            </span>
+          </div>
+          <div class="right">
+            <span class="clear">
+              <i class="icon-clear"></i>
+            </span>
+          </div>
+        </div>
       </div>
       <scroll ref="scrollRef" class="list_content">
-        <transition-group ref="listRef" name="list" tag="ul">
+        <!-- <transition-group ref="listRef" name="list" tag="ul"> -->
+        <ul ref="listRef">
           <li
             class="item"
             ref="listItem"
@@ -27,7 +32,8 @@
               <i class="iconfont" :class="getFavoriteIcon(song)"></i>
             </span>
           </li>
-        </transition-group>
+        </ul>
+        <!-- </transition-group> -->
       </scroll>
       <div class="list_close" @click.stop="hide">
         <span>关闭</span>
@@ -39,7 +45,7 @@
 <script>
 import Scroll from '@/base/Scroll/Scroll'
 import { useStore } from 'vuex'
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import useMode from './use-mode'
 import useFavorite from './use-favorite'
 
@@ -51,6 +57,7 @@ export default {
   setup () {
     const visible = ref(false)
     const scrollRef = ref(null)
+    const listRef = ref(null)
 
     // vuex
     const store = useStore()
@@ -61,6 +68,13 @@ export default {
     const { modeIcon, modeText, changeMode } = useMode()
     const { getFavoriteIcon, toggleFavorite } = useFavorite()
 
+    // watch
+    watch(currentSong, async newSong => {
+      if (!visible.value || !newSong.id) return
+      await nextTick()
+      scrollToCurrent() // 只要歌曲变化 就滚动到当前播放歌曲
+    })
+
     const hide = () => {
       visible.value = false
     }
@@ -68,10 +82,18 @@ export default {
       visible.value = true
       await nextTick() // 解决列表不能滚动的问题 scroll初始化实例的时候 页面还没加载
       refreshScroll()
+      scrollToCurrent()
+      // console.log(listRef.value)
     }
 
-    const selectItem = () => {
-
+    // 点击歌曲切歌
+    const selectItem = (song) => {
+      const index = playlist.value.findIndex(item => {
+        return song.id === item.id
+      })
+      if (index === -1) return
+      store.commit('setCurrentIndex', index)
+      store.commit('setPlayingState', true)
     }
     const getCurrentIcon = (song) => {
       if (song.id === currentSong.value.id) {
@@ -83,9 +105,20 @@ export default {
       scrollRef.value.scroll.refresh()
     }
 
+    // 跳转到当前播放歌曲
+    const scrollToCurrent = () => {
+      const index = sequenceList.value.findIndex(song => {
+        return song.id === currentSong.value.id
+      })
+      if (index === -1) return
+      const target = listRef.value.children[index]
+      scrollRef.value.scroll.scrollToElement(target, 300)
+    }
+
     return {
       visible,
       scrollRef,
+      listRef,
       playlist,
       sequenceList,
 
@@ -102,7 +135,8 @@ export default {
       show,
       selectItem,
       getCurrentIcon,
-      refreshScroll
+      refreshScroll,
+      scrollToCurrent
     }
   }
 }
@@ -131,20 +165,27 @@ export default {
       .title{
         display: flex;
         align-items: center;
-        .iconfont{
-          margin-right: 10px;
-          font-size: 20px;
-          color: $color-text-g;
-        }
-        .text{
-          flex: 1;
-          font-size: $font-size-medium;
-          color: $color-text;
-        }
-        .clear{
-          .icon-clear {
-            font-size: $font-size-medium;
+        justify-content: space-between;
+        .left{
+          display: flex;
+          align-items: center;
+          .iconfont{
+            margin-right: 10px;
+            font-size: 20px;
             color: $color-text-g;
+          }
+          .text{
+            flex: 1;
+            font-size: $font-size-medium;
+            color: $color-text;
+          }
+        }
+        .right{
+          .clear{
+            .icon-clear {
+              font-size: $font-size-medium;
+              color: $color-text-g;
+            }
           }
         }
       }
@@ -158,12 +199,12 @@ export default {
         height: 40px;
         padding: 0 30px 0 20px;
         overflow: hidden;
-        &.list-enter-active, &.list-leave-active {
-          transition: all 0.1s;
-        }
-        &.list-enter, &.list-leave-to {
-          height: 0;
-        }
+        // &.list-enter-active, &.list-leave-active {
+        //   transition: all 0.1s;
+        // }
+        // &.list-enter, &.list-leave-to {
+        //   height: 0;
+        // }
         .fa-volume-up {
           color: $color-theme;
           margin-right: 5px;
