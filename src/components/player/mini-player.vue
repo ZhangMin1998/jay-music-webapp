@@ -53,8 +53,8 @@ export default {
 
     // const route = useRoute()
     const picUrl = ref(null)
-    const name = ref(null)
-    const singer = ref(null)
+    // const name = ref(null)
+    // const singer = ref(null)
 
     // vuex
     const store = useStore()
@@ -73,8 +73,8 @@ export default {
         return
       }
       picUrl.value = currentSong.value.al.picUrl
-      name.value = currentSong.value.name
-      singer.value = currentSong.value.ar[0].name
+      //   name.value = currentSong.value.name
+      //   singer.value = currentSong.value.ar[0].name
     })
 
     // hooks
@@ -93,8 +93,8 @@ export default {
       playlistRef,
 
       picUrl,
-      name,
-      singer,
+      // name,
+      // singer,
 
       fullScreen,
       currentSong,

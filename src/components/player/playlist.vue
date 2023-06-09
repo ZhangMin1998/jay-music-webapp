@@ -1,5 +1,5 @@
 <template>
-  <div class="playlist" v-show="visible && playlist.length" @click.stop="hide">
+  <div class="play_list" v-show="visible && playlist.length" @click.stop="hide">
     <div class="list_wrapper" @click.stop>
       <div class="list_header">
         <div class="title">
@@ -50,7 +50,7 @@ import useMode from './use-mode'
 import useFavorite from './use-favorite'
 
 export default {
-  name: 'playlist',
+  name: 'play_list',
   components: {
     Scroll
   },
@@ -143,7 +143,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.playlist{
+.play_list{
   position: fixed;
   left: 0;
   right: 0;

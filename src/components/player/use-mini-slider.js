@@ -13,9 +13,10 @@ export default function useMinislider () {
   const fullScreen = computed(() => store.state.fullScreen)
   const playlist = computed(() => store.state.playlist)
   const currentIndex = computed(() => store.state.currentIndex)
+  // const playing = computed(() => store.state.playing)
 
   const sliderShow = computed(() => {
-    return !fullScreen.value && !!playlist.value
+    return !fullScreen.value && playlist.value.length > 0
   })
 
   onMounted(() => {
@@ -23,27 +24,28 @@ export default function useMinislider () {
     watch(sliderShow, async (newSliderShow) => {
       if (newSliderShow) {
         await nextTick()
-        if (!sliderVal) {
-          sliderVal = slider.value = new BScroll(sliderWrapperRef.value, {
-            click: true,
-            scrollX: true,
-            scrollY: false,
-            momentum: false, // 当使用 slide 时，这个值需要设置为 false，用来避免惯性动画带来的快速滚动时的闪烁的问题和快速滑动时一次滚动多页的问题。
-            bounce: false, // bounce 值需要设置为 false，否则会在循环衔接的时候出现闪烁
-            probeType: 2,
-            slide: {
-              autoplay: false,
-              loop: true
-            }
-          })
+        // if (!sliderVal) {
+        sliderVal = slider.value = new BScroll(sliderWrapperRef.value, {
+          click: true,
+          scrollX: true,
+          scrollY: false,
+          momentum: false, // 当使用 slide 时，这个值需要设置为 false，用来避免惯性动画带来的快速滚动时的闪烁的问题和快速滑动时一次滚动多页的问题。
+          bounce: false, // bounce 值需要设置为 false，否则会在循环衔接的时候出现闪烁
+          probeType: 2,
+          slide: {
+            autoplay: false,
+            loop: true
+          }
+        })
 
-          sliderVal.on('slideWillChange', (page) => {
-            store.commit('setCurrentIndex', page.pageX)
-            store.commit('setPlayingState', true)
-          })
-        } else {
-          sliderVal.refresh()
-        }
+        sliderVal.on('slideWillChange', (page) => {
+          console.log(222, page.pageX)
+          store.commit('setCurrentIndex', page.pageX)
+          store.commit('setPlayingState', true)
+        })
+        // } else {
+        //   sliderVal.refresh()
+        // }
         sliderVal.goToPage(currentIndex.value, 0, 0)
       }
     })
