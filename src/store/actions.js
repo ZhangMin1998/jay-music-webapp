@@ -35,3 +35,34 @@ export function changeMode ({ commit, state, getters }, mode) {
   commit('setCurrentIndex', index) // 保证在切换模式后新列表 还是播放当前歌曲
   commit('setPlayMode', mode)
 }
+
+// 删除歌曲
+export function removeSong({ commit, state }, song) {
+  const sequenceList = state.sequenceList.slice() // 拷贝
+  const playlist = state.playlist.slice()
+
+  // 找索引
+  const sequenceIndex = findIndex(sequenceList, song)
+  const playIndex = findIndex(playlist, song)
+  if (sequenceIndex < 0 || playIndex < 0) return
+
+  // 删除
+  sequenceList.splice(sequenceIndex, 1)
+  playlist.splice(playIndex, 1)
+
+  // 删除后当前播放索引可能会变
+  let currentIndex = state.currentIndex
+  if (playIndex < currentIndex || currentIndex === playlist.length) { // 或当前播放是最后一首 删除最后一首
+    currentIndex--
+  }
+
+  commit('setSequenceList', sequenceList)
+  commit('setPlaylist', playlist)
+  commit('setCurrentIndex', currentIndex)
+}
+
+function findIndex(list, song) {
+  return list.findIndex(item => {
+    return item.id === song.id
+  })
+}

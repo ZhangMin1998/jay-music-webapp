@@ -17,8 +17,8 @@
         </div>
       </div>
       <scroll ref="scrollRef" class="list_content">
-        <!-- <transition-group ref="listRef" name="list" tag="ul"> -->
-        <ul ref="listRef">
+        <transition-group ref="listRef" name="list" tag="ul">
+        <!-- <ul ref="listRef"> -->
           <li
             class="item"
             ref="listItem"
@@ -31,9 +31,12 @@
             <span class="favorite" @click="toggleFavorite(song)">
               <i class="iconfont" :class="getFavoriteIcon(song)"></i>
             </span>
+            <span class="delete" @click.stop="removeSong(song)">
+              <i class="icon-delete"></i>
+            </span>
           </li>
-        </ul>
-        <!-- </transition-group> -->
+        <!-- </ul> -->
+        </transition-group>
       </scroll>
       <div class="list_close" @click.stop="hide">
         <span>关闭</span>
@@ -111,8 +114,14 @@ export default {
         return song.id === currentSong.value.id
       })
       if (index === -1) return
-      const target = listRef.value.children[index]
+      // console.log(listRef.value)
+      const target = listRef.value.$el.children[index]
       scrollRef.value.scroll.scrollToElement(target, 300)
+    }
+
+    // 删除歌曲
+    const removeSong = song => {
+      store.dispatch('removeSong', song)
     }
 
     return {
@@ -136,7 +145,8 @@ export default {
       selectItem,
       getCurrentIcon,
       refreshScroll,
-      scrollToCurrent
+      scrollToCurrent,
+      removeSong
     }
   }
 }
@@ -199,12 +209,12 @@ export default {
         height: 40px;
         padding: 0 30px 0 20px;
         overflow: hidden;
-        // &.list-enter-active, &.list-leave-active {
-        //   transition: all 0.1s;
-        // }
-        // &.list-enter, &.list-leave-to {
-        //   height: 0;
-        // }
+        &.list-enter-active, &.list-leave-active {
+          transition: all 0.1s;
+        }
+        &.list-enter, &.list-leave-to {
+          height: 0;
+        }
         .fa-volume-up {
           color: $color-theme;
           margin-right: 5px;
@@ -217,9 +227,14 @@ export default {
           // @include no-wrap();
         }
         .favorite{
+          margin-right: 15px;
           .icon-like {
             color: $color-sub-theme;
           }
+        }
+        .delete{
+          font-size: $font-size-small;
+          color: $color-theme;
         }
       }
     }
