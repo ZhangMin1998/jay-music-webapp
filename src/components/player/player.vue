@@ -219,6 +219,7 @@ export default {
           const audioEl = audioRef.value
           audioEl.src = songData.url
           audioEl.play() // 播放
+          store.commit('setPlayingState', true)
         }
       })
     }
@@ -248,9 +249,9 @@ export default {
           index = list.length - 1
         }
         store.commit('setCurrentIndex', index)
-        if (!playing.value) {
-          store.commit('setPlayingState', true)
-        }
+        // if (!playing.value) {
+        //   store.commit('setPlayingState', true)
+        // }
       }
     }
 
@@ -266,9 +267,9 @@ export default {
           index = 0
         }
         store.commit('setCurrentIndex', index)
-        if (!playing.value) {
-          store.commit('setPlayingState', true)
-        }
+        // if (!playing.value) {
+        //   store.commit('setPlayingState', true)
+        // }
       }
     }
 

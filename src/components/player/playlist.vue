@@ -38,7 +38,7 @@
         <!-- </ul> -->
         </transition-group>
       </scroll>
-      <div class="list_close" @click.stop="hide">
+      <div class="list_close" :class="{'disable': removing}" @click.stop="hide">
         <span>关闭</span>
       </div>
     </div>
@@ -61,6 +61,7 @@ export default {
     const visible = ref(false)
     const scrollRef = ref(null)
     const listRef = ref(null)
+    const removing = ref(false)
 
     // vuex
     const store = useStore()
@@ -121,13 +122,22 @@ export default {
 
     // 删除歌曲
     const removeSong = song => {
+      if (removing.value) return // 防止多次点击 会报错
+
+      removing.value = true
       store.dispatch('removeSong', song)
+
+      setTimeout(() => { // 因为list动画就是300ms
+        removing.value = false
+      }, 300)
     }
 
     return {
       visible,
       scrollRef,
       listRef,
+      removing,
+
       playlist,
       sequenceList,
 
@@ -235,6 +245,9 @@ export default {
         .delete{
           font-size: $font-size-small;
           color: $color-theme;
+          &.disable{
+            color: $color-text-g;
+          }
         }
       }
     }

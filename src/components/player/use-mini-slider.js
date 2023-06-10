@@ -39,9 +39,8 @@ export default function useMinislider () {
         })
 
         sliderVal.on('slideWillChange', (page) => {
-          console.log(222, page.pageX)
           store.commit('setCurrentIndex', page.pageX)
-          store.commit('setPlayingState', true)
+          // store.commit('setPlayingState', true)
         })
         // } else {
         //   sliderVal.refresh()
@@ -54,6 +53,13 @@ export default function useMinislider () {
     watch(currentIndex, newVal => {
       if (sliderVal && sliderVal.value) {
         sliderVal.goToPage(newVal, 0, 0)
+      }
+    })
+
+    watch(playlist, async newList => {
+      if (sliderVal && sliderShow.value) {
+        await nextTick()
+        sliderVal.refresh()
       }
     })
   })
