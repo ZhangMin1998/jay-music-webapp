@@ -56,8 +56,9 @@ export default function useMinislider () {
       }
     })
 
+    // 解决删除歌曲后mini播放器左右滚动还会出现该歌曲的问题
     watch(playlist, async newList => {
-      if (sliderVal && sliderShow.value) {
+      if (sliderVal && sliderShow.value && newList.length) { // 有newList才能refresh
         await nextTick()
         sliderVal.refresh()
       }

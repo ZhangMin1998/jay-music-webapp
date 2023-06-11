@@ -10,7 +10,7 @@
             </span>
           </div>
           <div class="right">
-            <span class="clear">
+            <span class="clear" @click="showConfirm">
               <i class="icon-clear"></i>
             </span>
           </div>
@@ -42,11 +42,19 @@
         <span>关闭</span>
       </div>
     </div>
+    <Confirm
+      ref="confirmRef"
+      text="是否清空播放列表？"
+      confirmBtnText="清空"
+      @confirm="confirmClear"
+    >
+    </Confirm>
   </div>
 </template>
 
 <script>
 import Scroll from '@/base/Scroll/Scroll'
+import Confirm from '@/base/Comfirm/comfirm.vue'
 import { useStore } from 'vuex'
 import { ref, computed, watch, nextTick } from 'vue'
 import useMode from './use-mode'
@@ -55,13 +63,15 @@ import useFavorite from './use-favorite'
 export default {
   name: 'play_list',
   components: {
-    Scroll
+    Scroll,
+    Confirm
   },
   setup () {
     const visible = ref(false)
     const scrollRef = ref(null)
     const listRef = ref(null)
     const removing = ref(false)
+    const confirmRef = ref(null)
 
     // vuex
     const store = useStore()
@@ -127,9 +137,22 @@ export default {
       removing.value = true
       store.dispatch('removeSong', song)
 
+      if (!playlist.value.length) {
+        hide()
+      }
+
       setTimeout(() => { // 因为list动画就是300ms
         removing.value = false
       }, 300)
+    }
+
+    const showConfirm = () => {
+      confirmRef.value.show()
+    }
+
+    const confirmClear = () => {
+      store.dispatch('clearSongList')
+      hide()
     }
 
     return {
@@ -137,6 +160,7 @@ export default {
       scrollRef,
       listRef,
       removing,
+      confirmRef,
 
       playlist,
       sequenceList,
@@ -156,7 +180,9 @@ export default {
       getCurrentIcon,
       refreshScroll,
       scrollToCurrent,
-      removeSong
+      removeSong,
+      showConfirm,
+      confirmClear
     }
   }
 }
