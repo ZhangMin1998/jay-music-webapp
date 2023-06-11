@@ -54,7 +54,8 @@
 <script>
 import { getBannerData, getRecommendList, getRecommendMusic } from '@/api/recommend'
 import Slider from '@/base/Slider/Slider.vue'
-import Scroll from '@/base/Scroll/Scroll.vue'
+// import Scroll from '@/base/Scroll/Scroll.vue'
+import Scroll from '@/components/wrap-scroll'
 // import storage from 'good-storage'
 // import { ALBUM_KEY } from '@/assets/js/constant'
 

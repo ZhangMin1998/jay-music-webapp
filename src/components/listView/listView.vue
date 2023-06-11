@@ -32,7 +32,8 @@
 </template>
 
 <script>
-import Scroll from '@/base/Scroll/Scroll.vue'
+// import Scroll from '@/base/Scroll/Scroll.vue'
+import Scroll from '@/components/wrap-scroll'
 import useFixed from '@/components/listView/use-fixed'
 import useShortcut from '@/components/listView/use-shortcut'
 

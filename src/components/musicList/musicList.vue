@@ -44,7 +44,8 @@
 </template>
 
 <script>
-import Scroll from '@/base/Scroll/Scroll'
+// import Scroll from '@/base/Scroll/Scroll'
+import Scroll from '@/components/wrap-scroll'
 import SongList from '@/base/SongList/SongList'
 import { mapActions, mapState } from 'vuex'
 
