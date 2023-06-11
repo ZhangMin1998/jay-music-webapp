@@ -9,7 +9,7 @@ export default function useScroll (wrapperRef, options, emit) {
 
   onMounted(() => {
     const scrollVal = scroll.value = new BScroll(wrapperRef.value, {
-      observeDOM: true,
+      observeDOM: true, // 监听数据的变化，dom自动更新, 执行refresh, 内部重新计算
       ...options
     })
 
