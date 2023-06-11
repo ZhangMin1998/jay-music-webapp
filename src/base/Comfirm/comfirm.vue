@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name:'confirm',
+  name: 'con_firm',
   props: {
     text: {
       type: String,

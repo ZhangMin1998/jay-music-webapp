@@ -37,7 +37,7 @@ export function changeMode ({ commit, state, getters }, mode) {
 }
 
 // 删除歌曲
-export function removeSong({ commit, state }, song) {
+export function removeSong ({ commit, state }, song) {
   const sequenceList = state.sequenceList.slice() // 拷贝
   const playlist = state.playlist.slice()
 
@@ -66,14 +66,14 @@ export function removeSong({ commit, state }, song) {
 }
 
 // 清空列表
-export function clearSongList({ commit }) {
+export function clearSongList ({ commit }) {
   commit('setSequenceList', [])
   commit('setPlaylist', [])
   commit('setCurrentIndex', 0)
   commit('setPlayingState', false)
 }
 
-function findIndex(list, song) {
+function findIndex (list, song) {
   return list.findIndex(item => {
     return item.id === song.id
   })

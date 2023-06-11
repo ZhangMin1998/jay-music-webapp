@@ -21,7 +21,8 @@
       </div> -->
       <div class="filter" :style="filterStyle"></div>
     </div>
-    <Scroll class="list"
+    <Scroll
+      class="list"
       ref="list"
       v-loading="loading"
       v-no-result:[noResultText]="noResult"
@@ -110,8 +111,10 @@ export default {
       }
     },
     scrollStyle () {
+      const bottom = this.playlist.length ? '40px' : '0'
       return {
-        top: `${this.imageHeight}px`
+        top: `${this.imageHeight}px`,
+        bottom
       }
     },
     filterStyle () {
