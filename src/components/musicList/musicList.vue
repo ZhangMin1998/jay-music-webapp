@@ -213,6 +213,10 @@ export default {
         font-size: $font-size-medium-x;
       }
       .list-title{
+        width: 70%;
+        overflow: hidden;
+        white-space:nowrap;
+        text-overflow:ellipsis;
         position: absolute;
         right: 14px;
         line-height: 44px;

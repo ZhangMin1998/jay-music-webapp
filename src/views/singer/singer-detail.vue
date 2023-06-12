@@ -4,7 +4,6 @@
       :songs="hotSongs"
       :headerTitle="headerTitle"
       :pic="pic"
-      :bgStyle="bgStyle"
       :loading="loading"
     ></music-list>
   </div>
@@ -51,10 +50,6 @@ export default {
     },
     alias () {
       return this.headerTitleTouchDown
-    },
-    bgStyle () {
-      const singer = this.singerSource
-      return `background-image: url(${singer.avatar})`
     },
     pic () {
       const singer = this.singerSource

@@ -15,7 +15,7 @@
           <h1 class="title" v-show="!loading">推荐歌单</h1>
           <div class="box">
             <div v-for="item in playList" :key="item.id" class="item-box">
-              <div class="icon" @click="selectList(item)">
+              <div class="icon" @click="selectItem(item)">
                 <!-- <div class="gradients"></div> -->
                 <img v-lazy="item.picUrl" />
               </div>
@@ -48,7 +48,11 @@
         </div>
       </div>
     </Scroll>
-    <router-view></router-view>
+    <router-view v-slot="{ Component }">
+      <transition appear name="slide">
+        <component :is="Component" :data="selectedAlbum"/>
+      </transition>
+    </router-view>
   </div>
 </template>
 
@@ -57,8 +61,8 @@ import { getBannerData, getRecommendList, getRecommendMusic } from '@/api/recomm
 import Slider from '@/base/Slider/Slider.vue'
 // import Scroll from '@/base/Scroll/Scroll.vue'
 import Scroll from '@/components/wrap-scroll'
-// import storage from 'good-storage'
-// import { ALBUM_KEY } from '@/assets/js/constant'
+import storage from 'good-storage'
+import { ALBUM_KEY } from '@/assets/js/constant'
 
 export default {
   // eslint-disable-next-line
@@ -72,7 +76,8 @@ export default {
       banner: [],
       playList: [],
       recommendMusic: [],
-      loadingText: '正在加载...'
+      loadingText: '正在加载...',
+      selectedAlbum: null
     }
   },
   computed: {
@@ -119,9 +124,11 @@ export default {
       console.log(item)
     },
     // 点击歌单
-    selectList (list) {
+    selectItem (item) {
+      this.selectedAlbum = item
+      storage.session.set(ALBUM_KEY, item)
       this.$router.push({
-        path: `/recommend/${list.id}`
+        path: `/recommend/${item.id}`
       })
     },
     // 点击推荐歌曲

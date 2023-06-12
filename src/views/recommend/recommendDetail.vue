@@ -1,10 +1,9 @@
 <template>
   <div class="singer-detail">
     <music-list
-      :songs="hotSongs"
+      :songs="songs"
       :headerTitle="headerTitle"
       :pic="pic"
-      :bgStyle="bgStyle"
       :loading="loading"
     ></music-list>
   </div>
@@ -14,51 +13,47 @@
 import musicList from '@/components/musicList/musicList'
 import { getRecommendListDetail } from '@/api/recommend' // getSingerSongs
 import storage from 'good-storage'
-import { SINGER_KEY } from '@/assets/js/constant'
+import { ALBUM_KEY } from '@/assets/js/constant'
 
 export default {
   components: {
     musicList
   },
   props: {
-    singer: {
+    data: {
       type: Object
     }
   },
   computed: {
-    singerSource () {
+    dataSource () {
       let soure = null
-      const singer = this.singer
-      if (singer) {
-        soure = singer
+      const data = this.data
+      if (data) {
+        soure = data
       } else {
-        const cachedSinger = storage.session.get(SINGER_KEY)
-        if (cachedSinger && cachedSinger.id === Number(this.$route.params.id)) {
-          soure = cachedSinger
+        const cached = storage.session.get(ALBUM_KEY)
+        if (cached && cached.id === Number(this.$route.params.id)) {
+          soure = cached
         }
       }
       return soure
     },
     headerTitleTouchDown () {
       let name = ''
-      const singer = this.singerSource
-      if (singer.aliaName) {
-        name = singer.name + ` (${singer.aliaName})`
+      const data = this.dataSource
+      if (data.aliaName) {
+        name = data.name + ` (${data.aliaName})`
       } else {
-        name = singer.name
+        name = data.name
       }
       return name
     },
     alias () {
       return this.headerTitleTouchDown
     },
-    bgStyle () {
-      const singer = this.singerSource
-      return `background-image: url(${singer.avatar})`
-    },
     pic () {
-      const singer = this.singerSource
-      return singer && singer.avatar
+      const data = this.dataSource
+      return data && data.avatar || data.picUrl
     }
   },
   provide () {
@@ -68,19 +63,16 @@ export default {
   },
   data () {
     return {
-      headerTitle: '歌手',
-      hotSongs: [],
+      headerTitle: '歌单',
+      songs: [],
       loading: true
     }
   },
   async created () {
-    const detailResult2 = await getRecommendListDetail(this.singerSource.id)
+    const detailResult = await getRecommendListDetail(this.dataSource.id)
 
-    this.hotSongs = detailResult2.hotSongs
+    this.songs = detailResult.playlist.tracks
     this.loading = false
-  },
-  methods: {
-
   }
 }
 

@@ -55,7 +55,7 @@ export default {
       text-align: center;
 
       .tab-link {
-        padding-bottom: 5px;
+        padding: 6px;
         color: $color-text-lm;
       }
 

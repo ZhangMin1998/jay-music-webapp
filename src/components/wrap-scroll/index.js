@@ -19,7 +19,7 @@ export default {
       })
     })
   },
-  setup() {
+  setup () {
     const scrollRef = ref(null)
     const scroll = computed(() => {
       return scrollRef.value.scroll
