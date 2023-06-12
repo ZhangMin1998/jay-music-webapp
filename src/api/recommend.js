@@ -18,6 +18,17 @@ export function getRecommendList () {
     }
   })
 }
+
+// 推荐歌单详情
+export function getRecommendListDetail (id) {
+  return request({
+    url: '/playlist/detail',
+    params: {
+      id: id
+    }
+  })
+}
+
 // 推荐新音乐
 export function getRecommendMusic () {
   return request({

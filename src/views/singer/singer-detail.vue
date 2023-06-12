@@ -74,12 +74,6 @@ export default {
     }
   },
   async created () {
-    // console.log(this.singerSource)
-    // console.log('singer-detail-singer', this.singer)
-    // if (!this.singerSource) {
-    //   console.log(this.$route)
-    //   return
-    // }
     const detailResult2 = await getSingerDetail(this.singerSource.id)
 
     this.hotSongs = detailResult2.hotSongs

@@ -5,51 +5,70 @@ import { processSongs } from '@/service/song'
 export default function createDetailComponent(name, key, fetch) {
   return {
     name,
-    components: { MusicList },
-    props: {
-      data: Object
+    components: {
+      MusicList
     },
-    data() {
-      return {
-        songs: [],
-        loading: true
+    props: {
+      singer: {
+        type: Object
       }
     },
     computed: {
-      computedData() {
-        let ret = null
-        const data = this.data
-        if (data) {
-          ret = data
+      singerSource () {
+        let soure = null
+        const singer = this.singer
+        if (singer) {
+          soure = singer
         } else {
-          const cached = storage.session.get(key)
-          if (cached && (cached.mid || cached.id + '') === this.$route.params.id) {
-            ret = cached
+          const cachedSinger = storage.session.get(key)
+          if (cachedSinger && cachedSinger.id === Number(this.$route.params.id)) {
+            soure = cachedSinger
           }
         }
-        return ret
+        return soure
       },
-      pic() {
-        const data = this.computedData
-        return data && data.pic
+      headerTitleTouchDown () {
+        let name = ''
+        const singer = this.singerSource
+        if (singer.aliaName) {
+          name = singer.name + ` (${singer.aliaName})`
+        } else {
+          name = singer.name
+        }
+        return name
       },
-      title() {
-        const data = this.computedData
-        return data && (data.name || data.title)
+      alias () {
+        return this.headerTitleTouchDown
+      },
+      bgStyle () {
+        const singer = this.singerSource
+        return `background-image: url(${singer.avatar})`
+      },
+      pic () {
+        const singer = this.singerSource
+        return singer && singer.avatar
       }
     },
-    async created() {
-      const data = this.computedData
-      if (!data) {
-        const path = this.$route.matched[0].path
-        this.$router.push({
-          path
-        })
-        return
+    provide () {
+      return {
+        alias: this.alias
       }
-      const result = await fetch(data)
-      this.songs = await processSongs(result.songs)
+    },
+    data () {
+      return {
+        headerTitle: '歌手',
+        hotSongs: [],
+        loading: true
+      }
+    },
+    async created () {
+      const detailResult2 = await fetch(this.singerSource.id)
+
+      this.hotSongs = detailResult2.hotSongs
       this.loading = false
+    },
+    methods: {
+
     }
   }
 }

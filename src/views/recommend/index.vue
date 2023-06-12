@@ -15,7 +15,7 @@
           <h1 class="title" v-show="!loading">推荐歌单</h1>
           <div class="box">
             <div v-for="item in playList" :key="item.id" class="item-box">
-              <div class="icon">
+              <div class="icon" @click="selectList(item)">
                 <!-- <div class="gradients"></div> -->
                 <img v-lazy="item.picUrl" />
               </div>
@@ -48,6 +48,7 @@
         </div>
       </div>
     </Scroll>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -116,6 +117,12 @@ export default {
     // 点击轮播图
     selectBanner (item) {
       console.log(item)
+    },
+    // 点击歌单
+    selectList (list) {
+      this.$router.push({
+        path: `/recommend/${list.id}`
+      })
     },
     // 点击推荐歌曲
     selectSong (item) {
