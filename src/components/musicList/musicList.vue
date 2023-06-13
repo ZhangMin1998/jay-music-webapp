@@ -32,10 +32,10 @@
       @scroll="onScroll"
     >
       <div class="music_list_wrapper">
-        <div class="sequence_play" v-show="songs.length" @click="random">
+        <div class="sequence_play" v-show="songLength" @click="random">
           <i class="iconfont icon-bofangicon"></i>
           <span class="text">随机播放</span>
-          <span class="count">(共{{songs.length}}首)</span>
+          <span class="count">(共{{songLength}}首)</span>
         </div>
         <SongList :songs="songs" @select="selectItem"></SongList>
       </div>
@@ -145,10 +145,18 @@ export default {
           this.showAlias = true
         }
       }
+    },
+    songs: {
+      handler (newVal) {
+        if (newVal.length) {
+          this.songLength = newVal.length
+        }
+      }
     }
   },
   data () {
     return {
+      songLength: null,
       showAlias: true,
       imageHeight: 0, // 图片的高度
       scrollY: 0, // 滚动的距离

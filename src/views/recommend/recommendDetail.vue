@@ -1,5 +1,5 @@
 <template>
-  <div class="singer-detail">
+  <div class="album">
     <music-list
       :songs="songs"
       :headerTitle="headerTitle"
@@ -10,78 +10,82 @@
 </template>
 
 <script>
-import musicList from '@/components/musicList/musicList'
+// import musicList from '@/components/musicList/musicList'
+// import storage from 'good-storage'
 import { getRecommendListDetail } from '@/api/recommend' // getSingerSongs
-import storage from 'good-storage'
 import { ALBUM_KEY } from '@/assets/js/constant'
+import createDetailComponent from '@/assets/js/create-detail-component'
 
-export default {
-  components: {
-    musicList
-  },
-  props: {
-    data: {
-      type: Object
-    }
-  },
-  computed: {
-    dataSource () {
-      let soure = null
-      const data = this.data
-      if (data) {
-        soure = data
-      } else {
-        const cached = storage.session.get(ALBUM_KEY)
-        if (cached && cached.id === Number(this.$route.params.id)) {
-          soure = cached
-        }
-      }
-      return soure
-    },
-    headerTitleTouchDown () {
-      let name = ''
-      const data = this.dataSource
-      if (data.aliaName) {
-        name = data.name + ` (${data.aliaName})`
-      } else {
-        name = data.name
-      }
-      return name
-    },
-    alias () {
-      return this.headerTitleTouchDown
-    },
-    pic () {
-      const data = this.dataSource
-      return data && data.avatar || data.picUrl
-    }
-  },
-  provide () {
-    return {
-      alias: this.alias
-    }
-  },
-  data () {
-    return {
-      headerTitle: '歌单',
-      songs: [],
-      loading: true
-    }
-  },
-  async created () {
-    const detailResult = await getRecommendListDetail(this.dataSource.id)
+export default createDetailComponent('a_lbum', '歌单', ALBUM_KEY, getRecommendListDetail)
 
-    this.songs = detailResult.playlist.tracks
-    this.loading = false
-  }
-}
+// export default {
+//   name: 'a_lbum',
+//   components: {
+//     musicList
+//   },
+//   props: {
+//     data: {
+//       type: Object
+//     }
+//   },
+//   computed: {
+//     dataSource () {
+//       let soure = null
+//       const data = this.data
+//       if (data) {
+//         soure = data
+//       } else {
+//         const cached = storage.session.get(ALBUM_KEY)
+//         if (cached && cached.id === Number(this.$route.params.id)) {
+//           soure = cached
+//         }
+//       }
+//       return soure
+//     },
+//     headerTitleTouchDown () {
+//       let name = ''
+//       const data = this.dataSource
+//       if (data.aliaName) {
+//         name = data.name + ` (${data.aliaName})`
+//       } else {
+//         name = data.name
+//       }
+//       return name
+//     },
+//     alias () {
+//       return this.headerTitleTouchDown
+//     },
+//     pic () {
+//       const data = this.dataSource
+//       return data && (data.avatar || data.picUrl)
+//     }
+//   },
+//   provide () {
+//     return {
+//       alias: this.alias
+//     }
+//   },
+//   data () {
+//     return {
+//       headerTitle: '歌单',
+//       songs: [],
+//       loading: true
+//     }
+//   },
+//   async created () {
+//     const detailResult = await getRecommendListDetail(this.dataSource.id)
+
+//     this.songs = detailResult.playlist.tracks
+//     this.loading = false
+//   }
+// }
 
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/variable";
 @import "@/assets/scss/mixin";
-.singer-detail{
+.album{
   width: 100%;
   height: 100%;
   position: fixed;

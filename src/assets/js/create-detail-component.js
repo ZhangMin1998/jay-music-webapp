@@ -1,52 +1,51 @@
-import MusicList from '@/components/music-list/music-list'
+import MusicList from '@/components/musicList/musicList'
 import storage from 'good-storage'
-import { processSongs } from '@/service/song'
 
-export default function createDetailComponent(name, key, fetch) {
+export default function createDetailComponent (name, headerTitle, key, fetch) {
   return {
     name,
     components: {
       MusicList
     },
     props: {
-      singer: {
+      data: {
         type: Object
       }
     },
     computed: {
-      singerSource () {
+      dataSource () {
         let soure = null
-        const singer = this.singer
-        if (singer) {
-          soure = singer
+        const data = this.data
+        if (data) {
+          soure = data
         } else {
-          const cachedSinger = storage.session.get(key)
-          if (cachedSinger && cachedSinger.id === Number(this.$route.params.id)) {
-            soure = cachedSinger
+          const cached = storage.session.get(key)
+          if (cached && cached.id === Number(this.$route.params.id)) {
+            soure = cached
           }
         }
         return soure
       },
       headerTitleTouchDown () {
         let name = ''
-        const singer = this.singerSource
-        if (singer.aliaName) {
-          name = singer.name + ` (${singer.aliaName})`
+        const data = this.dataSource
+        if (data.aliaName) {
+          name = data.name + ` (${data.aliaName})`
         } else {
-          name = singer.name
+          name = data.name
         }
         return name
       },
       alias () {
         return this.headerTitleTouchDown
       },
-      bgStyle () {
-        const singer = this.singerSource
-        return `background-image: url(${singer.avatar})`
-      },
+      // bgStyle () {
+      //   const singer = this.dataSource
+      //   return `background-image: url(${singer.avatar})`
+      // },
       pic () {
-        const singer = this.singerSource
-        return singer && singer.avatar
+        const data = this.dataSource
+        return data && (data.avatar || data.picUrl)
       }
     },
     provide () {
@@ -56,19 +55,21 @@ export default function createDetailComponent(name, key, fetch) {
     },
     data () {
       return {
-        headerTitle: '歌手',
+        headerTitle: headerTitle,
         hotSongs: [],
         loading: true
       }
     },
     async created () {
-      const detailResult2 = await fetch(this.singerSource.id)
-
-      this.hotSongs = detailResult2.hotSongs
-      this.loading = false
-    },
-    methods: {
-
+      if (name === 'a_lbum') {
+        const detailResult = await fetch(this.dataSource.id)
+        this.songs = detailResult.playlist.tracks
+        this.loading = false
+      } else if (name === 'singer') {
+        const detailResult = await fetch(this.dataSource.id)
+        this.songs = detailResult.hotSongs
+        this.loading = false
+      }
     }
   }
 }

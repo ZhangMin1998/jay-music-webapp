@@ -11,9 +11,12 @@
 
 <script>
 import musicList from '@/components/musicList/musicList'
-import { getSingerDetail } from '@/api/singer' // getSingerSongs
 import storage from 'good-storage'
+import { getSingerDetail } from '@/api/singer' // getSingerSongs
 import { SINGER_KEY } from '@/assets/js/constant'
+// import createDetailComponent from '@/assets/js/create-detail-component'
+
+// export default createDetailComponent('singer', '歌手', SINGER_KEY, getSingerDetail)
 
 export default {
   components: {
@@ -73,9 +76,6 @@ export default {
 
     this.hotSongs = detailResult2.hotSongs
     this.loading = false
-  },
-  methods: {
-
   }
 }
 
