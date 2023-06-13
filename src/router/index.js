@@ -3,7 +3,8 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 const Recommend = () => import('@/views/recommend/index.vue'/* webpackChunkName: "recommend" */)
 const RecommendDetail = () => import('@/views/recommend/recommendDetail.vue')
 const Singer = () => import('@/views/singer/singer.vue'/* webpackChunkName: "singer" */)
-const TopList = () => import('@/views/top-list'/* webpackChunkName: "top-list" */)
+const TopList = () => import('@/views/top-list/top-list'/* webpackChunkName: "top-list" */)
+const TopListDetail = () => import('@/views/top-list/top-list-detail')
 const Search = () => import('@/views/search'/* webpackChunkName: "search" */)
 const SingerDetail = () => import('@/views/singer/singer-detail.vue'/* webpackChunkName: "singer-detail" */)
 // const Album = () => import('@/views/album'/* webpackChunkName: "album" */)
@@ -37,13 +38,15 @@ const routes = [
       }
     ]
   },
-  // {
-  //   path: '/singer/detail',
-  //   component: SingerDetail
-  // },
   {
     path: '/top-list',
-    component: TopList
+    component: TopList,
+    children: [
+      {
+        path: ':id',
+        component: TopListDetail
+      }
+    ]
   },
   {
     path: '/search',

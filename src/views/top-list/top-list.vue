@@ -1,7 +1,6 @@
 <template>
-  <div class="top-list" v-loading="loading">
-    top-list
-    <!-- <scroll class="top-list-content">
+  <div class="top_list" v-loading="loading">
+    <scroll class="top_list_content">
       <ul>
         <li
           class="item"
@@ -13,40 +12,40 @@
             <img
               width="100"
               height="100"
-              v-lazy="item.pic"
+              v-lazy="item.coverImgUrl"
             />
           </div>
-          <ul class="song-list">
+          <ul class="song_list">
             <li
               class="song"
-              v-for="(song, index) in item.songList"
-              :key="song.id">
+              v-for="(song, index) in item.tracks"
+              :key="index">
               <span>{{index + 1}}. </span>
-              <span>{{song.songName}}-{{song.singerName}}</span>
+              <span>{{song.first}}-{{song.second}}</span>
             </li>
           </ul>
         </li>
       </ul>
     </scroll>
+    <!-- <router-view></router-view> -->
     <router-view v-slot="{ Component }">
       <transition appear name="slide">
         <component :is="Component" :data="selectedTop"/>
       </transition>
-    </router-view> -->
+    </router-view>
   </div>
 </template>
 
 <script>
-// import Scroll from '@/components/wrap-scroll'
-// import { getTopList } from '@/service/top-list'
-// import { TOP_KEY } from '@/assets/js/constant'
-// import storage from 'good-storage'
+import Scroll from '@/components/wrap-scroll'
+import { getTopList } from '@/api/top-list'
+import { TOP_KEY } from '@/assets/js/constant'
+import storage from 'good-storage'
 
 export default {
-  // eslint-disable-next-line
   name: 'top-list',
   components: {
-    // Scroll
+    Scroll
   },
   data () {
     return {
@@ -54,40 +53,47 @@ export default {
       loading: true,
       selectedTop: null
     }
+  },
+  async created () {
+    const result = await getTopList()
+    // console.log(result)
+    this.topList = result.list
+    // result.list.forEach(item => {
+    //   if (item.tracks.length) {
+    //     this.topList.push(item)
+    //   }
+    // })
+    this.loading = false
+  },
+  methods: {
+    // 点击排行榜列表
+    selectItem (top) {
+      this.selectedTop = top
+      storage.session.set(TOP_KEY, top) // 解决刷新后无数据的问题
+      this.$router.push({
+        path: `/top-list/${top.id}`
+      })
+    }
   }
-  // async created () {
-  //   const result = await getTopList()
-  //   this.topList = result.topList
-  //   this.loading = false
-  // },
-  // methods: {
-  //   selectItem (top) {
-  //     this.selectedTop = top
-  //     this.cacheTop(top)
-  //     this.$router.push({
-  //       path: `/top-list/${top.id}`
-  //     })
-  //   },
-  //   cacheTop (top) {
-  //     // storage.session.set(TOP_KEY, top)
-  //   }
-  // }
 }
 </script>
 
 <style lang="scss" scoped>
-  .top-list {
+  .top_list {
     position: fixed;
     width: 100%;
     top: 88px;
     bottom: 0;
-    .top-list-content {
+    .top_list_content {
       height: 100%;
+      // padding-top: 5px;
       overflow: hidden;
       .item {
         display: flex;
         margin: 0 20px;
         padding-top: 20px;
+        // margin: 0 10px;
+        // padding: 3px 0;
         height: 100px;
         &:last-child {
           padding-bottom: 20px;
@@ -96,8 +102,11 @@ export default {
           flex: 0 0 100px;
           width: 100px;
           height: 100px;
+          img {
+            border-radius: 4px;
+          }
         }
-        .song-list {
+        .song_list {
           flex: 1;
           display: flex;
           flex-direction: column;
@@ -105,9 +114,9 @@ export default {
           padding: 0 20px;
           height: 100px;
           overflow: hidden;
-          background: $color-highlight-background;
-          color: $color-text-d;
-          font-size: $font-size-small;
+          background: $color-dialog-background;
+          color: $color-text;
+          font-size: $font-size-small-x;
           .song {
             @include no-wrap();
             line-height: 26px;

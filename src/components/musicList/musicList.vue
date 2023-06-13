@@ -37,7 +37,7 @@
           <span class="text">随机播放</span>
           <span class="count">(共{{songLength}}首)</span>
         </div>
-        <SongList :songs="songs" @select="selectItem"></SongList>
+        <SongList :songs="songs" @select="selectItem" :rank="rank"></SongList>
       </div>
     </Scroll>
   </div>
@@ -77,6 +77,10 @@ export default {
     noResultText: {
       type: String,
       default: '抱歉，没有找到可播放的歌曲'
+    },
+    rank: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {

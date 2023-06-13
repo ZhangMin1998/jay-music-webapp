@@ -2,7 +2,10 @@
   <div class="song_list">
     <ul>
       <li v-for="(item, index) in songs" :key="index" class="item" @click="selectItem(item, index)">
-        <p class="count">{{index + 1}}</p>
+        <div class="rank" v-if="rank">
+          <span :class="getRankCls(index)">{{ getRankText(index) }}</span>
+        </div>
+        <p class="count" v-else>{{index + 1}}</p>
         <div class="content">
           <h2 class="name">{{ item.name }}</h2>
           <!-- <p class="desc">{{ this.alias }}</p> -->
@@ -20,6 +23,10 @@ export default {
     songs: {
       type: Array,
       default: () => []
+    },
+    rank: {
+      type: Boolean,
+      default: false
     }
   },
   inject: ['alias'],
@@ -38,6 +45,18 @@ export default {
   methods: {
     selectItem (item, index) {
       this.$emit('select', { item, index })
+    },
+    getRankText(index) {
+      if (index > 2) {
+        return index + 1
+      }
+    },
+    getRankCls(index) {
+      if (index <= 2) {
+        return `icon icon${index}`
+      } else {
+        return 'text'
+      }
     }
   }
 }
@@ -59,6 +78,31 @@ export default {
       flex: 0 0 50px;
       text-align: center;
       color: $color-text-g;
+    }
+    .rank {
+      width: 50px;
+      // flex: 0 0 50px;
+      // margin-right: 20px;
+      text-align: center;
+      .icon {
+        display: inline-block;
+        width: 25px;
+        height: 24px;
+        background-size: 25px 24px;
+        &.icon0 {
+          @include bg-image('first');
+        }
+        &.icon1 {
+          @include bg-image('second');
+        }
+        &.icon2 {
+          @include bg-image('third');
+        }
+      }
+      .text {
+        color: $color-text-g;
+        // font-size: $font-size-large;
+      }
     }
     .content{
       flex: 1;

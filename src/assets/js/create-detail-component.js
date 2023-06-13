@@ -45,7 +45,7 @@ export default function createDetailComponent (name, headerTitle, key, fetch) {
       // },
       pic () {
         const data = this.dataSource
-        return data && (data.avatar || data.picUrl)
+        return data && (data.avatar || data.picUrl || data.coverImgUrl)
       }
     },
     provide () {
