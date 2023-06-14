@@ -3,6 +3,7 @@
     <transition appear name="slide">
       <div class="search_box_wrapper">
         <i class="fa fa-angle-left" @click="goBack"></i>
+        <search-box ref="searchBox" placeholder="搜索歌曲、歌手"></search-box>
       </div>
     </transition>
   </div>
@@ -11,6 +12,7 @@
 <script>
 // import { useRoute, useRouter } from 'vue-router'
 import { useRouter } from 'vue-router'
+import SearchBox from '@/base/search-box/search-box'
 // import SearchInput from '@/components/search/search-input'
 // import Suggest from '@/components/search/suggest'
 // import SearchList from '@/components/base/search-list/search-list'
@@ -28,11 +30,7 @@ export default {
   // eslint-disable-next-line
   name: 'search',
   components: {
-    // Confirm,
-    // Scroll,
-    // SearchList,
-    // SearchInput,
-    // Suggest
+    SearchBox
   },
   setup () {
     // const route = useRoute()
@@ -56,11 +54,17 @@ export default {
     bottom: 0;
     background: $color-background;
     .search_box_wrapper{
+      padding: 0px 35px 0px 5px;
       background: $color-theme;
+      display: flex;
+      align-items: center;
       .fa-angle-left {
         color: #fff;
         padding: 5px 10px;
         font-size: 30px;
+        // position: absolute;
+        // top: 3px;
+        // left: 5px;
       }
     }
   }
