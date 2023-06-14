@@ -46,12 +46,12 @@ export default {
     selectItem (item, index) {
       this.$emit('select', { item, index })
     },
-    getRankText(index) {
+    getRankText (index) {
       if (index > 2) {
         return index + 1
       }
     },
-    getRankCls(index) {
+    getRankCls (index) {
       if (index <= 2) {
         return `icon icon${index}`
       } else {

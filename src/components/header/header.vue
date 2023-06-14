@@ -5,6 +5,9 @@
     <router-link class="mine" to="/recommend">
       <i class="icon-mine"></i>
     </router-link>
+    <router-link to="/search" class="search">
+      <i class="iconfont icon-search"></i>
+    </router-link>
   </div>
 </template>
 
@@ -19,18 +22,7 @@ export default {
     height: 44px;
     width: 100%;
     text-align: center;
-    // color: $color-theme;
     background: $color-theme;
-    // .icon {
-    //   display: inline-block;
-    //   vertical-align: top;
-    //   margin-top: 6px;
-    //   width: 30px;
-    //   height: 32px;
-    //   margin-right: 9px;
-    //   @include bg-image('logo');
-    //   background-size: 30px 32px;
-    // }
     .text {
       display: inline-block;
       vertical-align: top;
@@ -42,8 +34,19 @@ export default {
     .mine {
       position: absolute;
       top: 0;
-      right: 0;
+      left: 0;
       .icon-mine {
+        display: block;
+        padding: 12px;
+        // font-size: $font-size-large-x;
+        color: $color-theme-l;
+      }
+    }
+    .search{
+      position: absolute;
+      top: 0;
+      right: 0;
+      .iconfont {
         display: block;
         padding: 12px;
         // font-size: $font-size-large-x;
