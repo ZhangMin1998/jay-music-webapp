@@ -1,31 +1,52 @@
 <template>
-  <div class="search_box">
+  <div class="search_box_vue3">
     <input :placeholder="placeholder" v-model.trim="query" type="text" class="box">
-    <i v-show="query" class="icon-delete" @click="clear"></i>
+    <i v-show="true" class="icon-delete" @click="clear"></i>
   </div>
 </template>
 
 <script>
+import { debounce } from 'throttle-debounce'
+// import { debounceFun } from '@/assets/js/util'
+
 export default {
-  name: 'search_box',
+  name: 'search_box_vue3',
   props: {
+    modelValue: String,
     placeholder: {
       type: String,
       deault: ''
     }
   },
-  emits: ['query'],
+  watch: {
+    // query (newVal) {
+    //   // this.$emit('update:modelValue', newVal)
+    //   debounce(300, (newVal) => {
+    //     // this.$emit('update:modelValue', newVal) // this的指向不对 ？？？
+    //   })
+    // }
+    modelValue (newVal) { // 监听父组件改变值的时候 自动填充时
+      this.query = newVal
+    }
+  },
   data () {
     return {
-      query: ''
+      name: 'zm',
+      query: this.modelValue
     }
   },
   created () {
-    this.$watch('query', debounce((newQuery) => {
-      this.$emit('query', newQuery)
-    }, 300))
+    this.$watch('query', debounce(300, (newQuery) => {
+      this.$emit('update:modelValue', newQuery)
+    }))
   },
   methods: {
+    //   clickfun: debounceFun(function() {
+    //     console.log(this.name)
+    //   }, 500),
+    //   clickfun2: debounce(300, () => {
+    //     console.log(666)
+    //   })
     clear () {
       this.query = ''
     }
@@ -34,7 +55,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.search_box{
+.search_box_vue3{
   display: flex;
   align-items: center;
   width: 100%;

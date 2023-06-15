@@ -17,6 +17,7 @@
     "good-storage": "^1.1.1",
     "lyric-parser": "^1.0.1",
     "pinyin": "^2.11.2",
+    "throttle-debounce": "^5.0.0",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vue3-lazy": "^1.0.0-alpha.1",

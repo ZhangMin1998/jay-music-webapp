@@ -26,3 +26,32 @@ export function formatTime (interval) {
   const second = (interval % 60 + '').padStart(2, '0')
   return `${minute}:${second}`
 }
+
+// 防抖
+export function debounceFun (func, delay) {
+  let timer
+
+  return function (...args) {
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      func.apply(this, args)
+    }, delay)
+  }
+}
+
+// 节流
+export function throttlefun (func, delay) {
+  let timer = null;
+
+  return function(...args) {
+    if (!timer) {
+      timer = setTimeout(() => {
+        func.apply(this, args);
+        timer = null;
+      }, delay);
+    }
+  };
+}
+
