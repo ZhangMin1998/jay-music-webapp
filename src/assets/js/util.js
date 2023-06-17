@@ -43,15 +43,14 @@ export function debounceFun (func, delay) {
 
 // 节流
 export function throttlefun (func, delay) {
-  let timer = null;
+  let timer = null
 
-  return function(...args) {
+  return function (...args) {
     if (!timer) {
       timer = setTimeout(() => {
-        func.apply(this, args);
-        timer = null;
-      }, delay);
+        func.apply(this, args)
+        timer = null
+      }, delay)
     }
-  };
+  }
 }
-
