@@ -8,11 +8,16 @@
       </div>
       <scroll class="search_scroll_wrapper" ref="scrollRef">
         <div>
+          <!-- 热门搜索 -->
           <div class="search_hots" v-show="!query">
             <p class="title">热门搜索</p>
             <span class="search_hots_item" v-for="(item, index) in hotKeys" :key="index" @click="addQuery(item.first)">
               {{ item.first }}
             </span>
+          </div>
+          <!-- 搜索结果 -->
+          <div class="search_result" v-show="query">
+            <suggest :query="query"></suggest>
           </div>
         </div>
       </scroll>
@@ -31,6 +36,7 @@ import { getSearchHot } from '@/api/search'
 // import Suggest from '@/components/search/suggest'
 // import SearchList from '@/components/base/search-list/search-list'
 import Scroll from '@/components/wrap-scroll'
+import suggest from '@/views/search/suggest'
 // import Confirm from '@/components/base/confirm/confirm'
 // import { getHotKeys } from '@/service/search'
 // import { useStore } from 'vuex'
@@ -45,7 +51,8 @@ export default {
   components: {
     // SearchBox,
     searchBoxVue3,
-    Scroll
+    Scroll,
+    suggest
   },
   setup () {
     // const route = useRoute()
@@ -121,6 +128,12 @@ export default {
           color: $color-text;
           font-size: $font-size-medium;
         }
+      }
+      .search_result{
+        width: 100%;
+        position: relative;
+        top: 10px;
+        bottom: 0;
       }
     }
   }
