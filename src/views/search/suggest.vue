@@ -1,27 +1,32 @@
 <template>
-  <div class="suggest" v-loading:[loadingText]="!Object.keys(suggest).length">
+  <div class="suggest" v-loading:[loadingText]="loading">
     <div class="search_suggest">
-      <p class="title">最佳匹配</p>
-      <div class="search_suggest_item" v-if="suggest.artists">
-        <img :src="suggest.artists[0].picUrl" width="50" height="50">
-        <span>歌手：{{suggest.artists[0].name}}</span>
+      <!-- <p class="title">最佳匹配{{ suggest }}</p> -->
+      <div class="search_suggest_item" v-for="(item, index) in singer" :key="index">
+        <img v-lazy="item.picUrl" width="50" height="50">
+        <span>歌手：{{item.name}}</span>
       </div>
-      <div class="search_suggest_item" v-if="suggest.playlists">
-        <img :src="suggest.playlists[0].coverImgUrl" width="50" height="50">
+      <div class="search_suggest_item" v-for="(item, index) in playlists" :key="index">
+        <img :src="item.coverImgUrl" width="50" height="50">
         <div class="text">
-          <p>歌单：{{suggest.playlists[0].name}}</p>
-          <p class="singer">{{suggest.albums[0].artist.name}}</p>
+          <p>歌单：{{item.name}}</p>
+          <p class="singer">{{item.description}}</p>
         </div>
       </div>
     </div>
     <ul class="suggest_list">
-
+      <li class="suggest-item" v-for="(item, index) in songs" :key="index">
+        <div class="name">
+          <p class="song">{{item.name}}</p>
+          <p class="singer">{{item.singer}}</p>
+        </div>
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
-import { ref, watch, reactive } from 'vue'
+import { ref, watch } from 'vue'
 import { getSearchSongs, getSearchSuggest, getSongDetail } from '@/api/search'
 import { createSearchSong } from '@/assets/js/song'
 
@@ -37,13 +42,24 @@ export default {
       default: true
     }
   },
-  setup (props) {
+  emits: ['noResult'],
+  setup (props, { emit }) {
     const singer = ref(null)
+    const playlists = ref(null) // 歌单
     const songs = ref([])
     const hasMore = ref(true)
     const page = ref(1)
-    const suggest = reactive({})
+    let suggest = ref(null)
+    let loading = ref(false)
     const loadingText = ref('')
+    const noResultText = ref('抱歉，暂无搜索结果')
+
+    // const loading = computed(() => {
+    //   return !singer.value && !playlists.value && !songs.value.length
+    // })
+    // const noResult = computed(() => {
+    //   return !singer.value && !playlists.value && !songs.value.length && !hasMore.value
+    // })
 
     watch(() => props.query, async newQuery => {
       if (!newQuery) return
@@ -55,13 +71,17 @@ export default {
 
       // 初始化
       singer.value = null
+      playlists.value = null
       songs.value = []
       page.value = 1
       hasMore.value = true
+      loading.value = true
 
       const res = await getSearchSongs(props.query, page.value)
       console.log(res)
-      const list = res.result.songs
+      hasMore.value = res.result.hasMore || false
+      // songs.value = res.result.songs || []
+      const list = res.result.songs || []
       const ret = []
       list.forEach((item) => {
         ret.push(createSearchSong(item))
@@ -70,18 +90,24 @@ export default {
       page.value += 30
 
       const res2 = await getSearchSuggest(props.query)
-      console.log(res2)
-      Object.assign(suggest, res2.result)
-      console.log(suggest)
+      singer.value = res2.result.artists
+      playlists.value = res2.result.playlists
+      loading.value = false
+
+      emit('noResult', !singer.value && !playlists.value && !songs.value.length && !hasMore.value)
     }
 
     return {
       singer,
+      playlists,
       songs,
       hasMore,
       page,
       suggest,
-      loadingText
+      loadingText,
+      loading,
+      noResultText
+      // noResult
     }
   }
 }
@@ -102,12 +128,13 @@ export default {
       align-items: center;
       padding: 8px 20px;
       font-size: $font-size-medium;
+      border-bottom: 1px solid rgb(228, 228, 228);
       img {
         flex: 0 0 50px;
         padding-right: 15px;
       }
       .text{
-        width: 100%;
+        width: 80%;
         p {
           padding: 3px 0;
           white-space: nowrap;
@@ -122,7 +149,32 @@ export default {
     }
   }
   .suggest_list{
-
+    height: 100%;
+    padding-bottom: 45px;
+    .suggest-item{
+      height: 50px;
+      padding: 3px 20px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgb(228, 228, 228);
+      p {
+        padding: 3px 0;
+      }
+      .song{
+        color: $color-text;
+        font-size: $font-size-medium-x;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .singer{
+        font-size: 12px;
+        color: $color-text-g;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
   }
 }
 </style>

@@ -6,7 +6,7 @@
         <!-- <search-box ref="searchBox" placeholder="搜索歌曲、歌手"></search-box> -->
         <search-box-vue3 v-model='query' placeholder="搜索歌曲、歌手"></search-box-vue3>
       </div>
-      <scroll class="search_scroll_wrapper" ref="scrollRef">
+      <scroll class="search_scroll_wrapper" ref="scrollRef" v-no-result:[noResultText]="noResult && query">
         <div>
           <!-- 热门搜索 -->
           <div class="search_hots" v-show="!query">
@@ -17,7 +17,7 @@
           </div>
           <!-- 搜索结果 -->
           <div class="search_result" v-show="query">
-            <suggest :query="query"></suggest>
+            <suggest :query="query" @noResult="noResultFun"></suggest>
           </div>
         </div>
       </scroll>
@@ -63,6 +63,9 @@ export default {
     //   console.log(val)
     // })
 
+    const noResultText = ref('抱歉，暂无搜索结果')
+    const noResult = ref(false)
+
     const hotKeys = ref([])
     getSearchHot().then(res => {
       hotKeys.value = res.result.hots
@@ -74,12 +77,18 @@ export default {
     const addQuery = (s) => {
       query.value = s
     }
+    const noResultFun = (e) => {
+      noResult.value = e
+    }
     return {
       query,
+      noResultText,
       hotKeys,
 
       goBack,
-      addQuery
+      addQuery,
+      noResultFun,
+      noResult
     }
   }
 }
@@ -131,6 +140,7 @@ export default {
       }
       .search_result{
         width: 100%;
+        height: 100%;
         position: relative;
         top: 10px;
         bottom: 0;
