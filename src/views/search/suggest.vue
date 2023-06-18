@@ -1,5 +1,5 @@
 <template>
-  <div class="suggest" v-loading:[loadingText]="loading">
+  <div class="suggest" ref="rootRef" v-loading:[loadingText]="loading">
     <div class="search_suggest">
       <!-- <p class="title">最佳匹配{{ suggest }}</p> -->
       <div class="search_suggest_item" v-for="(item, index) in singer" :key="index">
@@ -21,14 +21,16 @@
           <p class="singer">{{item.singer}}</p>
         </div>
       </li>
+      <div class="suggest-item" v-loading:[loadingText]="pullUpLoading"></div>
     </ul>
   </div>
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { getSearchSongs, getSearchSuggest, getSongDetail } from '@/api/search'
 import { createSearchSong } from '@/assets/js/song'
+import usePullUpLoad from '@/views/search/use-pull-up-load'
 
 export default {
   name: 's_uggest',
@@ -49,8 +51,8 @@ export default {
     const songs = ref([])
     const hasMore = ref(true)
     const page = ref(1)
-    let suggest = ref(null)
-    let loading = ref(false)
+    // let suggest = ref(null)
+    const loading = ref(false)
     const loadingText = ref('')
     const noResultText = ref('抱歉，暂无搜索结果')
 
@@ -60,6 +62,10 @@ export default {
     // const noResult = computed(() => {
     //   return !singer.value && !playlists.value && !songs.value.length && !hasMore.value
     // })
+
+    const pullUpLoading = computed(() => {
+      return isPullUpLoad.value && hasMore.value
+    })
 
     watch(() => props.query, async newQuery => {
       if (!newQuery) return
@@ -97,17 +103,37 @@ export default {
       emit('noResult', !singer.value && !playlists.value && !songs.value.length && !hasMore.value)
     }
 
+    const searchMore = async () => {
+      if (!hasMore.value || !props.query || !songs.value.length) return
+      // page.value++
+      const res = await getSearchSongs(props.query, page.value)
+      hasMore.value = res.result.hasMore || false
+      const list = res.result.songs || []
+      const ret = []
+      list.forEach((item) => {
+        ret.push(createSearchSong(item))
+      })
+      songs.value = songs.value.concat(ret)
+      page.value += 30
+    }
+
+    // hook
+    const { rootRef, isPullUpLoad } = usePullUpLoad(searchMore)
+
     return {
       singer,
       playlists,
       songs,
       hasMore,
       page,
-      suggest,
+      // suggest,
       loadingText,
       loading,
-      noResultText
-      // noResult
+      noResultText,
+      // noResult,
+
+      rootRef,
+      pullUpLoading
     }
   }
 }
