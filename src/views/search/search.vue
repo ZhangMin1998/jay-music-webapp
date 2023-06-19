@@ -19,7 +19,7 @@
       </scroll>
       <!-- 搜索结果 -->
       <div class="search_result" v-show="query">
-        <suggest :query="query" @noResult="noResultFun"></suggest>
+        <suggest :query="query" @noResult="noResultFun" @select-song="selectSong"></suggest>
       </div>
     </div>
   </transition>
@@ -29,6 +29,7 @@
 // import { useRoute, useRouter } from 'vue-router'
 import { useRouter } from 'vue-router'
 import { ref, watch } from 'vue'
+import { useStore } from 'vuex'
 // import SearchBox from '@/base/search-box/search-box'
 import searchBoxVue3 from '@/base/search-box/search-box-vue3'
 import { getSearchHot } from '@/api/search'
@@ -39,7 +40,6 @@ import Scroll from '@/components/wrap-scroll'
 import suggest from '@/views/search/suggest'
 // import Confirm from '@/components/base/confirm/confirm'
 // import { getHotKeys } from '@/service/search'
-// import { useStore } from 'vuex'
 // import { useRouter } from 'vue-router'
 // import storage from 'good-storage'
 // import { SINGER_KEY } from '@/assets/js/constant'
@@ -57,6 +57,8 @@ export default {
   setup () {
     // const route = useRoute()
     const router = useRouter()
+
+    const store = useStore()
 
     const query = ref('')
     // watch(query, (val) => {
@@ -80,6 +82,10 @@ export default {
     const noResultFun = (e) => {
       noResult.value = e
     }
+
+    const selectSong = song => { // 添加一首歌 就是往playlist sequenslist添加一首
+      store.dispatch('addSong', song)
+    }
     return {
       query,
       noResultText,
@@ -88,7 +94,9 @@ export default {
       goBack,
       addQuery,
       noResultFun,
-      noResult
+      noResult,
+
+      selectSong
     }
   }
 }

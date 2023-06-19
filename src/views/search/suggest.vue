@@ -13,7 +13,7 @@
           <p class="singer">{{item.description}}</p>
         </div>
       </div>
-      <li class="suggest-item" v-for="(item, index) in songs" :key="index">
+      <li class="suggest-item" v-for="(item, index) in songs" :key="index" @click="selectSong(item)">
         <div class="name">
           <p class="song">{{item.name}}</p>
           <p class="singer">{{item.singer}}</p>
@@ -52,6 +52,7 @@ export default {
     }
   },
   // emits: ['noResult'],
+  emits: ['selectSong'],
   setup (props, { emit }) {
     const singer = ref(null)
     const playlists = ref(null) // 歌单
@@ -127,6 +128,16 @@ export default {
     // hook
     const { rootRef, isPullUpLoad } = usePullUpLoad(searchMore)
 
+    const selectSong = (item) => {
+      getSongDetail(item.id).then((res) => {
+        if (res.code === 200) {
+          // item.al.picUrl = res.songs[0].al.picUrl
+          emit('select-song', res.songs[0])
+        }
+      })
+      // emit('select-song', item)
+    }
+
     return {
       singer,
       playlists,
@@ -140,7 +151,9 @@ export default {
       noResult,
 
       rootRef,
-      pullUpLoading
+      pullUpLoading,
+
+      selectSong
     }
   }
 }
