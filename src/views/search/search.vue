@@ -6,21 +6,21 @@
         <!-- <search-box ref="searchBox" placeholder="搜索歌曲、歌手"></search-box> -->
         <search-box-vue3 v-model='query' placeholder="搜索歌曲、歌手"></search-box-vue3>
       </div>
-      <scroll class="search_scroll_wrapper" ref="scrollRef" v-no-result:[noResultText]="noResult && query">
+      <scroll class="search_scroll_wrapper" ref="scrollRef" v-show="!query">
         <div>
           <!-- 热门搜索 -->
-          <div class="search_hots" v-show="!query">
+          <div class="search_hots">
             <p class="title">热门搜索</p>
             <span class="search_hots_item" v-for="(item, index) in hotKeys" :key="index" @click="addQuery(item.first)">
               {{ item.first }}
             </span>
           </div>
-          <!-- 搜索结果 -->
-          <div class="search_result" v-show="query">
-            <suggest :query="query" @noResult="noResultFun"></suggest>
-          </div>
         </div>
       </scroll>
+      <!-- 搜索结果 -->
+      <div class="search_result" v-show="query">
+        <suggest :query="query" @noResult="noResultFun"></suggest>
+      </div>
     </div>
   </transition>
 </template>
@@ -101,6 +101,8 @@ export default {
     top: 0;
     bottom: 0;
     background: $color-background;
+    display: flex;
+    flex-direction: column;
     .search_box_wrapper{
       padding: 0px 35px 0px 5px;
       background: $color-theme;
@@ -116,7 +118,8 @@ export default {
       }
     }
     .search_scroll_wrapper{
-      height: 100%;
+      flex: 1;
+      // height: 100%;
       overflow: hidden;
       .search_hots{
         margin: 0 20px;
@@ -138,13 +141,22 @@ export default {
           font-size: $font-size-medium;
         }
       }
-      .search_result{
-        width: 100%;
-        height: 100%;
-        position: relative;
-        top: 10px;
-        bottom: 0;
-      }
+      // .search_result{
+      //   width: 100%;
+      //   height: 100%;
+      //   position: relative;
+      //   top: 10px;
+      //   bottom: 0;
+      // }
+    }
+    .search_result{
+      flex: 1;
+      overflow: hidden;
+      // width: 100%;
+      // height: 100%;
+      // position: relative;
+      // top: 10px;
+      // bottom: 0;
     }
   }
 </style>

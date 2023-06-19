@@ -1,7 +1,7 @@
 <template>
-  <div class="suggest" ref="rootRef" v-loading:[loadingText]="loading">
+  <div class="suggest" ref="rootRef" v-loading:[loadingText]="loading" v-no-result:[noResultText]="noResult">
     <div class="search_suggest">
-      <!-- <p class="title">最佳匹配{{ suggest }}</p> -->
+      <p class="title" v-if="!noResult">最佳匹配{{ suggest }}</p>
       <div class="search_suggest_item" v-for="(item, index) in singer" :key="index">
         <img v-lazy="item.picUrl" width="50" height="50">
         <span>歌手：{{item.name}}</span>
@@ -13,8 +13,15 @@
           <p class="singer">{{item.description}}</p>
         </div>
       </div>
+      <li class="suggest-item" v-for="(item, index) in songs" :key="index">
+        <div class="name">
+          <p class="song">{{item.name}}</p>
+          <p class="singer">{{item.singer}}</p>
+        </div>
+      </li>
+      <div v-loading:[loadingText]="pullUpLoading"></div>
     </div>
-    <ul class="suggest_list">
+    <!-- <ul class="suggest_list">
       <li class="suggest-item" v-for="(item, index) in songs" :key="index">
         <div class="name">
           <p class="song">{{item.name}}</p>
@@ -22,7 +29,7 @@
         </div>
       </li>
       <div class="suggest-item" v-loading:[loadingText]="pullUpLoading"></div>
-    </ul>
+    </ul> -->
   </div>
 </template>
 
@@ -44,7 +51,7 @@ export default {
       default: true
     }
   },
-  emits: ['noResult'],
+  // emits: ['noResult'],
   setup (props, { emit }) {
     const singer = ref(null)
     const playlists = ref(null) // 歌单
@@ -53,15 +60,15 @@ export default {
     const page = ref(1)
     // let suggest = ref(null)
     const loading = ref(false)
-    const loadingText = ref('')
+    const loadingText = ref('正在加载...')
     const noResultText = ref('抱歉，暂无搜索结果')
 
     // const loading = computed(() => {
     //   return !singer.value && !playlists.value && !songs.value.length
     // })
-    // const noResult = computed(() => {
-    //   return !singer.value && !playlists.value && !songs.value.length && !hasMore.value
-    // })
+    const noResult = computed(() => {
+      return !singer.value && !playlists.value && !songs.value.length && !hasMore.value
+    })
 
     const pullUpLoading = computed(() => {
       return isPullUpLoad.value && hasMore.value
@@ -100,7 +107,7 @@ export default {
       playlists.value = res2.result.playlists
       loading.value = false
 
-      emit('noResult', !singer.value && !playlists.value && !songs.value.length && !hasMore.value)
+      // emit('noResult', !singer.value && !playlists.value && !songs.value.length && !hasMore.value)
     }
 
     const searchMore = async () => {
@@ -130,7 +137,7 @@ export default {
       loadingText,
       loading,
       noResultText,
-      // noResult,
+      noResult,
 
       rootRef,
       pullUpLoading
@@ -147,7 +154,7 @@ export default {
     .title{
       font-size: 12px;
       color: $color-theme;
-      padding: 0 0 20px 10px;
+      padding: 10px 0 10px 20px;
     }
     .search_suggest_item{
       display: flex;
@@ -173,10 +180,6 @@ export default {
         }
       }
     }
-  }
-  .suggest_list{
-    height: 100%;
-    padding-bottom: 45px;
     .suggest-item{
       height: 50px;
       padding: 3px 20px;
@@ -202,5 +205,33 @@ export default {
       }
     }
   }
+  // .suggest_list{
+  //   height: 100%;
+  //   padding-bottom: 45px;
+  //   .suggest-item{
+  //     height: 50px;
+  //     padding: 3px 20px;
+  //     display: flex;
+  //     align-items: center;
+  //     border-bottom: 1px solid rgb(228, 228, 228);
+  //     p {
+  //       padding: 3px 0;
+  //     }
+  //     .song{
+  //       color: $color-text;
+  //       font-size: $font-size-medium-x;
+  //       white-space: nowrap;
+  //       overflow: hidden;
+  //       text-overflow: ellipsis;
+  //     }
+  //     .singer{
+  //       font-size: 12px;
+  //       color: $color-text-g;
+  //       white-space: nowrap;
+  //       overflow: hidden;
+  //       text-overflow: ellipsis;
+  //     }
+  //   }
+  // }
 }
 </style>
