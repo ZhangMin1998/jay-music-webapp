@@ -1,7 +1,7 @@
 <template>
   <div class="suggest" ref="rootRef" v-loading:[loadingText]="loading" v-no-result:[noResultText]="noResult">
     <div class="search_suggest">
-      <p class="title" v-if="!noResult">最佳匹配{{ suggest }}</p>
+      <p class="title" v-if="!noResult">最佳匹配</p>
       <div class="search_suggest_item" v-for="(item, index) in singer" :key="index">
         <img v-lazy="item.picUrl" width="50" height="50">
         <span>歌手：{{item.name}}</span>
