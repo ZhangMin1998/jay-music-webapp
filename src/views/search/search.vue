@@ -19,8 +19,13 @@
       </scroll>
       <!-- 搜索结果 -->
       <div class="search_result" v-show="query">
-        <suggest :query="query" @noResult="noResultFun" @select-song="selectSong"></suggest>
+        <suggest :query="query" @noResult="noResultFun" @select-song="selectSong" @select-singer="selectSinger"></suggest>
       </div>
+      <router-view v-slot="{ Component }">
+        <transition appear name="slide">
+          <component :is="Component" :data="selectedSinger"/>
+        </transition>
+      </router-view>
     </div>
   </transition>
 </template>
@@ -38,11 +43,9 @@ import { getSearchHot } from '@/api/search'
 // import SearchList from '@/components/base/search-list/search-list'
 import Scroll from '@/components/wrap-scroll'
 import suggest from '@/views/search/suggest'
+import storage from 'good-storage'
+import { SINGER_KEY } from '@/assets/js/constant'
 // import Confirm from '@/components/base/confirm/confirm'
-// import { getHotKeys } from '@/service/search'
-// import { useRouter } from 'vue-router'
-// import storage from 'good-storage'
-// import { SINGER_KEY } from '@/assets/js/constant'
 // import useSearchHistory from '@/components/search/use-search-history'
 
 export default {
@@ -61,6 +64,7 @@ export default {
     const store = useStore()
 
     const query = ref('')
+    const selectedSinger = ref(null)
     // watch(query, (val) => {
     //   console.log(val)
     // })
@@ -86,17 +90,28 @@ export default {
     const selectSong = song => { // 添加一首歌 就是往playlist sequenslist添加一首
       store.dispatch('addSong', song)
     }
+
+    const selectSinger = item => {
+      // console.log(item)
+      selectedSinger.value = item
+      storage.session.set(SINGER_KEY, item)
+      router.push({
+        path: `/singer/${item.id}`
+      })
+    }
     return {
       query,
       noResultText,
       hotKeys,
+      selectedSinger,
 
       goBack,
       addQuery,
       noResultFun,
       noResult,
 
-      selectSong
+      selectSong,
+      selectSinger
     }
   }
 }

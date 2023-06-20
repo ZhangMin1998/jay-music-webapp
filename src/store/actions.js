@@ -74,7 +74,7 @@ export function clearSongList ({ commit }) {
 }
 
 // 添加歌曲
-export function addSong({ commit, state }, song) {
+export function addSong ({ commit, state }, song) {
   const sequenceList = state.sequenceList.slice() // 拷贝
   const playlist = state.playlist.slice()
   let currentIndex = state.currentIndex

@@ -2,7 +2,7 @@
   <div class="suggest" ref="rootRef" v-loading:[loadingText]="loading" v-no-result:[noResultText]="noResult">
     <div class="search_suggest">
       <p class="title" v-if="!noResult">最佳匹配</p>
-      <div class="search_suggest_item" v-for="(item, index) in singer" :key="index">
+      <div class="search_suggest_item" v-for="(item, index) in singer" :key="index" @click="selectSinger(item)">
         <img v-lazy="item.picUrl" width="50" height="50">
         <span>歌手：{{item.name}}</span>
       </div>
@@ -52,7 +52,7 @@ export default {
     }
   },
   // emits: ['noResult'],
-  emits: ['selectSong'],
+  emits: ['selectSong', 'select-singer'],
   setup (props, { emit }) {
     const singer = ref(null)
     const playlists = ref(null) // 歌单
@@ -128,6 +128,7 @@ export default {
     // hook
     const { rootRef, isPullUpLoad } = usePullUpLoad(searchMore)
 
+    // 点击歌曲
     const selectSong = (item) => {
       getSongDetail(item.id).then((res) => {
         if (res.code === 200) {
@@ -136,6 +137,13 @@ export default {
         }
       })
       // emit('select-song', item)
+    }
+
+    // 点击歌手
+    const selectSinger = item => {
+      // console.log(item)
+      item.avatar = item.picUrl
+      emit('select-singer', item)
     }
 
     return {
@@ -153,7 +161,8 @@ export default {
       rootRef,
       pullUpLoading,
 
-      selectSong
+      selectSong,
+      selectSinger
     }
   }
 }
