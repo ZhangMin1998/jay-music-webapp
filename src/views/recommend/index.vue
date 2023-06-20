@@ -128,7 +128,7 @@ export default {
       this.selectedAlbum = item
       storage.session.set(ALBUM_KEY, item)
       this.$router.push({
-        path: `/recommend/album/${item.id}`
+        path: `/album/${item.id}`
       })
     },
     // 点击推荐歌曲

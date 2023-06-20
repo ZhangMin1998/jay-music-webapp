@@ -18,13 +18,13 @@ const routes = [
   },
   {
     path: '/recommend',
-    component: Recommend,
-    children: [
-      {
-        path: 'album/:id',
-        component: RecommendDetail
-      }
-    ]
+    component: Recommend
+    // children: [
+    //   {
+    //     path: 'album/:id',
+    //     component: RecommendDetail
+    //   }
+    // ]
   },
   {
     path: '/singer',
@@ -55,12 +55,17 @@ const routes = [
       {
         path: '/singer/:id',
         component: SingerDetail
-      },
-      {
-        path: '/album/:id',
-        component: RecommendDetail
       }
+      // {
+      //   path: '/album/:id',
+      //   component: RecommendDetail
+      // }
     ]
+  },
+  {
+    path: '/album/:id',
+    name: 'Album',
+    component: RecommendDetail
   }
 ]
 
