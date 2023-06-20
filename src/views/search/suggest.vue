@@ -6,7 +6,7 @@
         <img v-lazy="item.picUrl" width="50" height="50">
         <span>歌手：{{item.name}}</span>
       </div>
-      <div class="search_suggest_item" v-for="(item, index) in playlists" :key="index">
+      <div class="search_suggest_item" v-for="(item, index) in playlists" :key="index" @click="selectAlbum(item)">
         <img :src="item.coverImgUrl" width="50" height="50">
         <div class="text">
           <p>歌单：{{item.name}}</p>
@@ -52,7 +52,7 @@ export default {
     }
   },
   // emits: ['noResult'],
-  emits: ['select-song', 'select-singer'],
+  emits: ['select-song', 'select-singer', 'select-album'],
   setup (props, { emit }) {
     const singer = ref(null)
     const playlists = ref(null) // 歌单
@@ -146,6 +146,12 @@ export default {
       emit('select-singer', item)
     }
 
+    // 点击歌单
+    const selectAlbum = item => {
+      // console.log(item)
+      emit('select-album', item)
+    }
+
     return {
       singer,
       playlists,
@@ -162,7 +168,8 @@ export default {
       pullUpLoading,
 
       selectSong,
-      selectSinger
+      selectSinger,
+      selectAlbum
     }
   }
 }

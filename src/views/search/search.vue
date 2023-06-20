@@ -19,11 +19,17 @@
       </scroll>
       <!-- 搜索结果 -->
       <div class="search_result" v-show="query">
-        <suggest :query="query" @noResult="noResultFun" @select-song="selectSong" @select-singer="selectSinger"></suggest>
+        <suggest
+          :query="query"
+          @noResult="noResultFun"
+          @select-song="selectSong"
+          @select-singer="selectSinger"
+          @select-album="selectAlbum"
+        ></suggest>
       </div>
       <router-view v-slot="{ Component }">
         <transition appear name="slide">
-          <component :is="Component" :data="selectedSinger"/>
+          <component :is="Component" :data="selectedItem"/>
         </transition>
       </router-view>
     </div>
@@ -44,7 +50,7 @@ import { getSearchHot } from '@/api/search'
 import Scroll from '@/components/wrap-scroll'
 import suggest from '@/views/search/suggest'
 import storage from 'good-storage'
-import { SINGER_KEY } from '@/assets/js/constant'
+import { SINGER_KEY, ALBUM_KEY } from '@/assets/js/constant'
 // import Confirm from '@/components/base/confirm/confirm'
 // import useSearchHistory from '@/components/search/use-search-history'
 
@@ -64,7 +70,7 @@ export default {
     const store = useStore()
 
     const query = ref('')
-    const selectedSinger = ref(null)
+    const selectedItem = ref(null)
     // watch(query, (val) => {
     //   console.log(val)
     // })
@@ -93,17 +99,24 @@ export default {
 
     const selectSinger = item => {
       // console.log(item)
-      selectedSinger.value = item
+      selectedItem.value = item
       storage.session.set(SINGER_KEY, item)
       router.push({
         path: `/singer/${item.id}`
+      })
+    }
+    const selectAlbum = item => {
+      selectedItem.value = item
+      storage.session.set(ALBUM_KEY, item)
+      router.push({
+        path: `/album/${item.id}`
       })
     }
     return {
       query,
       noResultText,
       hotKeys,
-      selectedSinger,
+      selectedItem,
 
       goBack,
       addQuery,
@@ -111,7 +124,8 @@ export default {
       noResult,
 
       selectSong,
-      selectSinger
+      selectSinger,
+      selectAlbum
     }
   }
 }
