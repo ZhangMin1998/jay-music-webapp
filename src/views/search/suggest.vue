@@ -52,7 +52,7 @@ export default {
     }
   },
   // emits: ['noResult'],
-  emits: ['selectSong', 'select-singer'],
+  emits: ['select-song', 'select-singer'],
   setup (props, { emit }) {
     const singer = ref(null)
     const playlists = ref(null) // 歌单

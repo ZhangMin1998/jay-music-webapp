@@ -57,7 +57,8 @@ export default function createDetailComponent (name, headerTitle, key, fetch) {
       return {
         headerTitle: headerTitle,
         hotSongs: [],
-        loading: true
+        loading: true,
+        songs: []
       }
     },
     async created () {
