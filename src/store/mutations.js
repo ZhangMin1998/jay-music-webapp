@@ -39,7 +39,7 @@ const mutations = {
   },
   // 保存搜索历史记录
   setSearchHistory (state, data) {
-    state.setSearchHistory = data
+    state.searchHistory = data
   }
 }
 

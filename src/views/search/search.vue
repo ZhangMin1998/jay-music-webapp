@@ -22,6 +22,11 @@
                 <i class="icon-clear" ></i>
               </span>
             </div>
+            <search-history
+              :searchList="historyList"
+              @select="addQuery"
+              @delete="deleteSearch"
+            ></search-history>
           </div>
         </div>
       </scroll>
@@ -47,27 +52,25 @@
 <script>
 // import { useRoute, useRouter } from 'vue-router'
 import { useRouter } from 'vue-router'
-import { ref, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
-// import SearchBox from '@/base/search-box/search-box'
 import searchBoxVue3 from '@/base/search-box/search-box-vue3'
+import searchHistory from '@/views/search/search-history'
 import { getSearchHot } from '@/api/search'
-// import SearchInput from '@/components/search/search-input'
-// import Suggest from '@/components/search/suggest'
-// import SearchList from '@/components/base/search-list/search-list'
 import Scroll from '@/components/wrap-scroll'
 import suggest from '@/views/search/suggest'
 import storage from 'good-storage'
 import { SINGER_KEY, ALBUM_KEY } from '@/assets/js/constant'
+import useSearchHistory from '@/views/search/use-search-history'
 // import Confirm from '@/components/base/confirm/confirm'
-// import useSearchHistory from '@/components/search/use-search-history'
+
 
 export default {
   // eslint-disable-next-line
   name: 'search',
   components: {
-    // SearchBox,
     searchBoxVue3,
+    searchHistory,
     Scroll,
     suggest
   },
@@ -86,6 +89,9 @@ export default {
     const noResultText = ref('抱歉，暂无搜索结果')
     const noResult = ref(false)
 
+    const historyList = computed(() => store.state.searchHistory)
+    const { saveSearch, deleteSearch, clearSearch } = useSearchHistory()
+
     const hotKeys = ref([])
     getSearchHot().then(res => {
       hotKeys.value = res.result.hots
@@ -102,11 +108,13 @@ export default {
     }
 
     const selectSong = song => { // 添加一首歌 就是往playlist sequenslist添加一首
+      saveSearch(query.value)
       store.dispatch('addSong', song)
     }
 
     const selectSinger = item => {
       // console.log(item)
+      saveSearch(query.value)
       selectedItem.value = item
       storage.session.set(SINGER_KEY, item)
       router.push({
@@ -114,6 +122,7 @@ export default {
       })
     }
     const selectAlbum = item => {
+      saveSearch(query.value)
       selectedItem.value = item
       storage.session.set(ALBUM_KEY, item)
       router.push({
@@ -126,6 +135,8 @@ export default {
       hotKeys,
       selectedItem,
 
+      historyList,
+
       goBack,
       addQuery,
       noResultFun,
@@ -133,7 +144,9 @@ export default {
 
       selectSong,
       selectSinger,
-      selectAlbum
+      selectAlbum,
+
+      deleteSearch
     }
   }
 }
