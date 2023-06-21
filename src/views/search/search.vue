@@ -15,6 +15,14 @@
               {{ item.first }}
             </span>
           </div>
+          <div class="search_history">
+            <div class="title">
+              <span class="text">搜索历史</span>
+              <span class="clear">
+                <i class="icon-clear" ></i>
+              </span>
+            </div>
+          </div>
         </div>
       </scroll>
       <!-- 搜索结果 -->
@@ -178,13 +186,25 @@ export default {
           font-size: $font-size-medium;
         }
       }
-      // .search_result{
-      //   width: 100%;
-      //   height: 100%;
-      //   position: relative;
-      //   top: 10px;
-      //   bottom: 0;
-      // }
+      .search_history{
+        margin: 10px 20px;
+        .title{
+          height: 30px;
+          display: flex;
+          align-items: center;
+          font-size: $font-size-small-x;
+          color: $color-text-g;
+          .text{
+          flex: 1;
+          }
+          .clear{
+          .icon-clear {
+            font-size: $font-size-medium;
+            color: $color-text;
+          }
+          }
+        }
+      }
     }
     .search_result{
       flex: 1;
