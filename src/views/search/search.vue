@@ -15,13 +15,20 @@
               {{ item.first }}
             </span>
           </div>
-          <div class="search_history">
+          <div class="search_history" v-show="historyList.length">
             <div class="title">
               <span class="text">搜索历史</span>
-              <span class="clear">
+              <span class="clear" @click="showConfirm">
                 <i class="icon-clear" ></i>
               </span>
             </div>
+            <Confirm
+              ref="confirmRef"
+              text="是否清空所有搜索历史"
+              confirm-btn-text="清空"
+              @confirm="clearSearch"
+            >
+            </Confirm>
             <search-history
               :searchList="historyList"
               @select="addQuery"
@@ -52,7 +59,7 @@
 <script>
 // import { useRoute, useRouter } from 'vue-router'
 import { useRouter } from 'vue-router'
-import { ref, computed } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import searchBoxVue3 from '@/base/search-box/search-box-vue3'
 import searchHistory from '@/views/search/search-history'
@@ -62,7 +69,7 @@ import suggest from '@/views/search/suggest'
 import storage from 'good-storage'
 import { SINGER_KEY, ALBUM_KEY } from '@/assets/js/constant'
 import useSearchHistory from '@/views/search/use-search-history'
-// import Confirm from '@/components/base/confirm/confirm'
+import Confirm from '@/base/Comfirm/comfirm.vue'
 
 
 export default {
@@ -72,7 +79,8 @@ export default {
     searchBoxVue3,
     searchHistory,
     Scroll,
-    suggest
+    suggest,
+    Confirm
   },
   setup () {
     // const route = useRoute()
@@ -81,10 +89,19 @@ export default {
     const store = useStore()
 
     const query = ref('')
+    const confirmRef = ref(null)
+    const scrollRef = ref(null)
     const selectedItem = ref(null)
-    // watch(query, (val) => {
-    //   console.log(val)
-    // })
+    watch(query, async (val) => {
+      if (!val) {
+        await nextTick()
+        refreshScroll()
+      }
+    })
+
+    const refreshScroll = () => {
+      scrollRef.value.scroll.refresh()
+    }
 
     const noResultText = ref('抱歉，暂无搜索结果')
     const noResult = ref(false)
@@ -129,11 +146,17 @@ export default {
         path: `/album/${item.id}`
       })
     }
+    const showConfirm = () => {
+      confirmRef.value.show()
+    }
+
     return {
       query,
       noResultText,
       hotKeys,
       selectedItem,
+      confirmRef,
+      scrollRef,
 
       historyList,
 
@@ -146,7 +169,9 @@ export default {
       selectSinger,
       selectAlbum,
 
-      deleteSearch
+      deleteSearch,
+      clearSearch,
+      showConfirm
     }
   }
 }

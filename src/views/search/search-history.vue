@@ -1,6 +1,6 @@
 <template>
   <div class="search_list">
-    <transition-group name="list" tag="ul">
+    <transition-group name="list2" tag="ul">
       <li
         v-for="(item, index) in searchList"
         :key="index"
@@ -39,6 +39,17 @@
 
 <style lang="scss" scoped>
 .search_list{
+
+  .list2-move,
+  .list2-enter-active,
+  .list2-leave-active {
+    transition: all 0.3s;
+  }
+
+  .list2-enter-from,
+  .list2-leave-to {
+    height: 0;
+  }
   .search_item{
     height: 35px;
     display: flex;
