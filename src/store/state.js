@@ -10,7 +10,8 @@ const state = {
   fullScreen: false, // 全屏播放还是收缩
 
   favoriteList: load(FAVORITE_KEY), // 收藏歌曲列表
-  searchHistory: load(SEARCH_KEY)
+  searchHistory: load(SEARCH_KEY),
+  playHistory: []
 }
 
 export default state
