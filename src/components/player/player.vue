@@ -130,6 +130,7 @@ import useAnimation from '@/components/player/use-animation'
 // import { formatTime } from '@/assets/js/util'
 
 import miniPlayer from '@/components/player/mini-player'
+import usePlayHistory from '@/components/player/use-play-history'
 
 export default {
   name: 'p-layer',
@@ -163,6 +164,7 @@ export default {
     const { currentLyric, currentLineNum, playLyric, stopLyric, lyricScrollRef, lyricListRef, pureMusicLyric, playingLyric } = useLyric({ songReady, currentTime })
     const { currentShow, middleLStyle, middleRStyle, onMiddleTouchStart, onMiddleTouchMove, onMiddleTouchEnd } = useMiddleInteractive()
     const { cdWrapperRef, enter, afterEnter, leave, afterLeave } = useAnimation()
+    const { savePlay } = usePlayHistory()
 
     // computed
     const playIcon = computed(() => {
@@ -284,6 +286,7 @@ export default {
       if (songReady.value) return
       songReady.value = true
       playLyric() // 如果歌词先到 songReady未触发  那就等songReady触发后执行
+      savePlay(currentSong.value)
     }
 
     const error = () => { // 有问题也能切换

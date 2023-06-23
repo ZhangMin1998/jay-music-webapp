@@ -29,7 +29,7 @@ export default {
       default: false
     }
   },
-  inject: ['alias'],
+  // inject: ['alias'],
   emits: ['select'],
   data () {
     return {

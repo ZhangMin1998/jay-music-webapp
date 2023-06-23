@@ -7,7 +7,7 @@
       <div class="switches_wrapper">
         <switches :switches="switches" v-model="currentIndex"></switches>
       </div>
-      <div class="sequence_play" @click="random">
+      <div class="sequence_play" @click="random" v-show="currentList.length">
         <i class="iconfont icon-bofangicon"></i>
         <span class="text">随机播放</span>
         <span class="count">(共{{songLength}}首)</span>
@@ -46,12 +46,18 @@ export default {
       'favoriteList',
       'playHistory'
     ]),
-    noResult() {
+    noResult () {
       return this.currentIndex === 0 ? !this.favoriteList.length : !this.playHistory.length
     },
-    noResultText() {
+    noResultText () {
       return this.currentIndex === 0 ? '暂无收藏歌曲' : '你还没有听过歌曲'
     },
+    songLength () {
+      return this.currentIndex === 0 ? this.favoriteList.length : this.playHistory.length
+    },
+    currentList () {
+      return this.currentIndex === 0 ? this.favoriteList : this.playHistory
+    }
   },
   data () {
     return {
@@ -63,14 +69,18 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'addSong',
+      'randomPlay'
+    ]),
     goBack () {
       this.$router.back()
     },
     random () {
-
+      this.randomPlay(this.currentList)
     },
-    selectSong () {
-
+    selectSong ({ item }) {
+      this.addSong(item)
     }
   }
 }
