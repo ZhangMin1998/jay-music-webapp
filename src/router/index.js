@@ -71,6 +71,10 @@ const routes = [
     path: '/user',
     name: 'User',
     component: User
+    // 命名路由  与 router-view name='user'搭配使用
+    // components: {
+    //   user: UserCenter
+    // }
   }
 ]
 
