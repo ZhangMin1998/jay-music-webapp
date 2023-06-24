@@ -1,13 +1,13 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const Recommend = () => import('@/views/recommend/index.vue'/* webpackChunkName: "recommend" */)
-const RecommendDetail = () => import('@/views/recommend/recommendDetail.vue')
+const RecommendDetail = () => import('@/views/recommend/recommendDetail.vue'/* webpackChunkName: "recommendDetail" */)
 const Singer = () => import('@/views/singer/singer.vue'/* webpackChunkName: "singer" */)
 const TopList = () => import('@/views/top-list/top-list'/* webpackChunkName: "top-list" */)
-const TopListDetail = () => import('@/views/top-list/top-list-detail')
+const TopListDetail = () => import('@/views/top-list/top-list-detail'/* webpackChunkName: "top-detail" */)
 const Search = () => import('@/views/search/search'/* webpackChunkName: "search" */)
 const SingerDetail = () => import('@/views/singer/singer-detail.vue'/* webpackChunkName: "singer-detail" */)
-const User = () => import('@/views/user/user.vue'/* webpackChunkName: "user-center" */)
+const UserCenter = () => import('@/views/user/user.vue'/* webpackChunkName: "user-center" */)
 // const Album = () => import('@/views/album'/* webpackChunkName: "album" */)
 // const TopDetail = () => import('@/views/top-detail'/* webpackChunkName: "top-detail" */)
 
@@ -70,7 +70,7 @@ const routes = [
   {
     path: '/user',
     name: 'User',
-    component: User
+    component: UserCenter
     // 命名路由  与 router-view name='user'搭配使用
     // components: {
     //   user: UserCenter
