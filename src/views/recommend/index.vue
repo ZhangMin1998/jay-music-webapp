@@ -31,7 +31,7 @@
         <div class="recommend-song" ref="recommendSong">
           <h1 class="title" v-show="!loading">推荐歌曲</h1>
           <div class="box">
-            <div v-for="item in recommendMusic" :key="item.id" class="item-box">
+            <div v-for="item in recommendMusic" :key="item.id" class="item-box" @click="selectSong(item)">
               <div class="icon">
                 <img v-lazy="item.picUrl" />
               </div>
@@ -58,6 +58,7 @@
 
 <script>
 import { getBannerData, getRecommendList, getRecommendMusic } from '@/api/recommend'
+import { getSongDetail } from '@/api/search'
 import Slider from '@/base/Slider/Slider.vue'
 // import Scroll from '@/base/Scroll/Scroll.vue'
 import Scroll from '@/components/wrap-scroll'
@@ -95,16 +96,16 @@ export default {
     // 获取轮播图
     getBannerData () {
       getBannerData().then((res) => {
-        console.log('获取轮播图', res)
+        // console.log('获取轮播图', res)
         if (res.code === 200) {
-          this.banner = res.banners.slice(0, 4)
+          this.banner = res.banners.slice(0, 6)
         }
       })
     },
     // 获取推荐歌单
     getRecommendList () {
       getRecommendList().then((res) => {
-        console.log('获取推荐歌单', res)
+        // console.log('获取推荐歌单', res)
         if (res.code === 200) {
           this.playList = res.result
         }
@@ -113,7 +114,7 @@ export default {
     // 获取推荐歌曲
     getRecommendMusic () {
       getRecommendMusic().then((res) => {
-        console.log('获取推荐歌曲', res)
+        // console.log('获取推荐歌曲', res)
         if (res.code === 200) {
           this.recommendMusic = res.result.slice(0, 9)
         }
@@ -125,6 +126,7 @@ export default {
     },
     // 点击歌单
     selectItem (item) {
+      // console.log(item)
       this.selectedAlbum = item
       storage.session.set(ALBUM_KEY, item)
       this.$router.push({
@@ -132,8 +134,9 @@ export default {
       })
     },
     // 点击推荐歌曲
-    selectSong (item) {
-
+    async selectSong (item) {
+      const result = await getSongDetail(item.id)
+      this.$store.dispatch('addSong', result.songs[0])
     },
     // 数字转换
     tranNumber (num, point) {

@@ -4,7 +4,7 @@ import { save } from '@/assets/js/array-store'
 
 export default function usePlayHistory () {
   const store = useStore()
-  const maxLen = 200.
+  const maxLen = 200
 
   const savePlay = (song) => {
     const songs = save(song, PLAY_KEY, item => {

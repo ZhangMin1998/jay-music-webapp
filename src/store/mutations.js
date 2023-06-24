@@ -42,7 +42,7 @@ const mutations = {
     state.searchHistory = data
   },
   // 保存历史播放歌曲
-  setPlayHistory(state, data) {
+  setPlayHistory (state, data) {
     state.playHistory = data
   }
 }

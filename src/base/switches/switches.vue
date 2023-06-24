@@ -14,6 +14,7 @@
 
 <script>
 export default {
+  name: 's_witches',
   props: {
     switches: {
       type: Array,

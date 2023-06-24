@@ -25,10 +25,11 @@ export default function useScroll (wrapperRef, options, emit) {
   })
 
   onActivated(() => {
-
+    scroll.value.enable()
+    scroll.value.refresh()
   })
   onDeactivated(() => {
-
+    scroll.value.disable()
   })
   return scroll
 }

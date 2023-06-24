@@ -1,9 +1,14 @@
 <template>
   <m-header></m-header>
   <tab></tab>
-  <keep-alive>
+  <!-- <keep-alive>
     <router-view :style="viewStyle"></router-view>
-  </keep-alive>
+  </keep-alive> -->
+  <router-view :style="viewStyle" v-slot="{ Component }">
+    <keep-alive>
+      <component :is="Component"/>
+    </keep-alive>
+  </router-view>
   <player></player>
 </template>
 

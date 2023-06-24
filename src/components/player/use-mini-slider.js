@@ -72,12 +72,12 @@ export default function useMinislider () {
   })
 
   onActivated(() => {
-    // slider.value.enable()
-    // slider.value.refresh()
+    slider.value.enable()
+    slider.value.refresh()
   })
 
   onDeactivated(() => {
-    // slider.value.disable()
+    slider.value.disable()
   })
 
   return {

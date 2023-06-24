@@ -71,7 +71,6 @@ import { SINGER_KEY, ALBUM_KEY } from '@/assets/js/constant'
 import useSearchHistory from '@/views/search/use-search-history'
 import Confirm from '@/base/Comfirm/comfirm.vue'
 
-
 export default {
   // eslint-disable-next-line
   name: 'search',

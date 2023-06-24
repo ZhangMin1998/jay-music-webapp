@@ -50,6 +50,13 @@ export default {
   beforeUnmount () {
     this.slide.destroy()
   },
+  activated () {
+    this.slide.enable()
+    this.slide.refresh()
+  },
+  deactivated () {
+    this.slide.disable()
+  },
   methods: {
     init () {
       this.slide = new BScroll(this.$refs.slide, {

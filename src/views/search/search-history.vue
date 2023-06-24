@@ -17,24 +17,24 @@
 </template>
 
 <script>
-  export default {
-    name: "search_list",
-    props: {
-      searchList: {
-        type: Array,
-        default: () => []
-      }
+export default {
+  name: 'search_list',
+  props: {
+    searchList: {
+      type: Array,
+      default: () => []
+    }
+  },
+  emits: ['select', 'delete'],
+  methods: {
+    deleteOne (item) {
+      this.$emit('delete', item)
     },
-    emits: ['select', 'delete'],
-    methods: {
-      deleteOne (item) {
-        this.$emit('delete', item)
-      },
-      selectItem (item) {
-        this.$emit('select', item)
-      }
+    selectItem (item) {
+      this.$emit('select', item)
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
